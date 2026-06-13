@@ -13,6 +13,8 @@ const archiveChanges: Record<string, string> = {
 
 export function ThenNow() {
   const [archiveMode, setArchiveMode] = useState<'then' | 'now'>('then')
+  const [selectedArchiveId, setSelectedArchiveId] = useState(archiveEntries[0].id)
+  const selectedArchive = archiveEntries.find((entry) => entry.id === selectedArchiveId) ?? archiveEntries[0]
 
   return (
     <MotionSection id="archive" className="section-shell overflow-hidden bg-[linear-gradient(180deg,rgba(242,217,170,0.46),rgba(7,26,45,0.08))]">
@@ -76,19 +78,53 @@ export function ThenNow() {
             </div>
           </motion.div>
         </motion.div>
-        <motion.div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" variants={staggerContainer}>
+        <motion.div className="mt-9 grid gap-5 lg:grid-cols-[0.8fr_1.2fr]" variants={fadeUp}>
+          <div className="glass overflow-hidden rounded-[1.35rem] border-[color:var(--sand-deep)]/24 shadow-soft">
+            <div className="archive-paper relative p-5 sm:p-6">
+              <div className="absolute right-5 top-5 rounded-full border border-[color:var(--sand-deep)]/25 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sand-deep)]/80">
+                Selected
+              </div>
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">{selectedArchive.year}</p>
+              <h3 className="mt-3 max-w-xl font-serif text-3xl leading-tight text-[color:var(--ink)]">{selectedArchive.title}</h3>
+              <p className="mt-2 max-w-xl text-base font-semibold leading-7 text-[color:var(--sea-deep)]">{selectedArchive.subtitle}</p>
+              <p className="mt-3 max-w-2xl leading-7 text-[color:var(--muted-foreground)]">{selectedArchive.description}</p>
+              <div className="mt-5 rounded-2xl border border-[color:var(--sand-deep)]/20 bg-white/54 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)]">
+                <span className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/58">What changed</span>
+                <span className="mt-1.5 block">{archiveChanges[selectedArchive.id]}</span>
+              </div>
+            </div>
+          </div>
+          <p className="self-end text-sm leading-6 text-[color:var(--muted-foreground)] lg:max-w-md">
+            Use the timeline cards as a quick lens: each date marks a different version of the same coastline, from planned resort to layered summer map.
+          </p>
+        </motion.div>
+        <motion.div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" variants={staggerContainer}>
           {archiveEntries.map((entry) => (
-            <motion.article key={entry.id} variants={fadeUp} whileHover={{ y: -4 }} className="group glass rounded-[1.25rem] p-5 shadow-soft">
+            <motion.button
+              key={entry.id}
+              type="button"
+              variants={fadeUp}
+              whileHover={{ y: -4 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => setSelectedArchiveId(entry.id)}
+              className={`archive-timeline-card group relative overflow-hidden rounded-[1.25rem] border p-5 text-left shadow-soft transition ${
+                selectedArchiveId === entry.id ? 'border-[color:var(--coral)]/45 bg-white/80 ring-2 ring-[color:var(--coral)]/14' : 'border-white/62 bg-white/56 hover:border-[color:var(--sand-deep)]/35'
+              }`}
+            >
+              <span className="absolute right-4 top-4 rounded-full border border-[color:var(--sand-deep)]/22 px-2.5 py-1 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sand-deep)]/70">
+                Archive
+              </span>
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-[color:var(--coral)] transition group-hover:text-[color:var(--sea-deep)]">{entry.year}</p>
-              <h3 className="mt-3 font-serif text-2xl text-[color:var(--ink)]">{entry.title}</h3>
+              <h3 className="mt-3 pr-8 font-serif text-2xl text-[color:var(--ink)]">{entry.title}</h3>
+              <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{entry.subtitle}</p>
               <p className="mt-3 leading-7 text-[color:var(--muted-foreground)]">{entry.description}</p>
-              <p className="mt-4 rounded-2xl bg-white/58 px-3 py-2 text-sm font-medium leading-6 text-[color:var(--ink)] opacity-0 transition group-hover:opacity-100">
-                What changed: {archiveChanges[entry.id]}
+              <p className="mt-4 rounded-2xl border border-[color:var(--border)]/70 bg-white/58 px-3 py-2 text-sm font-medium leading-6 text-[color:var(--ink)] opacity-80 transition group-hover:bg-white/78 group-hover:opacity-100">
+                {archiveChanges[entry.id]}
               </p>
-            </motion.article>
+            </motion.button>
           ))}
         </motion.div>
-        <motion.p variants={fadeUp} className="mt-6 max-w-3xl text-sm leading-6 text-[color:var(--muted-foreground)]">
+        <motion.p variants={fadeUp} className="mt-5 max-w-3xl text-xs leading-5 text-[color:var(--muted-foreground)]/82">
           {archiveDisclaimer}
         </motion.p>
       </div>

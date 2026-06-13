@@ -65,6 +65,14 @@ select {
   font: inherit;
 }
 
+:where(p, h1, h2, h3, h4, h5, h6, a, button, span, li) {
+  text-align: left;
+  letter-spacing: 0;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
 ::selection {
   color: var(--ink);
   background: var(--coral-soft);
@@ -106,14 +114,14 @@ select {
 
 .section-shell {
   position: relative;
-  padding: 6rem 1.25rem;
+  padding: 5.5rem 1.25rem;
   scroll-margin-top: var(--nav-offset);
 }
 
 @media (min-width: 640px) {
   .section-shell {
-    padding-top: 6.5rem;
-    padding-bottom: 7rem;
+    padding-top: 6rem;
+    padding-bottom: 6.5rem;
     padding-right: 2rem;
     padding-left: 2rem;
   }
@@ -258,21 +266,24 @@ select {
   border-radius: 1.75rem;
   border: 1px solid rgba(255, 255, 255, 0.16);
   background:
-    radial-gradient(circle at 24% 18%, rgba(204, 255, 244, 0.6), transparent 11rem),
-    linear-gradient(135deg, #052944 0%, #087996 46%, #20c7bd 100%);
+    radial-gradient(circle at 75% 12%, rgba(204, 255, 244, 0.58), transparent 9rem),
+    radial-gradient(circle at 18% 82%, rgba(242, 217, 170, 0.26), transparent 13rem),
+    linear-gradient(135deg, #052944 0%, #087996 48%, #20c7bd 100%);
   box-shadow: 0 28px 76px rgba(0, 0, 0, 0.3);
 }
 
 .map-canvas::before {
   content: "";
   position: absolute;
-  inset: 8% 45% -16% -13%;
-  border-radius: 49% 42% 36% 28%;
+  inset: 2% 47% -12% -12%;
+  border-radius: 42% 46% 38% 30%;
   background:
+    linear-gradient(98deg, rgba(255, 255, 255, 0.34), transparent 12%),
+    repeating-linear-gradient(86deg, rgba(6, 59, 91, 0.12) 0 1px, transparent 1px 18px),
     linear-gradient(145deg, rgba(242, 217, 170, 0.98), rgba(255, 248, 226, 0.84)),
     radial-gradient(circle at 68% 30%, rgba(255, 255, 255, 0.55), transparent 8rem);
   box-shadow: 22px 0 70px rgba(255, 255, 255, 0.2);
-  transform: rotate(7deg);
+  transform: rotate(6deg);
 }
 
 .map-canvas::after {
@@ -338,6 +349,35 @@ select {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.28);
   transform: rotate(-8deg);
+}
+
+.archive-paper {
+  background:
+    linear-gradient(90deg, rgba(114, 88, 61, 0.12) 0 1px, transparent 1px),
+    linear-gradient(rgba(114, 88, 61, 0.08) 0 1px, transparent 1px),
+    radial-gradient(circle at 12% 22%, rgba(242, 217, 170, 0.54), transparent 9rem),
+    linear-gradient(145deg, rgba(255, 248, 226, 0.82), rgba(255, 255, 255, 0.46));
+  background-size: 28px 100%, 100% 24px, auto, auto;
+}
+
+.archive-timeline-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(200, 148, 71, 0.18) 0 1px, transparent 1px),
+    radial-gradient(circle at 16% 14%, rgba(255, 248, 226, 0.72), transparent 5rem);
+  opacity: 0.5;
+  transition: opacity 220ms ease;
+}
+
+.archive-timeline-card:hover::before {
+  opacity: 0.82;
+}
+
+.archive-timeline-card > * {
+  position: relative;
 }
 
 .text-balance {

@@ -82,5 +82,6 @@ export type ArchiveEntry = {
   id: string
   year: string
   title: string
+  subtitle: string
   description: string
 }

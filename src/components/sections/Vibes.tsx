@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import { Camera, Coffee, Compass, Landmark, Music, Ship, Sunset, Umbrella, Users, type LucideIcon } from 'lucide-react'
-import { useState } from 'react'
 import { vibes } from '../../data/vibes'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
 import { SectionLabel } from '../ui/SectionLabel'
@@ -67,10 +66,14 @@ const vibeRecommendations: Record<string, { area: string; start: string; route: 
   },
 }
 
-export function Vibes() {
-  const [selectedVibeId, setSelectedVibeId] = useState(vibes[0].id)
-  const selectedVibe = vibes.find((vibe) => vibe.id === selectedVibeId) ?? vibes[0]
-  const selectedRecommendation = vibeRecommendations[selectedVibe.id]
+type VibesProps = {
+  selectedVibe: string
+  onSelectVibe: (vibeId: string) => void
+}
+
+export function Vibes({ selectedVibe, onSelectVibe }: VibesProps) {
+  const selectedVibeItem = vibes.find((vibe) => vibe.id === selectedVibe) ?? vibes[0]
+  const selectedRecommendation = vibeRecommendations[selectedVibeItem.id]
 
   return (
     <MotionSection id="vibes" className="section-shell">
@@ -88,7 +91,7 @@ export function Vibes() {
         <motion.div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" variants={staggerContainer}>
           {vibes.map((vibe, index) => {
             const Icon = iconMap[vibe.iconName] ?? Compass
-            const isSelected = selectedVibeId === vibe.id
+            const isSelected = selectedVibe === vibe.id
 
             return (
               <motion.button
@@ -97,7 +100,7 @@ export function Vibes() {
                 variants={fadeUp}
                 whileHover={{ y: -5, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
-                onClick={() => setSelectedVibeId(vibe.id)}
+                onClick={() => onSelectVibe(vibe.id)}
                 className={`glass group rounded-[1.35rem] p-5 text-left shadow-soft outline-none transition ${
                   isSelected ? 'border-[color:var(--coral)]/70 ring-2 ring-[color:var(--coral)]/20' : 'hover:border-[color:var(--turquoise)]/45'
                 }`}
@@ -124,31 +127,35 @@ export function Vibes() {
           })}
         </motion.div>
         <motion.div
-          key={selectedVibe.id}
+          key={selectedVibeItem.id}
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="glass mt-6 grid gap-4 rounded-[1.35rem] border-[color:var(--coral)]/35 p-5 shadow-soft md:grid-cols-[0.9fr_1.1fr]"
+          className="glass mt-6 overflow-hidden rounded-[1.35rem] border-[color:var(--coral)]/30 shadow-soft"
         >
-          <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">For this vibe, start with</p>
-            <h3 className="mt-3 font-serif text-3xl text-[color:var(--ink)]">{selectedVibe.title}</h3>
+          <div className="grid gap-5 p-5 md:grid-cols-[0.8fr_1.2fr] sm:p-6">
+            <div>
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">Recommended coast plan</p>
+              <h3 className="mt-3 font-serif text-3xl text-[color:var(--ink)]">{selectedVibeItem.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">A compact starting point for turning this mood into a route.</p>
+            </div>
+            <div className="grid gap-2.5 sm:grid-cols-3">
+              {[
+                ['Area', selectedRecommendation.area],
+                ['First stop', selectedRecommendation.start],
+                ['Route', selectedRecommendation.route],
+              ].map(([label, value]) => (
+                <div key={label} className="rounded-2xl border border-white/70 bg-white/62 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]">
+                  <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">{label}</span>
+                  <span className="mt-1.5 block text-sm font-bold leading-5 text-[color:var(--ink)]">{value}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="grid gap-3 text-sm leading-6 text-[color:var(--muted-foreground)] sm:grid-cols-3">
-            <p>
-              <span className="block font-bold text-[color:var(--ink)]">Area</span>
-              {selectedRecommendation.area}
-            </p>
-            <p>
-              <span className="block font-bold text-[color:var(--ink)]">First stop</span>
-              {selectedRecommendation.start}
-            </p>
-            <p>
-              <span className="block font-bold text-[color:var(--ink)]">Route</span>
-              {selectedRecommendation.route}
-            </p>
-            <p className="sm:col-span-3">
-              <span className="font-bold text-[color:var(--ink)]">Field note:</span> {selectedRecommendation.note}
+          <div className="border-t border-white/58 bg-[linear-gradient(90deg,rgba(242,217,170,0.46),rgba(255,255,255,0.34))] px-5 py-4 sm:px-6">
+            <p className="text-sm font-medium leading-6 text-[color:var(--ink)]">
+              <span className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">Field note</span>
+              <span className="ml-3 text-[color:var(--muted-foreground)]">{selectedRecommendation.note}</span>
             </p>
           </div>
         </motion.div>

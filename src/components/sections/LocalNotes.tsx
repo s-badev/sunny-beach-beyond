@@ -26,7 +26,7 @@ export function LocalNotes() {
             >
               <div className="absolute inset-y-5 left-0 w-1 rounded-r-full bg-[color:var(--coral)]/90 transition group-hover:bg-[color:var(--coral)]" aria-hidden="true" />
               <div className="flex items-center justify-between gap-3">
-                <p className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)] transition group-hover:tracking-[0.24em]">{note.label}</p>
+                <p className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)] transition group-hover:text-[color:var(--sea-deep)]">{note.label}</p>
                 <span className="rounded-full bg-white/58 px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)] opacity-0 transition group-hover:opacity-100">
                   Field note
                 </span>

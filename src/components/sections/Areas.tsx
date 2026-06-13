@@ -10,7 +10,38 @@ const areaVisuals: Record<string, string> = {
   Elenite: 'area-visual-elenite',
 }
 
-export function Areas() {
+const areaInsights: Record<string, { bestFor: string; avoidIf: string; tip: string }> = {
+  'sunny-beach': {
+    bestFor: 'first-time visitors, nightlife, easy access',
+    avoidIf: 'you want silence or a village pace',
+    tip: 'north, center and south behave like different trips, so check the exact hotel zone.',
+  },
+  nessebar: {
+    bestFor: 'history, old streets, photos',
+    avoidIf: 'you hate peak-season crowds',
+    tip: 'go earlier or near golden hour when the old town has more room to breathe.',
+  },
+  'sveti-vlas': {
+    bestFor: 'marina evenings, calmer stays, bay views',
+    avoidIf: 'you want the loudest party strip on foot',
+    tip: 'pair the beach with Marina Dinevi instead of treating it as only a hotel area.',
+  },
+  elenite: {
+    bestFor: 'quiet resort-edge beach time',
+    avoidIf: 'you need flexible late-night movement',
+    tip: 'plan return transport and treat it as a slower northern-coast day.',
+  },
+}
+
+type AreasProps = {
+  selectedArea: string
+  onSelectArea: (areaId: string) => void
+}
+
+export function Areas({ selectedArea, onSelectArea }: AreasProps) {
+  const selectedAreaItem = areas.find((area) => area.id === selectedArea) ?? areas[0]
+  const selectedInsight = areaInsights[selectedAreaItem.id]
+
   return (
     <MotionSection id="areas" className="section-shell overflow-hidden bg-[color:var(--foam)]/45">
       <div className="absolute -right-32 top-16 size-96 rounded-full bg-[color:var(--turquoise)]/18 blur-3xl" aria-hidden="true" />
@@ -28,11 +59,15 @@ export function Areas() {
         </motion.div>
         <motion.div className="mt-10 grid gap-5 md:grid-cols-2" variants={staggerContainer}>
           {areas.map((area, index) => (
-            <motion.article
+            <motion.button
               key={area.id}
+              type="button"
               variants={fadeUp}
               whileHover={{ y: -5 }}
-              className="group overflow-hidden rounded-[1.45rem] border border-white/70 bg-white/82 shadow-soft"
+              onClick={() => onSelectArea(area.id)}
+              className={`group overflow-hidden rounded-[1.45rem] border bg-white/82 text-left shadow-soft transition ${
+                selectedArea === area.id ? 'border-[color:var(--coral)]/55 ring-2 ring-[color:var(--coral)]/14' : 'border-white/70 hover:border-[color:var(--turquoise)]/45'
+              }`}
             >
               <div className={`relative h-40 overflow-hidden transition-transform duration-500 group-hover:scale-[1.025] ${areaVisuals[area.name]}`}>
                 <div className="absolute inset-0 grain opacity-30" aria-hidden="true" />
@@ -56,8 +91,36 @@ export function Areas() {
                   ))}
                 </div>
               </div>
-            </motion.article>
+            </motion.button>
           ))}
+        </motion.div>
+        <motion.div
+          key={selectedAreaItem.id}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass mt-5 overflow-hidden rounded-[1.25rem] border-[color:var(--turquoise)]/28 shadow-soft"
+        >
+          <div className="grid gap-4 p-5 md:grid-cols-[0.72fr_1fr] sm:p-6">
+            <div>
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">Area read</p>
+              <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">{selectedAreaItem.name}</h3>
+              <p className="mt-2 text-sm font-semibold text-[color:var(--sea-deep)]">{selectedAreaItem.mood}</p>
+            </div>
+            <div className="grid gap-2.5 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/70 bg-white/62 px-4 py-3">
+                <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">Best for</span>
+                <span className="mt-1.5 block text-sm font-bold leading-5 text-[color:var(--ink)]">{selectedInsight.bestFor}</span>
+              </div>
+              <div className="rounded-2xl border border-white/70 bg-white/62 px-4 py-3">
+                <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">Avoid if</span>
+                <span className="mt-1.5 block text-sm font-bold leading-5 text-[color:var(--ink)]">{selectedInsight.avoidIf}</span>
+              </div>
+              <div className="rounded-2xl border border-white/70 bg-white/62 px-4 py-3">
+                <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">Local tip</span>
+                <span className="mt-1.5 block text-sm font-bold leading-5 text-[color:var(--ink)]">{selectedInsight.tip}</span>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </MotionSection>

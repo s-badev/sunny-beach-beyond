@@ -18,7 +18,7 @@ export const places: Place[] = [
     area: 'Sunny Beach',
     category: 'Beaches',
     tags: ['central', 'promenade', 'loungers'],
-    description: 'The most direct resort beach zone, useful for first-timers and easy daytime logistics.',
+    description: 'The most direct resort beach zone, useful for first-time visitors and easy daytime logistics.',
     bestFor: 'A simple beach day with everything close by',
     position: { x: '35%', y: '46%' },
     googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Central+Sunny+Beach+Bulgaria',
