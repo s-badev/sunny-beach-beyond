@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7fbf8;
+  --background: #f6fbf8;
   --foreground: #1f2f35;
   --card: #ffffff;
   --muted: #e9f3ef;
@@ -46,8 +46,9 @@ body {
   min-height: 100svh;
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(32, 199, 189, 0.18), transparent 34rem),
-    linear-gradient(180deg, #f7fbf8 0%, #fffaf0 52%, #f7fbf8 100%);
+    radial-gradient(circle at top left, rgba(32, 199, 189, 0.2), transparent 32rem),
+    radial-gradient(circle at 86% 22%, rgba(240, 111, 97, 0.13), transparent 28rem),
+    linear-gradient(180deg, #f6fbf8 0%, #fff8e8 46%, #eef8f5 100%);
 }
 
 a {
@@ -68,14 +69,14 @@ select {
 }
 
 .glass {
-  border: 1px solid rgba(255, 255, 255, 0.62);
-  background: rgba(255, 255, 255, 0.58);
-  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.64);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.42));
+  backdrop-filter: blur(22px);
 }
 
 .glass-dark {
   border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05));
   backdrop-filter: blur(22px);
 }
 
@@ -94,10 +95,122 @@ select {
 .grain {
   pointer-events: none;
   background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.45) 0 1px, transparent 1px),
     linear-gradient(rgba(16, 36, 45, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(16, 36, 45, 0.026) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-size: 7px 7px, 28px 28px, 28px 28px;
   mix-blend-mode: multiply;
+}
+
+.section-shell {
+  position: relative;
+  padding: 6rem 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .section-shell {
+    padding-right: 2rem;
+    padding-left: 2rem;
+  }
+}
+
+.section-inner {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 80rem);
+  margin: 0 auto;
+}
+
+.hover-lift {
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-6px);
+}
+
+.coastline-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 33rem;
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.42), transparent 10rem),
+    linear-gradient(140deg, #042b48 0%, #07647d 36%, #20c7bd 68%, #f2d9aa 100%);
+}
+
+.coastline-card::before {
+  content: "";
+  position: absolute;
+  inset: 28% -18% -22% 35%;
+  border-radius: 56% 0 0 34%;
+  background:
+    radial-gradient(circle at 38% 24%, rgba(255, 255, 255, 0.35), transparent 9rem),
+    linear-gradient(145deg, #ffe7b8, #c89447);
+  box-shadow: -34px -28px 80px rgba(255, 255, 255, 0.25);
+  transform: rotate(-15deg);
+}
+
+.coastline-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, rgba(7, 26, 45, 0.68), transparent 48%),
+    radial-gradient(circle at 30% 74%, rgba(240, 111, 97, 0.28), transparent 14rem);
+}
+
+.map-canvas {
+  position: relative;
+  min-height: 38rem;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background:
+    radial-gradient(circle at 24% 18%, rgba(204, 255, 244, 0.6), transparent 11rem),
+    linear-gradient(135deg, #052944 0%, #087996 46%, #20c7bd 100%);
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.32);
+}
+
+.map-canvas::before {
+  content: "";
+  position: absolute;
+  inset: 8% 45% -16% -13%;
+  border-radius: 49% 42% 36% 28%;
+  background:
+    linear-gradient(145deg, rgba(242, 217, 170, 0.98), rgba(255, 248, 226, 0.84)),
+    radial-gradient(circle at 68% 30%, rgba(255, 255, 255, 0.55), transparent 8rem);
+  box-shadow: 22px 0 70px rgba(255, 255, 255, 0.2);
+  transform: rotate(7deg);
+}
+
+.map-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(120deg, transparent, #000 24%, #000 82%, transparent);
+}
+
+.archive-then {
+  background:
+    linear-gradient(135deg, rgba(16, 36, 45, 0.62), rgba(200, 148, 71, 0.18)),
+    radial-gradient(circle at 36% 32%, rgba(255, 248, 226, 0.88), transparent 9rem),
+    linear-gradient(145deg, #e8c78c, #896b49);
+  filter: sepia(0.18);
+}
+
+.archive-now {
+  background:
+    radial-gradient(circle at 72% 22%, rgba(255, 255, 255, 0.82), transparent 8rem),
+    linear-gradient(145deg, #033752 0%, #087996 44%, #20c7bd 68%, #f2d9aa 100%);
 }
 
 .text-balance {
