@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7fbf8;
+  --foreground: #1f2f35;
+  --card: #ffffff;
+  --muted: #e9f3ef;
+  --muted-foreground: #607178;
+  --border: #d7e4df;
+  --sea-deep: #063b5b;
+  --sea: #087996;
+  --turquoise: #20c7bd;
+  --foam: #dff6ed;
+  --sand: #f2d9aa;
+  --sand-deep: #c89447;
+  --coral: #f06f61;
+  --coral-soft: #ffd6cf;
+  --night: #071a2d;
+  --ink: #10242d;
+
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--foreground);
+  background: var(--background);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@theme {
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: Fraunces, ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100svh;
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(32, 199, 189, 0.18), transparent 34rem),
+    linear-gradient(180deg, #f7fbf8 0%, #fffaf0 52%, #f7fbf8 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  color: var(--ink);
+  background: var(--coral-soft);
+}
+
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(20px);
+}
+
+.glass-dark {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(22px);
+}
+
+.shadow-soft {
+  box-shadow: 0 24px 70px rgba(9, 58, 82, 0.13);
+}
+
+.shadow-glow {
+  box-shadow: 0 18px 55px rgba(32, 199, 189, 0.26);
+}
+
+.shadow-coral {
+  box-shadow: 0 18px 45px rgba(240, 111, 97, 0.38);
+}
+
+.grain {
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(16, 36, 45, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 36, 45, 0.026) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mix-blend-mode: multiply;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+.animate-float {
+  animation: float 7s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float 11s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
