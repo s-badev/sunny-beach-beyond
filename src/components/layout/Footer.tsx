@@ -4,18 +4,18 @@ export function Footer() {
     { href: '#areas', label: 'Areas' },
     { href: '#beaches', label: 'Beaches' },
     { href: '#nightlife', label: 'Nightlife' },
-    { href: '#local-notes', label: 'Notes' },
+    { href: '#notes', label: 'Notes' },
   ]
   const toolLinks = [
-    { href: '#map-preview', label: 'Interactive Map' },
-    { href: '#local-routes', label: 'Local Routes' },
-    { href: '#then-now', label: 'Archive' },
+    { href: '#map', label: 'Interactive Map' },
+    { href: '#routes', label: 'Local Routes' },
+    { href: '#archive', label: 'Archive' },
   ]
 
   return (
-    <footer className="relative overflow-hidden bg-[color:var(--night)] px-5 py-14 text-white sm:px-8">
+    <footer className="relative overflow-hidden bg-[color:var(--night)] px-5 py-12 text-white sm:px-8">
       <div className="grain absolute inset-0 opacity-15" aria-hidden="true" />
-      <div className="section-inner grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+      <div className="section-inner grid gap-8 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
         <div>
           <p className="font-serif text-3xl font-semibold">Sunny Beach &amp; Beyond</p>
           <p className="mt-4 max-w-md leading-7 text-white/66">

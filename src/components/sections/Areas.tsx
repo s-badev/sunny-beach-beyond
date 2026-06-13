@@ -1,6 +1,13 @@
 import { areas } from '../../data/areas'
 import { SectionLabel } from '../ui/SectionLabel'
 
+const areaVisuals: Record<string, string> = {
+  'Sunny Beach': 'area-visual-sunny',
+  Nessebar: 'area-visual-nessebar',
+  'Sveti Vlas': 'area-visual-sveti-vlas',
+  Elenite: 'area-visual-elenite',
+}
+
 export function Areas() {
   return (
     <section id="areas" className="section-shell overflow-hidden bg-[color:var(--foam)]/45">
@@ -19,20 +26,19 @@ export function Areas() {
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2">
           {areas.map((area, index) => (
-            <article key={area.id} className="hover-lift overflow-hidden rounded-[1.5rem] border border-white/70 bg-white/78 shadow-soft">
-              <div className="relative h-40 overflow-hidden bg-[linear-gradient(135deg,var(--sea-deep),var(--turquoise)_58%,var(--sand))]">
+            <article key={area.id} className="hover-lift overflow-hidden rounded-[1.45rem] border border-white/70 bg-white/82 shadow-soft">
+              <div className={`relative h-40 overflow-hidden ${areaVisuals[area.name]}`}>
                 <div className="absolute inset-0 grain opacity-30" aria-hidden="true" />
-                <div className="absolute -bottom-14 right-8 h-32 w-56 rounded-[50%] bg-[color:var(--sand)]/90" />
                 <div className="absolute left-5 top-5 rounded-full bg-white/18 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-white backdrop-blur">
                   Area {String(index + 1).padStart(2, '0')}
                 </div>
               </div>
-              <div className="p-6">
+              <div className="p-5 sm:p-6">
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-[color:var(--coral)]">{area.mood}</p>
                 <h3 className="mt-3 font-serif text-3xl text-[color:var(--ink)]">{area.name}</h3>
                 <p className="mt-2 font-semibold text-[color:var(--sea-deep)]">{area.subtitle}</p>
-                <p className="mt-4 leading-7 text-[color:var(--muted-foreground)]">{area.description}</p>
-                <p className="mt-5 rounded-2xl bg-[color:var(--foam)] px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)]">
+                <p className="mt-3.5 leading-7 text-[color:var(--muted-foreground)]">{area.description}</p>
+                <p className="mt-4 rounded-2xl border border-[color:var(--border)]/70 bg-[color:var(--foam)]/72 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)]">
                   {area.practicalNote}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
