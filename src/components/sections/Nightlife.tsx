@@ -72,6 +72,7 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
           <motion.div className="grid gap-4 sm:grid-cols-2" variants={staggerContainer}>
             {nightlife.map((item, index) => {
               const Icon = nightlifeIcons[index] ?? Music
+              const isSelected = selectedNightlife === item.id
 
               return (
                 <motion.button
@@ -80,12 +81,13 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
                   variants={fadeUp}
                   whileHover={{ y: -5, scale: 1.01 }}
                   onClick={() => onSelectNightlife(item.id)}
-                  className={`glass-dark group rounded-[1.35rem] p-5 text-left shadow-soft transition hover:border-[color:var(--coral)]/45 hover:shadow-glow sm:p-6 ${
-                    selectedNightlife === item.id ? 'border-[color:var(--coral)]/60 ring-2 ring-[color:var(--coral)]/18' : ''
+                  data-active={isSelected}
+                  className={`interactive-card active-rail glass-dark group rounded-[1.35rem] p-5 pl-6 text-left shadow-soft hover:border-[color:var(--coral)]/45 hover:shadow-glow sm:p-6 ${
+                    isSelected ? 'border-[color:var(--coral)]/60 bg-white/12 ring-2 ring-[color:var(--coral)]/18' : ''
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="grid size-10 place-items-center rounded-full bg-[color:var(--coral)]/16 text-[color:var(--coral-soft)] transition group-hover:-translate-y-1 group-hover:bg-[color:var(--coral)]/28">
+                    <span className="grid size-10 place-items-center rounded-full bg-[color:var(--coral)]/16 text-[color:var(--coral-soft)] transition group-hover:-translate-y-1 group-hover:bg-[color:var(--coral)]/28 group-data-[active=true]:bg-[color:var(--coral)]/34">
                       <Icon size={18} aria-hidden="true" />
                     </span>
                     <span className="flex items-center gap-1.5 rounded-full bg-white/9 px-3 py-1 font-mono text-[0.66rem] uppercase tracking-[0.13em] text-white/72">
@@ -97,7 +99,7 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
                   <p className="mt-2 leading-7 text-white/72">{item.description}</p>
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {item.tags.map((tag) => (
-                      <span key={tag} className="rounded-full border border-white/10 bg-white/8 px-2.5 py-1 text-[0.72rem] font-semibold text-white/76">
+                      <span key={tag} className="interactive-control rounded-full border border-white/10 bg-white/8 px-2.5 py-1 text-[0.72rem] font-semibold text-white/76 group-hover:bg-white/12">
                         {tag}
                       </span>
                     ))}
@@ -111,14 +113,14 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
           key={selectedNightlife}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-dark mt-6 overflow-hidden rounded-[1.35rem] border-[color:var(--coral)]/24 shadow-glow"
+          className="panel-sheen glass-dark mt-6 overflow-hidden rounded-[1.35rem] border-[color:var(--coral)]/24 shadow-glow"
         >
           <div className="grid gap-4 border-b border-white/10 bg-white/6 p-5 md:grid-cols-[0.72fr_1fr] sm:p-6">
             <div>
               <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral-soft)]">Night plan</p>
               <h3 className="mt-2 font-serif text-3xl leading-tight text-white">{selectedItem.title}</h3>
             </div>
-            <p className="rounded-2xl border border-white/10 bg-white/7 px-4 py-3 text-sm font-medium leading-6 text-white/72">
+            <p className="rounded-2xl border border-white/10 bg-white/9 px-4 py-3 text-sm font-medium leading-6 text-white/76">
               {selectedItem.description}
             </p>
           </div>

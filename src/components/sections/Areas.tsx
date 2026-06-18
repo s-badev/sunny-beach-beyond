@@ -63,13 +63,13 @@ export function Areas({ selectedArea, onSelectArea }: AreasProps) {
               key={area.id}
               type="button"
               variants={fadeUp}
-              whileHover={{ y: -5 }}
               onClick={() => onSelectArea(area.id)}
-              className={`group overflow-hidden rounded-[1.45rem] border bg-white/82 text-left shadow-soft transition ${
-                selectedArea === area.id ? 'border-[color:var(--coral)]/55 ring-2 ring-[color:var(--coral)]/14' : 'border-white/70 hover:border-[color:var(--turquoise)]/45'
+              data-active={selectedArea === area.id}
+              className={`interactive-card active-rail group overflow-hidden rounded-[1.45rem] border bg-white/82 text-left shadow-soft ${
+                selectedArea === area.id ? 'border-[color:var(--coral)]/55 bg-white/92 ring-2 ring-[color:var(--coral)]/14' : 'border-white/70 hover:border-[color:var(--turquoise)]/45'
               }`}
             >
-              <div className={`relative h-40 overflow-hidden transition-transform duration-500 group-hover:scale-[1.025] ${areaVisuals[area.name]}`}>
+              <div className={`relative h-40 overflow-hidden transition-transform duration-700 group-hover:scale-[1.035] group-data-[active=true]:scale-[1.025] ${areaVisuals[area.name]}`}>
                 <div className="absolute inset-0 grain opacity-30" aria-hidden="true" />
                 <div className="absolute left-5 top-5 rounded-full bg-white/18 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-white backdrop-blur">
                   Area {String(index + 1).padStart(2, '0')}
@@ -80,12 +80,15 @@ export function Areas({ selectedArea, onSelectArea }: AreasProps) {
                 <h3 className="mt-3 font-serif text-3xl text-[color:var(--ink)]">{area.name}</h3>
                 <p className="mt-2 font-semibold text-[color:var(--sea-deep)]">{area.subtitle}</p>
                 <p className="mt-3.5 leading-7 text-[color:var(--muted-foreground)]">{area.description}</p>
-                <p className="mt-4 rounded-2xl border border-[color:var(--border)]/70 bg-[color:var(--foam)]/72 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)] transition group-hover:border-[color:var(--turquoise)]/45 group-hover:bg-white/82">
-                  {area.practicalNote}
-                </p>
+                <div className="soft-reveal mt-4">
+                  <p className="rounded-2xl border border-[color:var(--border)]/70 bg-[color:var(--foam)]/72 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)] transition group-hover:border-[color:var(--turquoise)]/45 group-hover:bg-white/82">
+                    <span className="block font-mono text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-[color:var(--coral)]">Practical note</span>
+                    <span className="mt-1 block">{area.practicalNote}</span>
+                  </p>
+                </div>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {area.tags.map((tag) => (
-                    <span key={tag} className="translate-y-0 rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--sea-deep)] opacity-80 transition group-hover:-translate-y-0.5 group-hover:opacity-100">
+                    <span key={tag} className="interactive-control translate-y-0 rounded-full border border-[color:var(--border)] bg-white/36 px-3 py-1 text-xs font-semibold text-[color:var(--sea-deep)] opacity-80 group-hover:opacity-100">
                       {tag}
                     </span>
                   ))}

@@ -22,13 +22,13 @@ export function Nav() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visibleEntry = entries.find((entry) => entry.isIntersecting)
+        const visibleEntry = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
 
         if (visibleEntry?.target.id) {
           setActiveSection(visibleEntry.target.id)
         }
       },
-      { rootMargin: '-35% 0px -52% 0px', threshold: 0.01 },
+      { rootMargin: '-32% 0px -50% 0px', threshold: [0.01, 0.18, 0.36, 0.6] },
     )
 
     sections.forEach((section) => observer.observe(section))
@@ -39,8 +39,8 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-30 bg-[linear-gradient(180deg,rgba(246,251,248,0.92),rgba(246,251,248,0.72)_68%,rgba(246,251,248,0))] px-3 pb-3 pt-2 backdrop-blur-sm sm:px-5">
       <nav className="glass mx-auto flex max-w-7xl items-center justify-between rounded-full px-3 py-1.5 shadow-soft ring-1 ring-white/35">
-        <a href="#hero" className="flex min-w-0 items-center gap-2.5 text-[color:var(--ink)]">
-          <span className="relative grid size-9 shrink-0 place-items-center rounded-full bg-[color:var(--sea-deep)] text-white shadow-glow">
+        <a href="#hero" className="interactive-control group flex min-w-0 items-center gap-2.5 rounded-full pr-2 text-[color:var(--ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--turquoise)]">
+          <span className="relative grid size-9 shrink-0 place-items-center rounded-full bg-[color:var(--sea-deep)] text-white shadow-glow transition group-hover:bg-[color:var(--sea)]">
             <Compass size={16} strokeWidth={2.2} aria-hidden="true" />
             <Waves className="absolute -bottom-0.5 -right-0.5 rounded-full bg-[color:var(--turquoise)] p-0.5 text-[color:var(--sea-deep)]" size={14} aria-hidden="true" />
           </span>
@@ -52,10 +52,10 @@ export function Nav() {
             <a
               key={item.href}
               href={item.href}
-              className={`rounded-full px-2.5 py-1.5 transition ${
+              className={`interactive-control rounded-full px-2.5 py-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--turquoise)] ${
                 activeSection === item.href.slice(1)
                   ? 'bg-[color:var(--sea-deep)] text-white shadow-glow'
-                  : 'hover:bg-white/60 hover:text-[color:var(--sea-deep)]'
+                  : 'hover:bg-white/70 hover:text-[color:var(--sea-deep)]'
               }`}
             >
               {item.label}

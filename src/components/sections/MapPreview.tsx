@@ -101,7 +101,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                     type="button"
                     whileTap={{ scale: 0.96 }}
                     onClick={() => setSelectedArea(area)}
-                    className={`rounded-full px-3 py-1.5 text-[0.72rem] font-bold transition ${
+                    className={`interactive-control rounded-full px-3 py-1.5 text-[0.72rem] font-bold ${
                       selectedArea === area ? 'bg-[color:var(--sand)] text-[color:var(--ink)]' : 'bg-white/10 text-white/68 hover:bg-white/16'
                     }`}
                   >
@@ -120,7 +120,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                     type="button"
                     whileTap={{ scale: 0.96 }}
                     onClick={() => setSelectedCategory(category)}
-                    className={`rounded-full px-3 py-1.5 text-[0.72rem] font-bold transition ${
+                    className={`interactive-control rounded-full px-3 py-1.5 text-[0.72rem] font-bold ${
                       selectedCategory === category ? 'bg-[color:var(--turquoise)] text-[color:var(--night)]' : 'bg-white/10 text-white/68 hover:bg-white/16'
                     }`}
                   >
@@ -139,7 +139,8 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                     whileHover={{ x: 3 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={() => onSelectMapPlace(place.id)}
-                    className={`rounded-2xl border p-3.5 text-left transition ${
+                    data-active={activePlace?.id === place.id}
+                    className={`interactive-card rounded-2xl border p-3.5 text-left ${
                       activePlace?.id === place.id ? 'border-[color:var(--turquoise)] bg-white/15 shadow-glow' : 'border-white/10 bg-white/8 hover:bg-white/12'
                     }`}
                   >
@@ -271,12 +272,12 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                         href={activePlace.googleMapsUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-full bg-[color:var(--sand)] px-3.5 py-2 text-sm font-bold text-[color:var(--ink)] transition hover:-translate-y-0.5"
+                        className="interactive-control inline-flex items-center gap-2 rounded-full bg-[color:var(--sand)] px-3.5 py-2 text-sm font-bold text-[color:var(--ink)]"
                       >
                         Open in Google Maps
                         <ExternalLink size={15} aria-hidden="true" />
                       </a>
-                      <button type="button" onClick={addActivePlaceToRoute} className="inline-flex items-center gap-2 rounded-full bg-white/12 px-3.5 py-2 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-white/18">
+                      <button type="button" onClick={addActivePlaceToRoute} className="interactive-control inline-flex items-center gap-2 rounded-full bg-white/12 px-3.5 py-2 text-sm font-bold text-white hover:bg-white/18">
                         <Plus size={15} aria-hidden="true" />
                         {addedPlaceId === activePlace.id ? 'Added to route' : 'Add to Route'}
                       </button>

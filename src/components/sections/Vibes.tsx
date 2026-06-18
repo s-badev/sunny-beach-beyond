@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Camera, Coffee, Compass, Landmark, Music, Ship, Sunset, Umbrella, Users, type LucideIcon } from 'lucide-react'
+import { ArrowRight, Camera, Coffee, Compass, Landmark, Music, Ship, Sparkles, Sunset, Umbrella, Users, type LucideIcon } from 'lucide-react'
 import { vibes } from '../../data/vibes'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
 import { SectionLabel } from '../ui/SectionLabel'
@@ -101,15 +101,16 @@ export function Vibes({ selectedVibe, onSelectVibe }: VibesProps) {
                 whileHover={{ y: -5, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
                 onClick={() => onSelectVibe(vibe.id)}
-                className={`glass group rounded-[1.35rem] p-5 text-left shadow-soft outline-none transition ${
-                  isSelected ? 'border-[color:var(--coral)]/70 ring-2 ring-[color:var(--coral)]/20' : 'hover:border-[color:var(--turquoise)]/45'
+                data-active={isSelected}
+                className={`interactive-card active-rail glass group rounded-[1.35rem] p-5 pl-6 text-left shadow-soft ${
+                  isSelected ? 'border-[color:var(--coral)]/70 bg-white/78 ring-2 ring-[color:var(--coral)]/20' : 'hover:border-[color:var(--turquoise)]/45'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <span className={`font-mono text-xs font-semibold uppercase tracking-[0.2em] ${isSelected ? 'text-[color:var(--sea-deep)]' : 'text-[color:var(--coral)]'}`}>
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  <span className={`grid size-11 place-items-center rounded-full text-white shadow-glow transition group-hover:scale-105 ${isSelected ? 'bg-[color:var(--coral)]' : 'bg-[color:var(--sea-deep)]'}`}>
+                  <span className={`grid size-11 place-items-center rounded-full text-white shadow-glow transition group-hover:-translate-y-0.5 group-hover:scale-105 ${isSelected ? 'bg-[color:var(--coral)]' : 'bg-[color:var(--sea-deep)]'}`}>
                     <Icon size={20} aria-hidden="true" />
                   </span>
                 </div>
@@ -117,10 +118,14 @@ export function Vibes({ selectedVibe, onSelectVibe }: VibesProps) {
                 <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">{vibe.description}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {vibe.tags.map((tag) => (
-                    <span key={tag} className="rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-[color:var(--sea-deep)]">
+                    <span key={tag} className="interactive-control rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-[color:var(--sea-deep)] group-hover:bg-white/90">
                       {tag}
                     </span>
                   ))}
+                </div>
+                <div className="mt-5 flex items-center gap-2 text-sm font-bold text-[color:var(--coral)] opacity-0 transition group-hover:opacity-100 group-data-[active=true]:opacity-100">
+                  <span>{isSelected ? 'Active mood' : 'Preview plan'}</span>
+                  <ArrowRight size={15} aria-hidden="true" />
                 </div>
               </motion.button>
             )
@@ -131,11 +136,14 @@ export function Vibes({ selectedVibe, onSelectVibe }: VibesProps) {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="glass mt-6 overflow-hidden rounded-[1.35rem] border-[color:var(--coral)]/30 shadow-soft"
+          className="panel-sheen glass mt-6 overflow-hidden rounded-[1.35rem] border-[color:var(--coral)]/35 shadow-soft"
         >
-          <div className="grid gap-5 p-5 md:grid-cols-[0.8fr_1.2fr] sm:p-6">
+          <div className="grid gap-5 p-5 md:grid-cols-[0.78fr_1.22fr] sm:p-6">
             <div>
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">Recommended coast plan</p>
+              <p className="inline-flex items-center gap-2 rounded-full bg-[color:var(--coral)]/10 px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--coral)]">
+                <Sparkles size={14} aria-hidden="true" />
+                Recommended coast plan
+              </p>
               <h3 className="mt-3 font-serif text-3xl text-[color:var(--ink)]">{selectedVibeItem.title}</h3>
               <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">A compact starting point for turning this mood into a route.</p>
             </div>

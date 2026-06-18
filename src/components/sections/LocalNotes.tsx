@@ -22,7 +22,7 @@ export function LocalNotes() {
               key={note.id}
               variants={fadeUp}
               whileHover={{ y: -5 }}
-              className="group relative overflow-hidden rounded-[1.35rem] border border-white/72 bg-[linear-gradient(145deg,rgba(242,217,170,0.78),rgba(255,255,255,0.58))] p-5 shadow-soft sm:p-6"
+              className="interactive-card group relative overflow-hidden rounded-[1.35rem] border border-white/72 bg-[linear-gradient(145deg,rgba(242,217,170,0.78),rgba(255,255,255,0.58))] p-5 shadow-soft sm:p-6"
             >
               <div className="absolute inset-y-5 left-0 w-1 rounded-r-full bg-[color:var(--coral)]/90 transition group-hover:bg-[color:var(--coral)]" aria-hidden="true" />
               <div className="flex items-center justify-between gap-3">
