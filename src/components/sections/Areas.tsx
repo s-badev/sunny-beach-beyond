@@ -80,10 +80,21 @@ export function Areas({ selectedArea, onSelectArea }: AreasProps) {
                 <h3 className="mt-3 font-serif text-3xl text-[color:var(--ink)]">{area.name}</h3>
                 <p className="mt-2 font-semibold text-[color:var(--sea-deep)]">{area.subtitle}</p>
                 <p className="mt-3.5 leading-7 text-[color:var(--muted-foreground)]">{area.description}</p>
+                <div className="mt-4 grid gap-2 text-sm leading-5 sm:grid-cols-2">
+                  <p className="rounded-2xl border border-white/70 bg-white/56 px-3 py-2 text-[color:var(--ink)]">
+                    <span className="block font-mono text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sea-deep)]/58">Best for</span>
+                    <span className="mt-1 block font-semibold">{areaInsights[area.id].bestFor}</span>
+                  </p>
+                  <p className="rounded-2xl border border-white/70 bg-white/42 px-3 py-2 text-[color:var(--muted-foreground)]">
+                    <span className="block font-mono text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--coral)]/72">Avoid if</span>
+                    <span className="mt-1 block font-medium">{areaInsights[area.id].avoidIf}</span>
+                  </p>
+                </div>
                 <div className="soft-reveal mt-4">
                   <p className="rounded-2xl border border-[color:var(--border)]/70 bg-[color:var(--foam)]/72 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)] transition group-hover:border-[color:var(--turquoise)]/45 group-hover:bg-white/82">
-                    <span className="block font-mono text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-[color:var(--coral)]">Practical note</span>
-                    <span className="mt-1 block">{area.practicalNote}</span>
+                    <span className="block font-mono text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-[color:var(--coral)]">Local tip</span>
+                    <span className="mt-1 block">{areaInsights[area.id].tip}</span>
+                    <span className="mt-2 block text-[color:var(--muted-foreground)]">{area.practicalNote}</span>
                   </p>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-2">

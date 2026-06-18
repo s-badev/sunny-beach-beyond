@@ -11,10 +11,20 @@ const archiveChanges: Record<string, string> = {
   'today-sunny-beach-and-beyond': 'The guide now has to read several coastlines at once, not one simple resort.',
 }
 
+const archiveLensNotes: Record<'then' | 'now', string> = {
+  then: 'Then lens: read the coast as a planned holiday resort, where broad sand, state hotels, and postcards shaped the story.',
+  now: 'Now lens: read the coast as a layered summer map, where nightlife, marinas, old towns, and quieter edges compete for attention.',
+}
+
 export function ThenNow() {
   const [archiveMode, setArchiveMode] = useState<'then' | 'now'>('then')
   const [selectedArchiveId, setSelectedArchiveId] = useState(archiveEntries[0].id)
   const selectedArchive = archiveEntries.find((entry) => entry.id === selectedArchiveId) ?? archiveEntries[0]
+
+  function chooseArchiveMode(mode: 'then' | 'now') {
+    setArchiveMode(mode)
+    setSelectedArchiveId(mode === 'then' ? archiveEntries[0].id : archiveEntries[archiveEntries.length - 1].id)
+  }
 
   return (
     <MotionSection id="archive" className="section-shell overflow-hidden bg-[linear-gradient(180deg,rgba(242,217,170,0.46),rgba(7,26,45,0.08))]">
@@ -35,7 +45,7 @@ export function ThenNow() {
             <button
               key={mode}
               type="button"
-              onClick={() => setArchiveMode(mode)}
+              onClick={() => chooseArchiveMode(mode)}
               className={`interactive-control rounded-full px-4 py-2 text-sm font-bold ${
                 archiveMode === mode ? 'bg-[color:var(--sea-deep)] text-white shadow-glow' : 'text-[color:var(--muted-foreground)] hover:bg-white/70 hover:text-[color:var(--ink)]'
               }`}
@@ -47,7 +57,7 @@ export function ThenNow() {
         <motion.div className="mt-6 grid gap-5 lg:grid-cols-2" variants={staggerContainer}>
           <motion.button
             type="button"
-            onClick={() => setArchiveMode('then')}
+            onClick={() => chooseArchiveMode('then')}
             variants={fadeUp}
             whileHover={{ scale: 1.01 }}
             data-active={archiveMode === 'then'}
@@ -69,7 +79,7 @@ export function ThenNow() {
           </motion.button>
           <motion.button
             type="button"
-            onClick={() => setArchiveMode('now')}
+            onClick={() => chooseArchiveMode('now')}
             variants={fadeUp}
             whileHover={{ scale: 1.01 }}
             data-active={archiveMode === 'now'}
@@ -100,17 +110,22 @@ export function ThenNow() {
               </div>
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={selectedArchive.id}
+                  key={`${archiveMode}-${selectedArchive.id}`}
                   initial={{ opacity: 0, x: 14 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
                   transition={{ duration: 0.24 }}
                   className="pl-5"
                 >
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">{selectedArchive.year}</p>
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">
+                    {archiveMode === 'then' ? 'Then lens' : 'Now lens'} / {selectedArchive.year}
+                  </p>
                   <h3 className="mt-3 max-w-xl font-serif text-3xl leading-tight text-[color:var(--ink)]">{selectedArchive.title}</h3>
                   <p className="mt-2 max-w-xl text-base font-semibold leading-7 text-[color:var(--sea-deep)]">{selectedArchive.subtitle}</p>
                   <p className="mt-3 max-w-2xl leading-7 text-[color:var(--muted-foreground)]">{selectedArchive.description}</p>
+                  <div className="mt-4 rounded-2xl border border-[color:var(--sea-deep)]/10 bg-[color:var(--foam)]/50 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)]">
+                    {archiveLensNotes[archiveMode]}
+                  </div>
                   <div className="mt-5 rounded-2xl border border-[color:var(--sand-deep)]/20 bg-white/54 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)]">
                     <span className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/58">What changed</span>
                     <span className="mt-1.5 block">{archiveChanges[selectedArchive.id]}</span>

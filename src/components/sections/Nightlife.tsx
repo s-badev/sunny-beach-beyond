@@ -6,42 +6,48 @@ import { SectionLabel } from '../ui/SectionLabel'
 
 const nightlifeIcons = [Waves, Music, Martini, Music, Utensils, Martini]
 
-const nightPlans: Record<string, { startTime: string; bestArea: string; warning: string; afterHours: string }> = {
+const nightPlans: Record<string, { startTime: string; bestArea: string; warning: string; afterHours: string; flow: string }> = {
   'beach-bars': {
     startTime: 'Start around sunset.',
     bestArea: 'South and central Sunny Beach.',
     warning: 'Check where the quiet route back to your hotel is before drinks.',
     afterHours: 'Late snacks are easiest around the main pedestrian areas.',
+    flow: 'Sunset drink -> beach bar cluster -> direct walk or taxi back.',
   },
   'night-clubs': {
     startTime: 'Start after midnight.',
     bestArea: 'Central and south Sunny Beach.',
     warning: 'Plan return transport before the night gets loud.',
     afterHours: 'Late food is usually easier near the main pedestrian routes.',
+    flow: 'Dinner first -> one main club zone -> late food near the route home.',
   },
   'pool-parties': {
     startTime: 'Start in the afternoon.',
     bestArea: 'Sunny Beach hotel and party zones.',
     warning: 'Sun, drinks and transport make timing matter more than expected.',
     afterHours: 'Keep dinner simple nearby before moving into the night.',
+    flow: 'Afternoon event -> simple dinner -> decide whether the night continues.',
   },
   'live-music': {
     startTime: 'Start after dinner.',
     bestArea: 'Central Sunny Beach, Nessebar or Sveti Vlas terraces.',
     warning: 'Venue mood changes quickly by night and season.',
     afterHours: 'Walkable food stops are easier than late transfers.',
+    flow: 'Dinner -> live terrace -> short walk instead of a second transfer.',
   },
   'late-night-food': {
     startTime: 'Useful after midnight.',
     bestArea: 'Main resort center and busy pedestrian areas.',
     warning: 'Do not assume quieter edges have many late options.',
     afterHours: 'Keep it practical: quick food, water, and a direct route back.',
+    flow: 'Exit the venue -> food and water -> simple route back.',
   },
   'chill-cocktail-bars': {
     startTime: 'Start at golden hour.',
     bestArea: 'Sveti Vlas marina or quieter hotel zones.',
     warning: 'Check return timing if staying outside Sveti Vlas.',
     afterHours: 'A slow walk beats trying to turn it into a club route.',
+    flow: 'Viewpoint or marina walk -> cocktails -> quiet return.',
   },
 }
 
@@ -122,6 +128,7 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
             </div>
             <p className="rounded-2xl border border-white/10 bg-white/9 px-4 py-3 text-sm font-medium leading-6 text-white/76">
               {selectedItem.description}
+              <span className="mt-2 block border-t border-white/10 pt-2 font-semibold text-white">{selectedPlan.flow}</span>
             </p>
           </div>
           <div className="grid gap-3 p-5 text-sm leading-6 text-white/72 sm:grid-cols-2 lg:grid-cols-4 sm:p-6">

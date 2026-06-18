@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { ExternalLink, MapPin, Plus, Search, X } from 'lucide-react'
+import { Check, ExternalLink, GitBranch, MapPin, Plus, RotateCcw, Search, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { places } from '../../data/places'
 import type { AreaName, Place, PlaceCategory } from '../../types'
@@ -55,6 +55,8 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
   }, [filteredPlaces, onSelectMapPlace, selectedMapPlace])
 
   const activePlace = filteredPlaces.find((place) => place.id === selectedMapPlace) ?? filteredPlaces[0]
+  const activePlaceIsAdded = activePlace ? selectedStops.some((stop) => stop.id === activePlace.id) : false
+  const routeIsFull = selectedStops.length >= 4
   const routeMood = selectedStops.some((stop) => stop.category === 'Clubs' || stop.category === 'Bars')
     ? 'night route'
     : selectedStops.some((stop) => stop.area === 'Nessebar')
@@ -65,10 +67,20 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
 
   function addActivePlaceToRoute() {
     if (!activePlace) return
+    if (activePlaceIsAdded) {
+      setAddedPlaceId(activePlace.id)
+      window.setTimeout(() => setAddedPlaceId(null), 1400)
+      return
+    }
 
     onAddStop(activePlace)
     setAddedPlaceId(activePlace.id)
     window.setTimeout(() => setAddedPlaceId(null), 1400)
+  }
+
+  function resetFilters() {
+    setSelectedArea('All')
+    setSelectedCategory('All')
   }
 
   return (
@@ -90,6 +102,11 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
             <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/9 px-4 py-2.5 text-sm text-white/72">
               <Search size={16} aria-hidden="true" />
               <span>{filteredPlaces.length} matching places</span>
+              {(selectedArea !== 'All' || selectedCategory !== 'All') && (
+                <button type="button" onClick={resetFilters} className="interactive-control ml-auto rounded-full bg-white/10 px-2 py-1 text-[0.68rem] font-bold text-white/70 hover:bg-white/16 hover:text-white">
+                  Reset
+                </button>
+              )}
             </div>
 
             <div className="mt-5">
@@ -151,15 +168,23 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                   </motion.button>
                 ))
               ) : (
-                <div className="rounded-2xl border border-white/10 bg-white/7 p-4 text-sm leading-6 text-white/56">
-                  No places match these filters. Change the area or category to bring coast stops back.
+                <div className="rounded-2xl border border-white/10 bg-white/7 p-4 text-sm leading-6 text-white/62">
+                  <p className="font-semibold text-white">No places match this filter pair.</p>
+                  <p className="mt-1">Reset filters or loosen one side to bring coast stops back.</p>
+                  <button type="button" onClick={resetFilters} className="interactive-control mt-3 inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/18">
+                    <RotateCcw size={13} aria-hidden="true" />
+                    Show all places
+                  </button>
                 </div>
               )}
             </div>
             <div className="mt-5 rounded-2xl border border-white/10 bg-white/8 p-3.5">
               <div className="flex items-center justify-between gap-3">
-                <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/52">Selected stops</p>
-                <span className="rounded-full bg-white/10 px-2 py-0.5 text-[0.68rem] font-bold text-white/62">{selectedStops.length}/4</span>
+                <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/52">
+                  <GitBranch size={13} aria-hidden="true" />
+                  Route sketch
+                </p>
+                <span className={`rounded-full px-2 py-0.5 text-[0.68rem] font-bold ${routeIsFull ? 'bg-[color:var(--coral)]/22 text-[color:var(--coral-soft)]' : 'bg-white/10 text-white/62'}`}>{selectedStops.length}/4</span>
               </div>
               <AnimatePresence initial={false}>
                 {selectedStops.length > 0 ? (
@@ -170,10 +195,13 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                         initial={{ opacity: 0, x: -8 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 8 }}
-                        className="flex items-center justify-between gap-2 rounded-full bg-white/9 px-3 py-1.5 text-xs font-semibold text-white/78"
+                        className="flex items-center justify-between gap-2 rounded-2xl border border-white/10 bg-white/9 px-3 py-2 text-xs font-semibold text-white/78"
                       >
-                        <span>{index + 1}. {stop.name}</span>
-                        <button type="button" onClick={() => onRemoveStop(stop.id)} className="rounded-full p-0.5 text-white/54 transition hover:bg-white/12 hover:text-white" aria-label={`Remove ${stop.name}`}>
+                        <span className="flex min-w-0 items-center gap-2">
+                          <span className="grid size-5 shrink-0 place-items-center rounded-full bg-white/12 font-mono text-[0.62rem] text-white/70">{index + 1}</span>
+                          <span className="truncate">{stop.name}</span>
+                        </span>
+                        <button type="button" onClick={() => onRemoveStop(stop.id)} className="interactive-control rounded-full p-1 text-white/54 hover:bg-white/12 hover:text-white" aria-label={`Remove ${stop.name}`}>
                           <X size={12} aria-hidden="true" />
                         </button>
                       </motion.div>
@@ -181,12 +209,12 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                     <div className="rounded-2xl border border-white/10 bg-white/7 px-3 py-2 text-xs leading-5 text-white/62">
                       <span className="font-bold text-white/82">{selectedStops.length} stops / {routeMood}</span>
                       <br />
-                      Keep this as a sketch route, then open each place in Google Maps when you need exact directions.
+                      {routeIsFull ? 'Adding another place replaces the oldest stop, keeping the route lightweight.' : 'Add up to four stops, then open each place in Google Maps for exact directions.'}
                     </div>
                   </motion.div>
                 ) : (
                   <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-3 text-xs leading-5 text-white/48">
-                    Add map places to sketch a lightweight route.
+                    Choose a place on the map, then add it here to build a lightweight coastal route.
                   </motion.p>
                 )}
               </AnimatePresence>
@@ -277,11 +305,25 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                         Open in Google Maps
                         <ExternalLink size={15} aria-hidden="true" />
                       </a>
-                      <button type="button" onClick={addActivePlaceToRoute} className="interactive-control inline-flex items-center gap-2 rounded-full bg-white/12 px-3.5 py-2 text-sm font-bold text-white hover:bg-white/18">
-                        <Plus size={15} aria-hidden="true" />
-                        {addedPlaceId === activePlace.id ? 'Added to route' : 'Add to Route'}
+                      <button
+                        type="button"
+                        onClick={addActivePlaceToRoute}
+                        aria-pressed={activePlaceIsAdded}
+                        className={`interactive-control inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-bold text-white ${
+                          activePlaceIsAdded ? 'bg-[color:var(--turquoise)]/22 text-[color:var(--foam)]' : 'bg-white/12 hover:bg-white/18'
+                        }`}
+                      >
+                        {activePlaceIsAdded || addedPlaceId === activePlace.id ? <Check size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}
+                        {activePlaceIsAdded ? 'Already in route' : routeIsFull ? 'Replace oldest stop' : addedPlaceId === activePlace.id ? 'Added to route' : 'Add to Route'}
                       </button>
                     </div>
+                    <p className="mt-3 rounded-2xl border border-white/10 bg-white/7 px-3 py-2 text-xs leading-5 text-white/58">
+                      {activePlaceIsAdded
+                        ? 'This stop is already part of the route sketch.'
+                        : routeIsFull
+                          ? 'Route sketch is full; adding this place keeps the latest four stops.'
+                          : 'Add this stop when it belongs in the same day, not just because it looks close on the map.'}
+                    </p>
                   </>
                 ) : (
                   <>

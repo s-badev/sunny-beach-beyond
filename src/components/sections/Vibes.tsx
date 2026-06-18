@@ -15,54 +15,70 @@ const iconMap: Record<string, LucideIcon> = {
   Users,
 }
 
-const vibeRecommendations: Record<string, { area: string; start: string; route: string; note: string }> = {
+const vibeRecommendations: Record<string, { area: string; start: string; beach: string; route: string; note: string; guideShift: string }> = {
   'beach-day': {
     area: 'North Sunny Beach',
     start: 'Central Sunny Beach',
+    beach: 'North Sunny Beach',
     route: 'Family Beach Day',
     note: 'Start earlier, pick one beach zone, and save the promenade for late afternoon.',
+    guideShift: 'The guide now prioritizes easy beach access, shade, and low-friction movement.',
   },
   'party-night': {
     area: 'Sunny Beach',
     start: 'Cacao Beach Area',
+    beach: 'South Sunny Beach',
     route: 'Party Night Route',
     note: 'Plan the return before the night starts; short summer distances can still feel long at 3am.',
+    guideShift: 'The guide now weights late transport, food stops, and south/central nightlife clusters.',
   },
   'family-trip': {
     area: 'North Sunny Beach',
     start: 'Central Sunny Beach',
+    beach: 'North Sunny Beach',
     route: 'Family Beach Day',
     note: 'Keep food, shade, and walking distance simple instead of crossing the resort repeatedly.',
+    guideShift: 'The guide now favors compact days, calmer zones, and fewer transfers.',
   },
   'history-walk': {
     area: 'Nessebar',
     start: 'Old Nessebar',
+    beach: 'Nessebar Beach',
     route: 'History Walk in Nessebar',
     note: 'Go morning or golden hour if you want the old town to feel like a place, not a queue.',
+    guideShift: 'The guide now shifts toward walkability, old-town timing, and photo-friendly light.',
   },
   'romantic-sunset': {
     area: 'Sveti Vlas',
     start: 'Sveti Vlas Viewpoint',
+    beach: 'Sveti Vlas Beach',
     route: 'Sunset & Dinner Route',
     note: 'Time the viewpoint first, then move down toward the marina once the light softens.',
+    guideShift: 'The guide now favors golden-hour views, dinner pacing, and quieter transfers.',
   },
   'luxury-marina': {
     area: 'Sveti Vlas',
     start: 'Marina Dinevi',
+    beach: 'Sveti Vlas Beach',
     route: 'Sunset & Dinner Route',
     note: 'Treat it as a slower evening: marina walk, dinner, then cocktails rather than rushing stops.',
+    guideShift: 'The guide now centers polished waterfront stops and a slower evening spend.',
   },
   'chill-coffee': {
     area: 'Sveti Vlas',
     start: 'Marina Dinevi',
+    beach: 'Sveti Vlas Beach',
     route: 'Chill Day in Sveti Vlas',
     note: 'Use coffee as a pause between beach time and dinner, especially away from the loudest strips.',
+    guideShift: 'The guide now suggests pauses, cafe-friendly areas, and lower-noise routes.',
   },
   'photo-spots': {
     area: 'Nessebar',
     start: 'Nessebar Old Town Pier',
+    beach: 'Nessebar Beach',
     route: 'History Walk in Nessebar',
     note: 'Avoid flat midday light; old stone and marina views work better at the edges of the day.',
+    guideShift: 'The guide now highlights viewpoints, morning/evening light, and scenic walking links.',
   },
 }
 
@@ -138,19 +154,20 @@ export function Vibes({ selectedVibe, onSelectVibe }: VibesProps) {
           animate="show"
           className="panel-sheen glass mt-6 overflow-hidden rounded-[1.35rem] border-[color:var(--coral)]/35 shadow-soft"
         >
-          <div className="grid gap-5 p-5 md:grid-cols-[0.78fr_1.22fr] sm:p-6">
+          <div className="grid gap-5 p-5 md:grid-cols-[0.72fr_1.28fr] sm:p-6">
             <div>
               <p className="inline-flex items-center gap-2 rounded-full bg-[color:var(--coral)]/10 px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--coral)]">
                 <Sparkles size={14} aria-hidden="true" />
                 Recommended coast plan
               </p>
               <h3 className="mt-3 font-serif text-3xl text-[color:var(--ink)]">{selectedVibeItem.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">A compact starting point for turning this mood into a route.</p>
+              <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">{selectedRecommendation.guideShift}</p>
             </div>
-            <div className="grid gap-2.5 sm:grid-cols-3">
+            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                ['Area', selectedRecommendation.area],
+                ['Best area', selectedRecommendation.area],
                 ['First stop', selectedRecommendation.start],
+                ['Beach', selectedRecommendation.beach],
                 ['Route', selectedRecommendation.route],
               ].map(([label, value]) => (
                 <div key={label} className="rounded-2xl border border-white/70 bg-white/62 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]">
