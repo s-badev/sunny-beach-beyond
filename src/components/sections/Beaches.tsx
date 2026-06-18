@@ -13,13 +13,14 @@ const beachTips: Record<string, string> = {
   'elenite-beach': 'Treat this as a planned quiet beach day, not a quick hop.',
 }
 
-const beachDetails: Record<string, { bestTime: string; energy: string; crowd: string; transport: string; verdict: string }> = {
+const beachDetails: Record<string, { bestTime: string; energy: string; crowd: string; transport: string; verdict: string; avoidIf: string }> = {
   'central-sunny-beach': {
     bestTime: 'Morning for space, late afternoon for atmosphere',
     energy: 'High',
     crowd: 'Busy in peak season',
     transport: 'Easy on foot from central hotels',
     verdict: 'The practical first-day choice.',
+    avoidIf: 'you want quiet sand or a low-stimulation day',
   },
   'north-sunny-beach': {
     bestTime: 'Morning to early afternoon',
@@ -27,6 +28,7 @@ const beachDetails: Record<string, { bestTime: string; energy: string; crowd: st
     crowd: 'Moderate by Sunny Beach standards',
     transport: 'Taxi or longer walk from the south',
     verdict: 'Better breathing room without leaving the resort.',
+    avoidIf: 'you need to stay close to south-side bars',
   },
   'south-sunny-beach': {
     bestTime: 'Afternoon into evening',
@@ -34,6 +36,7 @@ const beachDetails: Record<string, { bestTime: string; energy: string; crowd: st
     crowd: 'Busy near bars and routes to Nessebar',
     transport: 'Useful if continuing south',
     verdict: 'Best when beach day becomes evening plans.',
+    avoidIf: 'you want a purely calm family beach day',
   },
   'nessebar-beach': {
     bestTime: 'Morning or golden hour',
@@ -41,6 +44,7 @@ const beachDetails: Record<string, { bestTime: string; energy: string; crowd: st
     crowd: 'Crowded around old-town visiting hours',
     transport: 'Allow extra time for the road',
     verdict: 'Beach plus history, if timed well.',
+    avoidIf: 'you are trying to avoid transport friction',
   },
   'sveti-vlas-beach': {
     bestTime: 'Late afternoon',
@@ -48,6 +52,7 @@ const beachDetails: Record<string, { bestTime: string; energy: string; crowd: st
     crowd: 'Moderate',
     transport: 'Best with planned taxi or bus',
     verdict: 'A softer beach day before marina dinner.',
+    avoidIf: 'you want the loudest resort energy nearby',
   },
   'elenite-beach': {
     bestTime: 'Full planned day',
@@ -55,6 +60,7 @@ const beachDetails: Record<string, { bestTime: string; energy: string; crowd: st
     crowd: 'Lower but resort-dependent',
     transport: 'Plan return transport first',
     verdict: 'Slow and quiet, less spontaneous.',
+    avoidIf: 'you want flexible hopping between areas',
   },
 }
 
@@ -112,6 +118,12 @@ export function Beaches({ selectedBeach, onSelectBeach }: BeachesProps) {
                   Best for / {beach.bestFor}
                 </p>
                 <p className="mt-4 flex-1 leading-7 text-[color:var(--muted-foreground)]">{beach.description}</p>
+                <div className="soft-reveal mt-4">
+                  <p className="rounded-2xl border border-[color:var(--coral)]/18 bg-[color:var(--coral-soft)]/28 px-3 py-2 text-sm font-medium leading-6 text-[color:var(--ink)]">
+                    <span className="block font-mono text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--coral)]">Avoid if</span>
+                    <span className="mt-1 block">{beachDetails[beach.id].avoidIf}</span>
+                  </p>
+                </div>
                 <div className="mt-4 flex flex-wrap gap-1.5 opacity-80 transition group-hover:opacity-100">
                   {beach.tags.map((tag) => (
                     <span key={tag} className="interactive-control rounded-full border border-white/80 bg-white/58 px-2.5 py-1 text-[0.72rem] font-semibold text-[color:var(--sea-deep)]">
@@ -135,9 +147,15 @@ export function Beaches({ selectedBeach, onSelectBeach }: BeachesProps) {
               <h3 className="mt-2 font-serif text-2xl text-[color:var(--ink)]">{selectedBeachItem.name}</h3>
               <p className="mt-2 text-sm font-semibold text-[color:var(--sea-deep)]">{selectedBeachItem.area}</p>
             </div>
-            <div className="rounded-2xl border border-white/70 bg-white/64 px-4 py-3">
-              <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">Quick verdict</p>
-              <p className="mt-1.5 text-sm font-medium leading-6 text-[color:var(--ink)]">{selectedBeachDetails.verdict} {beachTips[selectedBeachItem.id]}</p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-white/70 bg-white/64 px-4 py-3">
+                <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">Choose this if</p>
+                <p className="mt-1.5 text-sm font-medium leading-6 text-[color:var(--ink)]">{selectedBeachItem.bestFor}</p>
+              </div>
+              <div className="rounded-2xl border border-[color:var(--coral)]/16 bg-[color:var(--coral-soft)]/28 px-4 py-3">
+                <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">Avoid if</p>
+                <p className="mt-1.5 text-sm font-medium leading-6 text-[color:var(--ink)]">{selectedBeachDetails.avoidIf}</p>
+              </div>
             </div>
           </div>
           <div className="grid gap-3 p-5 text-sm leading-6 text-[color:var(--muted-foreground)] sm:grid-cols-2 lg:grid-cols-4 sm:p-6">
@@ -162,7 +180,7 @@ export function Beaches({ selectedBeach, onSelectBeach }: BeachesProps) {
                 <ShieldCheck size={14} aria-hidden="true" />
                 Mini-guide
               </span>
-              <span className="text-[color:var(--muted-foreground)]">Use this drawer to decide timing first, then transport; that usually matters more than the beach name.</span>
+              <span className="text-[color:var(--muted-foreground)]">{selectedBeachDetails.verdict} {beachTips[selectedBeachItem.id]}</span>
             </p>
           </div>
         </motion.div>

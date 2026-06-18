@@ -24,13 +24,13 @@ export function Hero() {
         animate={prefersReducedMotion ? undefined : { scale: [1.01, 1.028, 1.01] }}
         transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(100deg,rgba(7,26,45,0.58)_0%,rgba(7,26,45,0.34)_34%,rgba(7,26,45,0.07)_66%,rgba(7,26,45,0.1)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 z-0 h-80 bg-[linear-gradient(180deg,transparent,rgba(7,26,45,0.52))]" aria-hidden="true" />
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_23%_52%,rgba(7,26,45,0.28),transparent_24rem)]" aria-hidden="true" />
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(100deg,rgba(7,26,45,0.5)_0%,rgba(7,26,45,0.29)_34%,rgba(7,26,45,0.06)_66%,rgba(7,26,45,0.08)_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 z-0 h-80 bg-[linear-gradient(180deg,transparent,rgba(7,26,45,0.45))]" aria-hidden="true" />
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_23%_52%,rgba(7,26,45,0.24),transparent_24rem)]" aria-hidden="true" />
       <div className="grain absolute inset-0 z-0 opacity-10" aria-hidden="true" />
       <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-        <div className="relative pt-8 drop-shadow-[0_18px_45px_rgba(0,0,0,0.35)]">
-          <div className="absolute -inset-x-6 -inset-y-5 -z-10 rounded-[2rem] bg-[radial-gradient(circle_at_28%_44%,rgba(7,26,45,0.58),rgba(7,26,45,0.28)_42%,transparent_72%)] blur-xl" aria-hidden="true" />
+        <div className="relative pt-8 drop-shadow-[0_18px_45px_rgba(0,0,0,0.34)]">
+          <div className="absolute -inset-x-6 -inset-y-5 -z-10 rounded-[2rem] bg-[radial-gradient(circle_at_28%_44%,rgba(7,26,45,0.52),rgba(7,26,45,0.24)_42%,transparent_72%)] blur-xl" aria-hidden="true" />
           <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--coral-soft)]">
             A coastal Bulgaria field guide
           </p>
