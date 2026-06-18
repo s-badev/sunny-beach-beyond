@@ -15,7 +15,7 @@ export function Hero() {
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
 
   return (
-    <section id="hero" className="relative min-h-screen overflow-hidden px-5 pb-20 pt-24 text-white sm:px-8 lg:pb-24 lg:pt-28">
+    <section id="hero" className="relative min-h-[100svh] overflow-hidden px-4 pb-14 pt-32 text-white sm:px-8 sm:pb-20 sm:pt-28 lg:pb-24">
       <motion.img
         src={heroImage}
         alt="Sunny Beach coastline"
@@ -28,25 +28,25 @@ export function Hero() {
       <div className="absolute inset-x-0 bottom-0 z-0 h-80 bg-[linear-gradient(180deg,transparent,rgba(7,26,45,0.45))]" aria-hidden="true" />
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_23%_52%,rgba(7,26,45,0.24),transparent_24rem)]" aria-hidden="true" />
       <div className="grain absolute inset-0 z-0 opacity-10" aria-hidden="true" />
-      <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-        <div className="relative pt-8 drop-shadow-[0_18px_45px_rgba(0,0,0,0.34)]">
+      <div className="relative mx-auto grid max-w-7xl gap-8 sm:gap-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+        <div className="relative pt-4 drop-shadow-[0_18px_45px_rgba(0,0,0,0.34)] sm:pt-8">
           <div className="absolute -inset-x-6 -inset-y-5 -z-10 rounded-[2rem] bg-[radial-gradient(circle_at_28%_44%,rgba(7,26,45,0.52),rgba(7,26,45,0.24)_42%,transparent_72%)] blur-xl" aria-hidden="true" />
           <p className="mb-5 font-mono text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--coral-soft)]">
             A coastal Bulgaria field guide
           </p>
-          <h1 className="max-w-4xl text-balance font-serif text-6xl font-semibold leading-[0.9] sm:text-7xl lg:text-7xl xl:text-8xl">
+          <h1 className="max-w-4xl text-balance font-serif text-5xl font-semibold leading-[0.92] sm:text-7xl lg:text-7xl xl:text-8xl">
             Sunny Beach
             <span className="block text-[color:var(--sand)]">&amp; Beyond.</span>
           </h1>
-          <p className="mt-7 max-w-2xl text-pretty text-lg leading-8 text-white/76">
+          <p className="mt-6 max-w-2xl text-pretty text-base leading-7 text-white/78 sm:mt-7 sm:text-lg sm:leading-8">
             Explore beaches, nightlife, history, local spots and hidden corners around Sunny Beach, Nessebar, Sveti Vlas and Elenite - shaped by 20 years of summers, walks, nights out and changes along the coast.
           </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <a href="#vibes" className="group inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--sand)] px-6 py-3 text-sm font-bold text-[color:var(--ink)] shadow-coral transition duration-300 hover:-translate-y-1 hover:bg-[#ffe2aa] hover:shadow-glow">
+          <div className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row">
+            <a href="#vibes" className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--sand)] px-6 py-3 text-center text-sm font-bold text-[color:var(--ink)] shadow-coral transition duration-300 hover:-translate-y-1 hover:bg-[#ffe2aa] hover:shadow-glow sm:w-auto">
               Choose Your Vibe
               <ArrowRight className="transition group-hover:translate-x-1" size={17} aria-hidden="true" />
             </a>
-            <a href="#map" className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/24 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-white/36 hover:bg-white/18 hover:shadow-glow">
+            <a href="#map" className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/24 bg-white/10 px-6 py-3 text-center text-sm font-bold text-white backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-white/36 hover:bg-white/18 hover:shadow-glow sm:w-auto">
               <MapPinned className="transition group-hover:-translate-y-0.5" size={17} aria-hidden="true" />
               Open Interactive Map
             </a>
@@ -54,7 +54,7 @@ export function Hero() {
         </div>
 
         <motion.div
-          className="pointer-events-none relative min-h-[25rem] overflow-visible rounded-[2rem] lg:min-h-[33rem]"
+          className="pointer-events-none relative hidden min-h-[24rem] overflow-visible rounded-[2rem] sm:block lg:min-h-[33rem]"
           onPointerMove={(event) => {
             if (prefersReducedMotion) return
             const rect = event.currentTarget.getBoundingClientRect()

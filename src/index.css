@@ -17,7 +17,7 @@
   --coral-soft: #ffd6cf;
   --night: #071a2d;
   --ink: #10242d;
-  --nav-offset: 5.25rem;
+  --nav-offset: 8.25rem;
 
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--foreground);
@@ -47,6 +47,7 @@ body {
   min-width: 320px;
   min-height: 100svh;
   margin: 0;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top left, rgba(32, 199, 189, 0.2), transparent 32rem),
     radial-gradient(circle at 86% 22%, rgba(240, 111, 97, 0.13), transparent 28rem),
@@ -114,7 +115,7 @@ select {
 
 .section-shell {
   position: relative;
-  padding: 5.5rem 1.25rem;
+  padding: 4.5rem 1rem;
   scroll-margin-top: var(--nav-offset);
 }
 
@@ -124,6 +125,12 @@ select {
     padding-bottom: 6.5rem;
     padding-right: 2rem;
     padding-left: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --nav-offset: 5.25rem;
   }
 }
 
@@ -144,6 +151,40 @@ select {
   z-index: 1;
   width: min(100%, 80rem);
   margin: 0 auto;
+}
+
+@media (max-width: 639px) {
+  .section-shell :where(h2) {
+    font-size: 2.35rem;
+    line-height: 1.05;
+  }
+
+  .section-shell :where(p) {
+    line-height: 1.7;
+  }
+
+  .section-shell :where(.font-mono) {
+    letter-spacing: 0.11em;
+  }
+
+  .interactive-card:hover {
+    transform: none;
+  }
+
+  .map-canvas {
+    min-height: 34rem;
+    border-radius: 1.35rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section-shell :where(h2) {
+    font-size: 2.1rem;
+  }
+
+  .map-canvas {
+    min-height: 36rem;
+  }
 }
 
 .hover-lift {

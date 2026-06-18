@@ -61,7 +61,7 @@ export function ThenNow() {
             variants={fadeUp}
             whileHover={{ scale: 1.01 }}
             data-active={archiveMode === 'then'}
-            className={`interactive-card archive-then group relative min-h-96 overflow-hidden rounded-[1.65rem] border border-white/30 p-6 text-left shadow-soft transition ${archiveMode === 'then' ? 'ring-2 ring-[color:var(--coral)]/30' : 'opacity-85'}`}
+            className={`interactive-card archive-then group relative min-h-80 overflow-hidden rounded-[1.65rem] border border-white/30 p-6 text-left shadow-soft transition sm:min-h-96 ${archiveMode === 'then' ? 'ring-2 ring-[color:var(--coral)]/30' : 'opacity-85'}`}
           >
             <div className="grain absolute inset-0 opacity-34" aria-hidden="true" />
             <div className="absolute left-8 top-20 h-44 w-32 -rotate-6 rounded-xl border border-white/28 bg-white/14 p-3 shadow-soft" aria-hidden="true">
@@ -74,7 +74,7 @@ export function ThenNow() {
               <span className="mb-3 inline-block rounded-full bg-white/18 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/86 opacity-0 backdrop-blur transition group-hover:opacity-100 group-data-[active=true]:opacity-100">
                 {archiveMode === 'then' ? 'Selected lens' : 'Switch lens'}
               </span>
-              <p className="max-w-lg font-serif text-4xl leading-tight text-white">Faded postcards, broad sand, slower summers.</p>
+              <p className="max-w-lg font-serif text-3xl leading-tight text-white sm:text-4xl">Faded postcards, broad sand, slower summers.</p>
             </div>
           </motion.button>
           <motion.button
@@ -83,7 +83,7 @@ export function ThenNow() {
             variants={fadeUp}
             whileHover={{ scale: 1.01 }}
             data-active={archiveMode === 'now'}
-            className={`interactive-card archive-now group relative min-h-96 overflow-hidden rounded-[1.65rem] border border-white/34 p-6 text-left shadow-glow transition ${archiveMode === 'now' ? 'ring-2 ring-[color:var(--turquoise)]/35' : 'opacity-85'}`}
+            className={`interactive-card archive-now group relative min-h-80 overflow-hidden rounded-[1.65rem] border border-white/34 p-6 text-left shadow-glow transition sm:min-h-96 ${archiveMode === 'now' ? 'ring-2 ring-[color:var(--turquoise)]/35' : 'opacity-85'}`}
           >
             <div className="grain absolute inset-0 opacity-16" aria-hidden="true" />
             <div className="absolute -right-14 bottom-12 h-44 w-72 rounded-[50%] bg-[color:var(--sand)]/86 shadow-soft" aria-hidden="true" />
@@ -96,7 +96,7 @@ export function ThenNow() {
               <span className="mb-3 inline-block rounded-full bg-white/18 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/86 opacity-0 backdrop-blur transition group-hover:opacity-100 group-data-[active=true]:opacity-100">
                 {archiveMode === 'now' ? 'Selected lens' : 'Switch lens'}
               </span>
-              <p className="max-w-lg font-serif text-4xl leading-tight text-white">Neon nights, marina lights, old streets and full beaches.</p>
+              <p className="max-w-lg font-serif text-3xl leading-tight text-white sm:text-4xl">Neon nights, marina lights, old streets and full beaches.</p>
             </div>
           </motion.button>
         </motion.div>
@@ -105,7 +105,7 @@ export function ThenNow() {
             <div className="archive-paper relative min-h-[21rem] p-5 sm:p-6">
               <div className="absolute bottom-6 left-6 top-6 w-px bg-[color:var(--sand-deep)]/18" aria-hidden="true" />
               <div className="absolute left-[1.15rem] top-7 size-3 rounded-full bg-[color:var(--coral)] shadow-coral" aria-hidden="true" />
-              <div className="absolute right-5 top-5 rounded-full border border-[color:var(--sand-deep)]/25 bg-white/42 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sand-deep)]/80">
+              <div className="absolute right-5 top-5 hidden rounded-full border border-[color:var(--sand-deep)]/25 bg-white/42 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sand-deep)]/80 sm:block">
                 Selected entry
               </div>
               <AnimatePresence mode="wait">

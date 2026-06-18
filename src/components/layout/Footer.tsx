@@ -13,9 +13,9 @@ export function Footer() {
   ]
 
   return (
-    <footer className="relative overflow-hidden bg-[color:var(--night)] px-5 py-12 text-white sm:px-8">
+    <footer className="relative overflow-hidden bg-[color:var(--night)] px-5 py-10 text-white sm:px-8 sm:py-12">
       <div className="grain absolute inset-0 opacity-15" aria-hidden="true" />
-      <div className="section-inner grid gap-8 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+      <div className="section-inner grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
         <div>
           <p className="font-serif text-3xl font-semibold">Sunny Beach &amp; Beyond</p>
           <p className="mt-4 max-w-md leading-7 text-white/66">

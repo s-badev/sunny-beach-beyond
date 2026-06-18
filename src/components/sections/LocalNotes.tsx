@@ -55,7 +55,7 @@ export function LocalNotes() {
             Small observations matter. The best experience depends on where you stay, when you move and what kind of summer you want.
           </p>
         </motion.div>
-        <motion.div className="mt-9 grid gap-4 md:grid-cols-3" variants={staggerContainer}>
+        <motion.div className="mt-9 grid gap-4 sm:grid-cols-2 xl:grid-cols-3" variants={staggerContainer}>
           {localNotes.map((note) => (
             <motion.button
               key={note.id}
@@ -100,7 +100,7 @@ export function LocalNotes() {
               <h3 className="mt-2 font-serif text-3xl leading-tight text-[color:var(--ink)]">{selectedNote.title}</h3>
               <p className="mt-2 text-sm font-semibold text-[color:var(--sea-deep)]">{selectedNote.label}</p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid gap-3 lg:grid-cols-3">
               <div className="rounded-2xl border border-[color:var(--border)]/75 bg-[color:var(--foam)]/58 px-4 py-3">
                 <span className="flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sea-deep)]/62">
                   <CheckCircle2 size={14} aria-hidden="true" />

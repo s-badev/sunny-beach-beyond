@@ -147,7 +147,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
               </div>
             </div>
 
-            <div className="mt-5 grid max-h-[22rem] gap-2.5 overflow-auto pr-1">
+            <div className="mt-5 grid max-h-[18rem] gap-2.5 overflow-auto pr-1 sm:max-h-[22rem]">
               {filteredPlaces.length > 0 ? (
                 filteredPlaces.map((place) => (
                   <motion.button
@@ -281,7 +281,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ duration: 0.22 }}
-                className="glass-dark absolute bottom-5 right-5 z-40 w-[min(22rem,calc(100%-2.5rem))] rounded-[1.25rem] p-4 shadow-glow sm:p-5"
+                className="glass-dark absolute inset-x-4 bottom-4 z-40 max-h-[74%] overflow-auto rounded-[1.25rem] p-4 shadow-glow sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[min(22rem,calc(100%-2.5rem))] sm:max-h-none sm:overflow-visible sm:p-5"
               >
                 {activePlace ? (
                   <>
@@ -295,12 +295,12 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                       <span className="block font-mono text-[0.66rem] uppercase tracking-[0.14em] text-[color:var(--sand)]/78">Use it for</span>
                       {activePlace.bestFor}
                     </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                       <a
                         href={activePlace.googleMapsUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="interactive-control inline-flex items-center gap-2 rounded-full bg-[color:var(--sand)] px-3.5 py-2 text-sm font-bold text-[color:var(--ink)]"
+                        className="interactive-control inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--sand)] px-3.5 py-2 text-center text-sm font-bold text-[color:var(--ink)]"
                       >
                         Open in Google Maps
                         <ExternalLink size={15} aria-hidden="true" />
@@ -309,7 +309,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                         type="button"
                         onClick={addActivePlaceToRoute}
                         aria-pressed={activePlaceIsAdded}
-                        className={`interactive-control inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-bold text-white ${
+                        className={`interactive-control inline-flex items-center justify-center gap-2 rounded-full px-3.5 py-2 text-center text-sm font-bold text-white ${
                           activePlaceIsAdded ? 'bg-[color:var(--turquoise)]/22 text-[color:var(--foam)]' : 'bg-white/12 hover:bg-white/18'
                         }`}
                       >
