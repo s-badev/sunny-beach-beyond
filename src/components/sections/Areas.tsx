@@ -112,11 +112,11 @@ export function Areas({ selectedArea, onSelectArea }: AreasProps) {
           key={selectedAreaItem.id}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass mt-5 overflow-hidden rounded-[1.25rem] border-[color:var(--turquoise)]/28 shadow-soft"
+          className="panel-sheen glass mt-5 overflow-hidden rounded-[1.25rem] border-[color:var(--turquoise)]/28 shadow-soft"
         >
           <div className="grid gap-4 p-5 md:grid-cols-[0.72fr_1fr] sm:p-6">
             <div>
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">Area read</p>
+              <p className="inline-flex rounded-full bg-[color:var(--turquoise)]/12 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--sea-deep)]">Selected area read</p>
               <h3 className="mt-2 font-serif text-3xl text-[color:var(--ink)]">{selectedAreaItem.name}</h3>
               <p className="mt-2 text-sm font-semibold text-[color:var(--sea-deep)]">{selectedAreaItem.mood}</p>
             </div>

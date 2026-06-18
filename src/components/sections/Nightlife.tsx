@@ -110,6 +110,12 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
                       </span>
                     ))}
                   </div>
+                  <div className="soft-reveal mt-4">
+                    <p className="rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-sm font-medium leading-6 text-white/78">
+                      <span className="block font-mono text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--coral-soft)]/78">Plan logic</span>
+                      <span className="mt-1 block">{nightPlans[item.id].flow}</span>
+                    </p>
+                  </div>
                 </motion.button>
               )
             })}

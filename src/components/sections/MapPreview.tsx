@@ -147,6 +147,14 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
               </div>
             </div>
 
+            <div className="mt-5 rounded-2xl border border-white/10 bg-white/7 px-3.5 py-3 text-xs leading-5 text-white/62">
+              <p className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-white/46">Current view</p>
+              <p className="mt-1.5 font-semibold text-white/82">
+                {selectedArea === 'All' ? 'All areas' : selectedArea} / {selectedCategory === 'All' ? 'all categories' : selectedCategory}
+              </p>
+              <p className="mt-1">{filteredPlaces.length} place{filteredPlaces.length === 1 ? '' : 's'} available for this coastal read.</p>
+            </div>
+
             <div className="mt-5 grid max-h-[18rem] gap-2.5 overflow-auto pr-1 sm:max-h-[22rem]">
               {filteredPlaces.length > 0 ? (
                 filteredPlaces.map((place) => (
@@ -161,7 +169,10 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                       activePlace?.id === place.id ? 'border-[color:var(--turquoise)] bg-white/15 shadow-glow' : 'border-white/10 bg-white/8 hover:bg-white/12'
                     }`}
                   >
-                    <span className="font-serif text-lg leading-tight text-white">{place.name}</span>
+                    <span className="flex items-start justify-between gap-2">
+                      <span className="font-serif text-lg leading-tight text-white">{place.name}</span>
+                      {activePlace?.id === place.id && <span className="rounded-full bg-[color:var(--turquoise)]/18 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-[color:var(--foam)]">Active</span>}
+                    </span>
                     <span className="mt-1.5 block text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/52">
                       {place.area} / {place.category}
                     </span>

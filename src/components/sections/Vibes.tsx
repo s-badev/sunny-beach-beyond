@@ -178,9 +178,9 @@ export function Vibes({ selectedVibe, onSelectVibe }: VibesProps) {
             </div>
           </div>
           <div className="border-t border-white/58 bg-[linear-gradient(90deg,rgba(242,217,170,0.46),rgba(255,255,255,0.34))] px-5 py-4 sm:px-6">
-            <p className="text-sm font-medium leading-6 text-[color:var(--ink)]">
-              <span className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">Field note</span>
-              <span className="ml-3 text-[color:var(--muted-foreground)]">{selectedRecommendation.note}</span>
+            <p className="flex flex-col gap-2 text-sm font-medium leading-6 text-[color:var(--ink)] sm:flex-row sm:items-start">
+              <span className="inline-flex w-fit rounded-full bg-white/58 px-3 py-1 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">Field note</span>
+              <span className="text-[color:var(--muted-foreground)]">{selectedRecommendation.note}</span>
             </p>
           </div>
         </motion.div>

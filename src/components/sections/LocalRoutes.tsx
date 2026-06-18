@@ -51,8 +51,9 @@ export function LocalRoutes({ selectedRoute, selectedStops, onSelectRoute }: Loc
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">
-                    R{String(index + 1).padStart(2, '0')}
+                  <p className="flex flex-wrap items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--coral)]">
+                    <span>R{String(index + 1).padStart(2, '0')}</span>
+                    {selectedRoute === routeItem.id && <span className="rounded-full bg-[color:var(--coral)]/10 px-2 py-0.5 text-[0.62rem] tracking-[0.12em]">Selected</span>}
                   </p>
                   <h3 className="mt-2.5 font-serif text-[1.7rem] leading-tight text-[color:var(--ink)]">{routeItem.title}</h3>
                 </div>
@@ -86,8 +87,11 @@ export function LocalRoutes({ selectedRoute, selectedStops, onSelectRoute }: Loc
                   aria-hidden="true"
                 />
               </button>
-              <div className="mt-5 rounded-2xl border border-[color:var(--border)]/70 bg-white/46 p-4 transition group-hover:bg-white/58">
-                <p className="mb-3 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/60">Stops</p>
+              <div className="mt-5 rounded-2xl border border-[color:var(--border)]/70 bg-white/46 p-4 transition group-hover:bg-white/58 group-data-[active=true]:border-[color:var(--coral)]/20 group-data-[active=true]:bg-white/64">
+                <p className="mb-3 flex items-center justify-between gap-3 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/60">
+                  <span>Stops</span>
+                  <span className="rounded-full bg-white/58 px-2 py-0.5 text-[0.62rem] text-[color:var(--sea-deep)]/70">{routeItem.stops.length} point rhythm</span>
+                </p>
                 <div className="grid gap-2.5">
                 {routeItem.stops.map((stop, stopIndex) => (
                   <div key={stop} className="relative flex items-center gap-3">
