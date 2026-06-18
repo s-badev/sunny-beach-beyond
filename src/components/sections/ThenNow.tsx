@@ -100,13 +100,18 @@ export function ThenNow() {
             </div>
           </motion.button>
         </motion.div>
-        <motion.div className="mt-9 grid gap-5 lg:grid-cols-[0.8fr_1.2fr]" variants={fadeUp}>
-          <div className="glass overflow-hidden rounded-[1.35rem] border-[color:var(--sand-deep)]/24 shadow-soft">
-            <div className="archive-paper relative min-h-[21rem] p-5 sm:p-6">
-              <div className="absolute bottom-6 left-6 top-6 w-px bg-[color:var(--sand-deep)]/18" aria-hidden="true" />
-              <div className="absolute left-[1.15rem] top-7 size-3 rounded-full bg-[color:var(--coral)] shadow-coral" aria-hidden="true" />
-              <div className="absolute right-5 top-5 hidden rounded-full border border-[color:var(--sand-deep)]/25 bg-white/42 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sand-deep)]/80 sm:block">
-                Selected entry
+        <motion.div className="mt-9" variants={fadeUp}>
+          <div className="panel-sheen glass overflow-hidden rounded-[1.45rem] border-[color:var(--sand-deep)]/24 shadow-soft">
+            <div className="archive-paper relative p-5 sm:p-7 lg:p-8">
+              <div className="absolute bottom-6 left-6 top-6 hidden w-px bg-[color:var(--sand-deep)]/18 sm:block" aria-hidden="true" />
+              <div className="absolute left-[1.15rem] top-8 hidden size-3 rounded-full bg-[color:var(--coral)] shadow-coral sm:block" aria-hidden="true" />
+              <div className="mb-5 flex flex-wrap items-center gap-2 pl-0 sm:pl-5">
+                <span className="rounded-full border border-[color:var(--sand-deep)]/25 bg-white/46 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sand-deep)]/80">
+                  Selected entry
+                </span>
+                <span className="rounded-full bg-[color:var(--coral)]/10 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">
+                  {archiveMode === 'then' ? 'Then lens' : 'Now lens'}
+                </span>
               </div>
               <AnimatePresence mode="wait">
                 <motion.div
@@ -115,26 +120,31 @@ export function ThenNow() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
                   transition={{ duration: 0.24 }}
-                  className="pl-5"
+                  className="grid gap-6 sm:pl-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(22rem,1.1fr)] lg:items-start"
                 >
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">
-                    {archiveMode === 'then' ? 'Then lens' : 'Now lens'} / {selectedArchive.year}
-                  </p>
-                  <h3 className="mt-3 max-w-xl font-serif text-3xl leading-tight text-[color:var(--ink)]">{selectedArchive.title}</h3>
-                  <p className="mt-2 max-w-xl text-base font-semibold leading-7 text-[color:var(--sea-deep)]">{selectedArchive.subtitle}</p>
-                  <p className="mt-3 max-w-2xl leading-7 text-[color:var(--muted-foreground)]">{selectedArchive.description}</p>
-                  <div className="mt-4 rounded-2xl border border-[color:var(--sea-deep)]/10 bg-[color:var(--foam)]/50 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)]">
-                    {archiveLensNotes[archiveMode]}
+                  <div>
+                    <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral)]">{selectedArchive.year}</p>
+                    <h3 className="mt-3 max-w-3xl font-serif text-3xl leading-tight text-[color:var(--ink)] sm:text-4xl">{selectedArchive.title}</h3>
+                    <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-[color:var(--sea-deep)]">{selectedArchive.subtitle}</p>
+                    <p className="mt-4 max-w-3xl leading-7 text-[color:var(--muted-foreground)]">{selectedArchive.description}</p>
                   </div>
-                  <div className="mt-5 rounded-2xl border border-[color:var(--sand-deep)]/20 bg-white/54 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)]">
-                    <span className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/58">What changed</span>
-                    <span className="mt-1.5 block">{archiveChanges[selectedArchive.id]}</span>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                    <div className="rounded-2xl border border-[color:var(--sea-deep)]/10 bg-[color:var(--foam)]/50 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)]">
+                      <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/58">
+                        {archiveMode === 'then' ? 'Then lens' : 'Now lens'}
+                      </span>
+                      <span className="mt-1.5 block">{archiveLensNotes[archiveMode]}</span>
+                    </div>
+                    <div className="rounded-2xl border border-[color:var(--sand-deep)]/20 bg-white/54 px-4 py-3 text-sm font-medium leading-6 text-[color:var(--ink)]">
+                      <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/58">What changed</span>
+                      <span className="mt-1.5 block">{archiveChanges[selectedArchive.id]}</span>
+                    </div>
                   </div>
                 </motion.div>
               </AnimatePresence>
             </div>
           </div>
-          <p className="self-end text-sm leading-6 text-[color:var(--muted-foreground)] lg:max-w-md">
+          <p className="mt-4 max-w-3xl text-sm leading-6 text-[color:var(--muted-foreground)]">
             Use the timeline cards as a quick lens: each date marks a different version of the same coastline, from planned resort to layered summer map.
           </p>
         </motion.div>
@@ -147,6 +157,7 @@ export function ThenNow() {
               whileHover={{ y: -4 }}
               whileTap={{ scale: 0.99 }}
               onClick={() => setSelectedArchiveId(entry.id)}
+              onMouseEnter={() => setSelectedArchiveId(entry.id)}
               data-active={selectedArchiveId === entry.id}
               className={`interactive-card active-rail archive-timeline-card group relative overflow-hidden rounded-[1.25rem] border p-5 pl-6 text-left shadow-soft ${
                 selectedArchiveId === entry.id ? 'border-[color:var(--coral)]/45 bg-white/80 ring-2 ring-[color:var(--coral)]/14' : 'border-white/62 bg-white/56 hover:border-[color:var(--sand-deep)]/35'
