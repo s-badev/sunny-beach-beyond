@@ -450,6 +450,49 @@ select {
     linear-gradient(118deg, rgba(7, 26, 45, 0.68), transparent 50%, rgba(255, 255, 255, 0.08));
 }
 
+.archive-museum-artifact {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.archive-museum-artifact::before {
+  content: "";
+  position: absolute;
+  inset: 0.75rem;
+  z-index: -1;
+  border: 1px solid rgba(255, 248, 226, 0.24);
+  border-radius: 1rem;
+  pointer-events: none;
+}
+
+.archive-museum-artifact::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.11) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.34), transparent 8rem);
+  background-size: 30px 30px, 30px 30px, auto;
+}
+
+.archive-museum-then {
+  background:
+    radial-gradient(circle at 24% 24%, rgba(255, 248, 226, 0.5), transparent 8rem),
+    repeating-linear-gradient(92deg, rgba(114, 88, 61, 0.1) 0 1px, transparent 1px 18px),
+    linear-gradient(145deg, #d8b06f, #72583d);
+  filter: sepia(0.16) contrast(0.97);
+}
+
+.archive-museum-now {
+  background:
+    radial-gradient(circle at 75% 22%, rgba(255, 255, 255, 0.74), transparent 8rem),
+    radial-gradient(circle at 28% 82%, rgba(240, 111, 97, 0.24), transparent 10rem),
+    linear-gradient(145deg, #022940 0%, #087996 48%, #20c7bd 72%, #f2d9aa 100%);
+}
+
 .hero-coastal-bg {
   background:
     linear-gradient(95deg, rgba(7, 26, 45, 0.95), rgba(7, 26, 45, 0.58) 36%, rgba(7, 26, 45, 0.08) 66%),
