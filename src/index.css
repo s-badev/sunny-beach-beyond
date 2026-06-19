@@ -374,6 +374,43 @@ select {
     radial-gradient(circle at 30% 74%, rgba(240, 111, 97, 0.28), transparent 14rem);
 }
 
+.beach-atlas-visual,
+.beach-card-shore {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.62), transparent 8rem),
+    radial-gradient(circle at 26% 82%, rgba(240, 111, 97, 0.24), transparent 10rem),
+    linear-gradient(135deg, #052944 0%, #087996 44%, #20c7bd 72%, #f2d9aa 100%);
+}
+
+.beach-atlas-visual::before,
+.beach-card-shore::before {
+  content: "";
+  position: absolute;
+  inset: auto -8% -36% 28%;
+  z-index: -1;
+  height: 58%;
+  border-radius: 999px;
+  background:
+    repeating-linear-gradient(96deg, rgba(6, 59, 91, 0.12) 0 1px, transparent 1px 18px),
+    linear-gradient(145deg, rgba(255, 248, 226, 0.94), rgba(200, 148, 71, 0.72));
+  box-shadow: -22px -18px 70px rgba(255, 255, 255, 0.22);
+  transform: rotate(-8deg);
+}
+
+.beach-atlas-visual::after,
+.beach-card-shore::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 72% 34%, transparent 0 24%, rgba(255, 255, 255, 0.18) 24.4%, transparent 25%),
+    linear-gradient(118deg, rgba(7, 26, 45, 0.52), transparent 48%, rgba(255, 255, 255, 0.08));
+}
+
 .hero-coastal-bg {
   background:
     linear-gradient(95deg, rgba(7, 26, 45, 0.95), rgba(7, 26, 45, 0.58) 36%, rgba(7, 26, 45, 0.08) 66%),
