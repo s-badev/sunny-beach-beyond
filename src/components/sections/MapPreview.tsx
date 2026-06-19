@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { places } from '../../data/places'
 import type { AreaName, Place, PlaceCategory } from '../../types'
 import { fadeUp, MotionSection } from '../ui/motion'
+import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
 type AreaFilter = AreaName | 'All'
@@ -187,9 +188,9 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
             <SectionLabel>Map</SectionLabel>
             <h2 className="text-balance font-serif text-4xl font-semibold leading-tight sm:text-5xl">Interactive coast preview.</h2>
           </div>
-          <p className="max-w-2xl text-lg leading-8 text-[color:var(--muted-foreground)]">
+          <SectionIntro label="Planning tool">
             Filter the coastal map by area or category, save up to four stops, and open Google Maps when you want real-world directions.
-          </p>
+          </SectionIntro>
         </motion.div>
 
         <motion.div
@@ -323,6 +324,42 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                       </button>
                     </div>
                   )}
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-3">
+                <div className="rounded-[1.15rem] border border-[color:var(--border)]/70 bg-white/76 p-3 shadow-soft">
+                  <p className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">Map legend</p>
+                  <div className="mt-3 grid gap-2 text-xs font-semibold text-[color:var(--ink)]">
+                    <div className="flex items-center gap-2">
+                      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[color:var(--coral)] text-white">
+                        <MapPin size={12} aria-hidden="true" />
+                      </span>
+                      Selected pin
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[color:var(--turquoise)] text-[color:var(--night)]">
+                        <Check size={12} aria-hidden="true" />
+                      </span>
+                      Route stop
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[color:var(--sea-deep)] text-white">
+                        <MapPin size={12} aria-hidden="true" />
+                      </span>
+                      Available place
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-[1.15rem] border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/72 p-3 shadow-soft">
+                  <p className="inline-flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]">
+                    <Compass size={13} aria-hidden="true" />
+                    Filter tip
+                  </p>
+                  <p className="mt-2 text-xs font-semibold leading-5 text-[color:var(--ink)]">
+                    Use area first, then category. Distance alone does not tell the full summer rhythm.
+                  </p>
                 </div>
               </div>
             </aside>

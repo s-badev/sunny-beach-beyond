@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { localNotes } from '../../data/localNotes'
 import type { LocalNote } from '../../types'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
 type NoteMetricKey = 'timing' | 'transport' | 'crowd' | 'noise' | 'walkability' | 'planning'
@@ -245,9 +246,9 @@ export function LocalNotes() {
               Insider field notes for small decisions that matter.
             </h2>
           </div>
-          <p className="max-w-2xl text-lg leading-8 text-[color:var(--muted-foreground)]">
+          <SectionIntro label="Insider field notes">
             Practical local rules for choosing where to stay, when to move, how to read crowds, and which coastal tradeoffs to solve before they become annoying.
-          </p>
+          </SectionIntro>
         </motion.div>
 
         <motion.div className="mt-8 overflow-hidden rounded-[1.75rem] border border-white/72 bg-white/58 shadow-[0_32px_90px_rgba(9,58,82,0.13)] backdrop-blur" variants={fadeUp}>

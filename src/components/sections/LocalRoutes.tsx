@@ -3,6 +3,7 @@ import { AlertTriangle, BadgeCheck, Camera, Clock3, Compass, Footprints, Moon, R
 import { routes } from '../../data/routes'
 import type { LocalRoute, Place } from '../../types'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
 type RouteMetricKey = 'walkability' | 'time' | 'friction' | 'sunset' | 'family' | 'nightlife' | 'photo' | 'crowd'
@@ -315,9 +316,9 @@ export function LocalRoutes({ selectedRoute, selectedStops, onSelectRoute }: Loc
               Cinematic routes for the kind of day you want.
             </h2>
           </div>
-          <p className="max-w-2xl text-lg leading-8 text-[color:var(--muted-foreground)]">
+          <SectionIntro label="Itinerary lens">
             Pick a local itinerary by pace, transport, timing and the mistake you want to avoid before the coast gets busy.
-          </p>
+          </SectionIntro>
         </motion.div>
 
         <motion.div className="mt-8 overflow-hidden rounded-[1.75rem] border border-white/72 bg-white/58 shadow-[0_32px_90px_rgba(9,58,82,0.13)] backdrop-blur" variants={fadeUp}>

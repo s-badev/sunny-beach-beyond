@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, BadgeCheck, Clock3, Compass, Footprints, Gauge, Navigation, ShieldCheck, Sun, Users, Waves, type LucideIcon } from 'lucide-react'
 import { beaches } from '../../data/beaches'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
 type MetricKey = 'energy' | 'crowd' | 'access' | 'family' | 'walkability' | 'nightlife' | 'calm'
@@ -21,6 +22,7 @@ type BeachAtlasDetail = {
   verdict: string
   localNote: string
   dayPlan: string
+  nextMove: string
   useCase: string
   atlasLabel: string
   metrics: Record<MetricKey, BeachMetric>
@@ -36,6 +38,7 @@ const beachDetails: Record<string, BeachAtlasDetail> = {
     verdict: 'Choose Central Sunny Beach when convenience matters more than silence.',
     localNote: 'Use it as the easy first-day base: food, loungers, promenade, and quick exits are all close.',
     dayPlan: 'Arrive before the loudest hours, swim early, then save the promenade for a late-afternoon walk.',
+    nextMove: 'Keep the day simple: one central beach zone first, then use the promenade only after the heat softens.',
     useCase: 'First-time resort day',
     atlasLabel: 'Most practical',
     metrics: {
@@ -57,6 +60,7 @@ const beachDetails: Record<string, BeachAtlasDetail> = {
     verdict: 'North Sunny Beach works better when you want the resort without the loudest edge.',
     localNote: 'It still feels like Sunny Beach, just with more breathing room and easier pacing.',
     dayPlan: 'Start with a simple swim, keep lunch nearby, then move south only if you want more noise.',
+    nextMove: 'Stay north for lunch if the day is working; only move south when the group actually wants more volume.',
     useCase: 'Resort day with space',
     atlasLabel: 'Softer resort',
     metrics: {
@@ -78,6 +82,7 @@ const beachDetails: Record<string, BeachAtlasDetail> = {
     verdict: 'South Sunny Beach is useful when your day may continue toward Nessebar or beach bars.',
     localNote: 'Pick it when the beach is only part of the plan, not when you want the softest day.',
     dayPlan: 'Swim later, keep the evening flexible, then continue toward a bar cluster or Nessebar-side walk.',
+    nextMove: 'Treat this as a bridge: beach first, then choose either a bar cluster or a Nessebar-side walk.',
     useCase: 'Beach to evening plan',
     atlasLabel: 'Best for momentum',
     metrics: {
@@ -99,6 +104,7 @@ const beachDetails: Record<string, BeachAtlasDetail> = {
     verdict: 'Nessebar Beach is best when the beach is part of an old-town walk, not the whole day.',
     localNote: 'The reward is the combination: sand, views, old streets, and a more textured day.',
     dayPlan: 'Swim outside the busiest window, walk the old town, then pause for a view before heading back.',
+    nextMove: 'Pair the swim with one old-town loop, then leave enough time for a slow return or dinner.',
     useCase: 'Beach plus history',
     atlasLabel: 'Best paired plan',
     metrics: {
@@ -120,6 +126,7 @@ const beachDetails: Record<string, BeachAtlasDetail> = {
     verdict: 'Sveti Vlas Beach is calmer and better paired with marina evenings.',
     localNote: 'It is strongest as a slower day that turns into dinner, not as a high-volume beach party.',
     dayPlan: 'Arrive after the hottest window, swim slowly, then walk toward Marina Dinevi for sunset.',
+    nextMove: 'Let the marina be the natural finish: swim, walk, sunset, then dinner without adding another transfer.',
     useCase: 'Swim then marina dinner',
     atlasLabel: 'Most polished',
     metrics: {
@@ -141,6 +148,7 @@ const beachDetails: Record<string, BeachAtlasDetail> = {
     verdict: 'Elenite Beach works best as a planned slow day, not a spontaneous quick hop.',
     localNote: 'The distance is part of the choice. Treat it as staying put, not a quick detour.',
     dayPlan: 'Commit to the bay, keep the day simple, and solve the return plan before you settle in.',
+    nextMove: 'Do less here on purpose: beach, lunch, long pause, and a return plan before the evening gets awkward.',
     useCase: 'Slow bay day',
     atlasLabel: 'Quietest edge',
     metrics: {
@@ -209,9 +217,9 @@ export function Beaches({ selectedBeach, onSelectBeach }: BeachesProps) {
               A beach atlas for choosing the right day.
             </h2>
           </div>
-          <p className="max-w-2xl text-lg leading-8 text-[color:var(--muted-foreground)]">
+          <SectionIntro label="Beach atlas">
             Compare the coast by mood, access, crowd, calm and what each shoreline is actually good for.
-          </p>
+          </SectionIntro>
         </motion.div>
 
         <motion.div className="mt-7 overflow-hidden rounded-[1.75rem] border border-white/72 bg-white/58 shadow-[0_32px_90px_rgba(9,58,82,0.13)] backdrop-blur" variants={fadeUp}>
@@ -271,6 +279,14 @@ export function Beaches({ selectedBeach, onSelectBeach }: BeachesProps) {
                         How to use it
                       </span>
                       <p className="mt-1.5 text-sm font-medium leading-6 text-[color:var(--ink)]">{selectedBeachDetails.dayPlan}</p>
+                    </div>
+
+                    <div className="mt-3 rounded-[1rem] border border-[color:var(--turquoise)]/24 bg-[color:var(--foam)]/62 p-3.5">
+                      <span className="inline-flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sea-deep)]">
+                        <Compass size={14} aria-hidden="true" />
+                        Good next move
+                      </span>
+                      <p className="mt-1.5 text-sm font-semibold leading-6 text-[color:var(--ink)]">{selectedBeachDetails.nextMove}</p>
                     </div>
                   </div>
                 </div>

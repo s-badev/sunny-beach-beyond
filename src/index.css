@@ -547,6 +547,43 @@ select {
   mask-image: linear-gradient(110deg, transparent, #000 18%, #000 88%, transparent);
 }
 
+.mood-compass-visual,
+.mood-card-strip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.58), transparent 8rem),
+    radial-gradient(circle at 24% 82%, rgba(240, 111, 97, 0.2), transparent 10rem),
+    linear-gradient(135deg, #052944 0%, #087996 48%, #20c7bd 76%, #f2d9aa 100%);
+}
+
+.mood-compass-visual::before,
+.mood-card-strip::before {
+  content: "";
+  position: absolute;
+  inset: auto -10% -34% 30%;
+  z-index: -1;
+  height: 58%;
+  border-radius: 999px;
+  background:
+    repeating-linear-gradient(96deg, rgba(6, 59, 91, 0.12) 0 1px, transparent 1px 18px),
+    linear-gradient(145deg, rgba(255, 248, 226, 0.94), rgba(200, 148, 71, 0.68));
+  box-shadow: -22px -18px 70px rgba(255, 255, 255, 0.22);
+  transform: rotate(-8deg);
+}
+
+.mood-compass-visual::after,
+.mood-card-strip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 72% 34%, transparent 0 24%, rgba(255, 255, 255, 0.18) 24.4%, transparent 25%),
+    linear-gradient(118deg, rgba(7, 26, 45, 0.58), transparent 48%, rgba(255, 255, 255, 0.08));
+}
+
 .archive-museum-artifact {
   position: relative;
   isolation: isolate;
@@ -782,6 +819,89 @@ select {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.28);
   transform: rotate(-8deg);
+}
+
+.area-zone-map {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 74% 18%, rgba(255, 255, 255, 0.5), transparent 8rem),
+    radial-gradient(circle at 22% 74%, rgba(240, 111, 97, 0.22), transparent 10rem),
+    linear-gradient(135deg, #073b58 0%, #087996 43%, #20c7bd 72%, #f2d9aa 100%);
+}
+
+.area-zone-map::before {
+  content: "";
+  position: absolute;
+  inset: 6% 44% 5% -18%;
+  z-index: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 70% 18%, rgba(255, 248, 226, 0.68), transparent 20%),
+    linear-gradient(145deg, rgba(242, 217, 170, 0.74), rgba(255, 255, 255, 0.22));
+  box-shadow:
+    30px 0 0 rgba(255, 255, 255, 0.13),
+    52px 0 40px rgba(255, 255, 255, 0.16);
+  transform: rotate(-9deg);
+}
+
+.area-zone-map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(ellipse at 58% 32%, transparent 0 25%, rgba(255, 255, 255, 0.13) 25.5%, transparent 26.2%),
+    radial-gradient(ellipse at 42% 68%, transparent 0 31%, rgba(255, 255, 255, 0.11) 31.5%, transparent 32.2%);
+  background-size:
+    38px 38px,
+    38px 38px,
+    26rem 18rem,
+    31rem 23rem;
+  mask-image: linear-gradient(130deg, transparent, #000 17%, #000 88%, transparent);
+}
+
+.area-map-marker[data-active="true"]::after {
+  content: "";
+  position: absolute;
+  inset: -0.55rem;
+  z-index: -1;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  animation: area-marker-pulse 2.3s ease-out infinite;
+}
+
+.area-card-strip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(90deg, transparent, #000 24%, #000 88%);
+  opacity: 0.68;
+}
+
+@keyframes area-marker-pulse {
+  0% {
+    opacity: 0.68;
+    transform: scale(0.86);
+  }
+
+  72%,
+  100% {
+    opacity: 0;
+    transform: scale(1.75);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .area-map-marker[data-active="true"]::after {
+    animation: none;
+  }
 }
 
 .archive-paper {

@@ -3,6 +3,7 @@ import { AlertTriangle, BadgeCheck, Clock, Compass, Martini, Moon, Music, Naviga
 import { nightlife } from '../../data/nightlife'
 import type { NightlifeItem } from '../../types'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
 type NightMetricKey = 'energy' | 'crowd' | 'transport' | 'noise' | 'polish' | 'late'
@@ -23,6 +24,7 @@ type NightPlan = {
   warning: string
   whyWorks: string
   afterHours: string
+  returnPlan: string
   flow: string[]
   flowNotes: string[]
   cardHint: string
@@ -49,6 +51,7 @@ const nightPlans: Record<string, NightPlan> = {
     warning: 'Beach bars work best before the loudest part of the night starts.',
     whyWorks: 'It gives the night a coastal start: sunset, music, sand, and a simple exit before the club rhythm takes over.',
     afterHours: 'Late snacks are easiest around the main pedestrian areas.',
+    returnPlan: 'Decide whether this stays a beach-bar night before the group drifts toward louder south-side routes.',
     flow: ['Sunset drink', 'Beach bar cluster', 'Choose louder or quieter', 'Direct walk or taxi back'],
     flowNotes: ['Start while the light is still soft.', 'Let the first venue set the volume.', 'Do not drift south by accident if you want a quiet night.', 'Keep the return route simple.'],
     cardHint: 'Best for casual drinks that can stay easy or become louder.',
@@ -71,6 +74,7 @@ const nightPlans: Record<string, NightPlan> = {
     warning: 'Cacao and south-side beach bars change the rhythm quickly - useful for party routes, not quiet nights.',
     whyWorks: 'It avoids wasting energy early and treats the club zone as the main event after food and a clear return plan.',
     afterHours: 'Late food is usually easier near the main pedestrian routes.',
+    returnPlan: 'Set the way back before midnight. After the main event starts, transport decisions get slower and messier.',
     flow: ['Dinner first', 'Main strip warmup', 'Club or Cacao zone', 'Food near the route home'],
     flowNotes: ['Eat before the group starts splitting.', 'Choose one main direction instead of hopping randomly.', 'Make this the peak, not the first stop.', 'End near food, water and transport.'],
     cardHint: 'For groups who want the loudest Sunny Beach rhythm.',
@@ -93,6 +97,7 @@ const nightPlans: Record<string, NightPlan> = {
     warning: 'Sun, drinks and transport make timing matter more than expected.',
     whyWorks: 'It lets groups get the party atmosphere early, then decide whether to continue or reset before the night.',
     afterHours: 'Keep dinner simple nearby before moving into the night.',
+    returnPlan: 'Build in a reset after the event so dinner and transport do not become decisions made while tired.',
     flow: ['Afternoon event', 'Hydrate and reset', 'Simple dinner', 'Continue or call it'],
     flowNotes: ['Start earlier than a club night.', 'Build in a pause, not just another drink.', 'Avoid a long transfer while tired.', 'Choose the night only if the group still has energy.'],
     cardHint: 'Good for groups who want resort energy before club hours.',
@@ -115,6 +120,7 @@ const nightPlans: Record<string, NightPlan> = {
     warning: 'Live music and relaxed bars are better when you want atmosphere without committing to a club night.',
     whyWorks: 'It keeps the evening human-scaled: dinner, music, short walk, and no pressure to turn it into a late route.',
     afterHours: 'Walkable food stops are easier than late transfers.',
+    returnPlan: 'Keep the evening in one area. A short walk back protects the relaxed mood better than a second transfer.',
     flow: ['Dinner', 'Live terrace', 'Short walk', 'Quiet finish'],
     flowNotes: ['Pick the area first, then the venue.', 'Let the music be the anchor.', 'Stay walkable if the night is low-key.', 'Do not force a second transfer.'],
     cardHint: 'For atmosphere without the commitment of a club night.',
@@ -137,6 +143,7 @@ const nightPlans: Record<string, NightPlan> = {
     warning: 'Do not assume quieter edges have food late at night.',
     whyWorks: 'It makes the end of the night safer and simpler: food, water, orientation, then a direct way back.',
     afterHours: 'Keep it practical: quick food, water, and a direct route back.',
+    returnPlan: 'Use food as the regroup point, then go home directly instead of adding a random extra stop.',
     flow: ['Exit the venue', 'Food and water', 'Re-group', 'Simple route back'],
     flowNotes: ['Leave before everyone scatters.', 'Choose practical over scenic.', 'Check who needs a taxi.', 'Do not add a new party stop by accident.'],
     cardHint: 'The useful late-night move, not the glamorous one.',
@@ -159,6 +166,7 @@ const nightPlans: Record<string, NightPlan> = {
     warning: 'Sveti Vlas evenings work best when you treat the marina as the finish.',
     whyWorks: 'It keeps the night elegant and readable: view, cocktail, conversation, then a quiet return instead of forcing a club route.',
     afterHours: 'A slow walk beats trying to turn it into a club route.',
+    returnPlan: 'Check the return before the last drink. This plan works because it stays slow and intentional.',
     flow: ['Viewpoint or marina walk', 'Cocktails', 'Conversation', 'Quiet return'],
     flowNotes: ['Start with the light, not the drink.', 'Let the marina set the pace.', 'Keep the night small and intentional.', 'Return before transport becomes the problem.'],
     cardHint: 'For a polished evening with views and lower noise.',
@@ -319,9 +327,9 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
               A cinematic evening guide for the coast after dark.
             </h2>
           </div>
-          <p className="max-w-2xl text-lg leading-8 text-white/68">
+          <SectionIntro label="Evening guide" tone="dark">
             Choose the night by mood, noise, transport and how you want the evening to end, from sunset cocktails to south-side club energy.
-          </p>
+          </SectionIntro>
         </motion.div>
 
         <motion.div className="mt-8 overflow-hidden rounded-[1.75rem] border border-white/12 bg-white/7 shadow-[0_32px_90px_rgba(0,0,0,0.28)] backdrop-blur" variants={fadeUp}>
@@ -418,6 +426,13 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
                     <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/42">Late value</p>
                     <p className="mt-1 text-sm font-bold text-white">{selectedPlan.metrics.late.value}/100</p>
                   </div>
+                </div>
+                <div className="mt-3 rounded-[1rem] border border-[color:var(--turquoise)]/18 bg-[color:var(--turquoise)]/10 px-3 py-2.5">
+                  <span className="inline-flex items-center gap-2 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.13em] text-[color:var(--turquoise)]">
+                    <Navigation size={13} aria-hidden="true" />
+                    Return plan
+                  </span>
+                  <p className="mt-1.5 text-sm font-semibold leading-6 text-white/84">{selectedPlan.returnPlan}</p>
                 </div>
               </div>
             </aside>

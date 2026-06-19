@@ -3,6 +3,7 @@ import { Archive, BadgeCheck, Camera, Clock3, Layers, MapPinned, Stamp } from 'l
 import { useState } from 'react'
 import { archiveDisclaimer, archiveEntries } from '../../data/archive'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
 type ArchiveMode = 'then' | 'now'
@@ -90,9 +91,9 @@ export function ThenNow() {
               A digital postcard museum for a changing coast.
             </h2>
           </div>
-          <p className="max-w-2xl text-lg leading-8 tracking-normal text-[color:var(--muted-foreground)] [overflow-wrap:normal] [word-break:normal]">
+          <SectionIntro label="Archive lens">
             Trace Sunny Beach from planned resort and postcard memory to today&apos;s layered map of party zones, old streets, marina evenings and quieter edges.
-          </p>
+          </SectionIntro>
         </motion.div>
 
         <motion.div className="mt-8 overflow-hidden rounded-[1.75rem] border border-white/72 bg-white/58 shadow-[0_32px_90px_rgba(9,58,82,0.13)] backdrop-blur" variants={fadeUp}>
