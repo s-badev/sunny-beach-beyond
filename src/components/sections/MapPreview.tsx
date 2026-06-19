@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, ExternalLink, GitBranch, MapPin, Plus, RotateCcw, Search, X } from 'lucide-react'
+import { AlertTriangle, Check, Compass, ExternalLink, GitBranch, MapPin, Plus, RotateCcw, Search, ShieldCheck, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { places } from '../../data/places'
 import type { AreaName, Place, PlaceCategory } from '../../types'
@@ -67,6 +67,41 @@ function buildRoutePath(stops: Place[]) {
     .join(' ')
 }
 
+function getNextMove(place: Place) {
+  if (place.category === 'Clubs' || place.category === 'Bars') {
+    return {
+      title: 'Good next move',
+      text: 'Pair this with late food or a direct return plan. Do not leave transport vague after the loud stops.',
+    }
+  }
+
+  if (place.area === 'Nessebar') {
+    return {
+      title: 'Good next move',
+      text: 'Pair this with an old-town walk or sea-wall pause, then add buffer time before dinner or sunset.',
+    }
+  }
+
+  if (place.area === 'Sveti Vlas') {
+    return {
+      title: 'Good next move',
+      text: 'Pair it with Marina Dinevi or a sunset viewpoint, and treat the marina as the evening finish.',
+    }
+  }
+
+  if (place.area === 'Elenite') {
+    return {
+      title: 'Good next move',
+      text: 'Use this as a slow planned stop. It works better as a stay-put beach day than a quick hop.',
+    }
+  }
+
+  return {
+    title: 'Good next move',
+    text: 'Pair nearby beach time with a simple promenade stop, then avoid stacking too many far areas into one day.',
+  }
+}
+
 export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, onAddStop, onRemoveStop }: MapPreviewProps) {
   const [selectedArea, setSelectedArea] = useState<AreaFilter>('All')
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All')
@@ -106,6 +141,24 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
         ? 'marina day'
         : 'beach day'
   const currentViewLabel = `${selectedArea === 'All' ? 'All areas' : selectedArea} / ${selectedCategory === 'All' ? 'all categories' : selectedCategory}`
+  const nextMove = activePlace ? getNextMove(activePlace) : null
+  const checklistItems = [
+    {
+      label: 'Same-day fit',
+      complete: selectedStops.length > 0,
+      note: selectedStops.length > 0 ? 'Route has a starting rhythm.' : 'Add one stop to start shaping the day.',
+    },
+    {
+      label: 'Route line',
+      complete: selectedStops.length >= 2,
+      note: selectedStops.length >= 2 ? 'Two or more stops are connected on the map.' : 'Add 2+ stops to draw a route line.',
+    },
+    {
+      label: 'Transport check',
+      complete: selectedStops.some((stop) => stop.area !== selectedStops[0]?.area),
+      note: selectedStops.some((stop) => stop.area !== selectedStops[0]?.area) ? 'Cross-area route: allow transfer time.' : 'Close on the map can still be slow in summer.',
+    },
+  ]
 
   function addActivePlaceToRoute() {
     if (!activePlace) return
@@ -227,7 +280,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                   <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--sea-deep)]/62">Places</p>
                   <span className="rounded-full bg-[color:var(--foam)] px-2 py-1 text-xs font-bold text-[color:var(--sea-deep)]">{filteredPlaces.length}</span>
                 </div>
-                <div className="mt-3 grid max-h-[19rem] gap-2.5 overflow-auto pr-1 sm:max-h-[22rem] lg:max-h-[25rem]">
+                <div className="mt-3 grid max-h-[19rem] gap-2.5 overflow-x-hidden overflow-y-auto pr-1 sm:max-h-[22rem] lg:max-h-[25rem]">
                   {filteredPlaces.length > 0 ? (
                     filteredPlaces.map((place) => (
                       <motion.button
@@ -237,20 +290,20 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                         whileTap={{ scale: 0.99 }}
                         onClick={() => onSelectMapPlace(place.id)}
                         data-active={activePlace?.id === place.id}
-                        className={`interactive-card active-rail rounded-[1.15rem] border p-3 text-left ${
+                        className={`interactive-card active-rail w-full min-w-0 rounded-[1.15rem] border p-3 text-left ${
                           activePlace?.id === place.id
                             ? 'border-[color:var(--turquoise)] bg-white shadow-glow'
                             : 'border-[color:var(--border)]/74 bg-white/72 hover:bg-white'
                         }`}
                       >
-                        <span className="flex items-start justify-between gap-3">
-                          <span className="min-w-0">
+                        <span className="flex min-w-0 items-start justify-between gap-3">
+                          <span className="min-w-0 flex-1">
                             <span className="block truncate font-serif text-lg leading-tight text-[color:var(--ink)]">{place.name}</span>
                             <span className="mt-1.5 block text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--muted-foreground)]">
                               {place.area}
                             </span>
                           </span>
-                          <span className={`shrink-0 rounded-full px-2 py-1 text-[0.62rem] font-bold ${categoryTone[place.category]}`}>
+                          <span className={`max-w-[5.75rem] shrink-0 truncate rounded-full px-2 py-1 text-[0.62rem] font-bold ${categoryTone[place.category]}`}>
                             {categoryShort[place.category]}
                           </span>
                         </span>
@@ -274,8 +327,8 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
               </div>
             </aside>
 
-            <div className="min-w-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.42),rgba(223,246,237,0.36))] p-3 sm:p-5 xl:p-6">
-              <div className="map-canvas">
+            <div className="flex min-w-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.42),rgba(223,246,237,0.36))] p-3 sm:p-5 xl:p-6">
+              <div className="map-canvas min-h-full flex-1">
                 <svg className="absolute inset-0 z-10 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                   <path d="M27 2 C 33 12, 36 23, 34 34 C 32 47, 41 57, 44 68 C 48 80, 42 89, 36 98" fill="none" stroke="rgba(255,248,226,0.92)" strokeWidth="1.25" />
                   <path d="M33 3 C 42 15, 45 30, 43 43 C 41 57, 52 68, 59 79 C 64 87, 64 94, 60 100" fill="none" stroke="rgba(255,255,255,0.48)" strokeDasharray="3 4" strokeWidth="0.62" />
@@ -515,6 +568,61 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                   )}
                 </AnimatePresence>
               </div>
+
+              {activePlace && (
+                <div className="mt-4 grid gap-3">
+                  <div className="rounded-[1.25rem] border border-[color:var(--border)]/75 bg-white/82 p-4 shadow-soft">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
+                        <Compass size={13} aria-hidden="true" />
+                        Stop context
+                      </p>
+                      <span className={`max-w-[6rem] truncate rounded-full px-2.5 py-1 text-[0.66rem] font-bold ${categoryTone[activePlace.category]}`}>
+                        {categoryShort[activePlace.category]}
+                      </span>
+                    </div>
+                    <p className="mt-3 text-sm font-bold leading-6 text-[color:var(--ink)]">Best use: {activePlace.bestFor}</p>
+                    <p className="mt-1.5 text-xs leading-5 text-[color:var(--muted-foreground)]">
+                      {activePlace.area} stop. Use it when the day rhythm matches the plan, not just because the pin looks close.
+                    </p>
+                  </div>
+
+                  <div className="rounded-[1.25rem] border border-[color:var(--border)]/75 bg-white/82 p-4 shadow-soft">
+                    <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
+                      <ShieldCheck size={13} aria-hidden="true" />
+                      Route checklist
+                    </p>
+                    <div className="mt-3 grid gap-2">
+                      {checklistItems.map((item) => (
+                        <div key={item.label} className="flex gap-3 rounded-[1rem] bg-[color:var(--background)]/68 px-3 py-2">
+                          <span
+                            className={`mt-0.5 grid size-6 shrink-0 place-items-center rounded-full ${
+                              item.complete ? 'bg-[color:var(--turquoise)] text-[color:var(--night)]' : 'bg-white text-[color:var(--sea-deep)]'
+                            }`}
+                          >
+                            {item.complete ? <Check size={13} aria-hidden="true" /> : <Plus size={13} aria-hidden="true" />}
+                          </span>
+                          <p className="text-xs leading-5 text-[color:var(--muted-foreground)]">
+                            <span className="block font-bold text-[color:var(--ink)]">{item.label}</span>
+                            {item.note}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-[1.25rem] border border-[color:var(--coral)]/18 bg-[color:var(--coral-soft)]/24 p-4 shadow-soft">
+                    <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">
+                      <AlertTriangle size={13} aria-hidden="true" />
+                      {nextMove?.title}
+                    </p>
+                    <p className="mt-2 text-sm font-medium leading-6 text-[color:var(--ink)]">{nextMove?.text}</p>
+                    <p className="mt-2 border-t border-[color:var(--coral)]/14 pt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">
+                      Build routes by day rhythm, transport friction, and timing. Distance alone is the least useful signal in peak summer.
+                    </p>
+                  </div>
+                </div>
+              )}
             </aside>
           </div>
         </motion.div>

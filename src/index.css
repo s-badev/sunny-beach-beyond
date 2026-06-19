@@ -17,7 +17,7 @@
   --coral-soft: #ffd6cf;
   --night: #071a2d;
   --ink: #10242d;
-  --nav-offset: 8.25rem;
+  --nav-offset: 9.75rem;
 
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--foreground);
@@ -134,7 +134,7 @@ select {
 
 @media (min-width: 1024px) {
   :root {
-    --nav-offset: 5.25rem;
+    --nav-offset: 6.75rem;
   }
 }
 
@@ -148,6 +148,16 @@ select {
 #routes,
 #archive {
   scroll-margin-top: var(--nav-offset);
+}
+
+#map {
+  padding-bottom: 3.75rem;
+}
+
+@media (min-width: 640px) {
+  #map {
+    padding-bottom: 4.5rem;
+  }
 }
 
 .section-inner {
@@ -652,7 +662,8 @@ select {
 .map-canvas {
   position: relative;
   isolation: isolate;
-  min-height: 42rem;
+  height: 100%;
+  min-height: 41rem;
   overflow: hidden;
   border-radius: 1.55rem;
   border: 1px solid rgba(255, 255, 255, 0.68);
@@ -663,6 +674,18 @@ select {
   box-shadow:
     0 30px 78px rgba(9, 58, 82, 0.22),
     0 0 0 1px rgba(255, 255, 255, 0.28) inset;
+}
+
+@media (max-width: 639px) {
+  .map-canvas {
+    min-height: 32rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .map-canvas {
+    min-height: 33.5rem;
+  }
 }
 
 .map-canvas::before {
