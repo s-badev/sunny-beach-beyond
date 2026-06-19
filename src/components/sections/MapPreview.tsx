@@ -12,12 +12,34 @@ type CategoryFilter = PlaceCategory | 'All'
 const areaFilters: AreaFilter[] = ['All', 'Sunny Beach', 'Nessebar', 'Sveti Vlas', 'Elenite']
 const categoryFilters: CategoryFilter[] = ['All', 'Beaches', 'Restaurants', 'Cafes', 'Bars', 'Clubs', 'Hotels', 'Parking', 'Viewpoints']
 const mapZones = [
-  { label: 'Elenite bay', x: '16%', y: '13%' },
-  { label: 'Sveti Vlas edge', x: '24%', y: '22%' },
-  { label: 'Sunny Beach strip', x: '36%', y: '40%' },
-  { label: 'South beach', x: '42%', y: '60%' },
-  { label: 'Old Nessebar', x: '56%', y: '77%' },
+  { label: 'Elenite bay', x: '13%', y: '12%' },
+  { label: 'Sveti Vlas marina', x: '20%', y: '25%' },
+  { label: 'Sunny Beach strip', x: '33%', y: '44%' },
+  { label: 'South beach', x: '41%', y: '63%' },
+  { label: 'Old Nessebar', x: '55%', y: '80%' },
 ]
+
+const categoryTone: Record<PlaceCategory, string> = {
+  Beaches: 'bg-[color:var(--sand)] text-[color:var(--ink)]',
+  Restaurants: 'bg-[color:var(--foam)] text-[color:var(--sea-deep)]',
+  Cafes: 'bg-white/82 text-[color:var(--ink)]',
+  Bars: 'bg-[color:var(--coral-soft)] text-[color:var(--ink)]',
+  Clubs: 'bg-[color:var(--coral)] text-white',
+  Hotels: 'bg-white/20 text-white',
+  Parking: 'bg-[color:var(--sea-deep)] text-white',
+  Viewpoints: 'bg-[color:var(--turquoise)] text-[color:var(--night)]',
+}
+
+const categoryShort: Record<PlaceCategory, string> = {
+  Beaches: 'Beach',
+  Restaurants: 'Dine',
+  Cafes: 'Cafe',
+  Bars: 'Bar',
+  Clubs: 'Club',
+  Hotels: 'Stay',
+  Parking: 'Park',
+  Viewpoints: 'View',
+}
 
 type MapPreviewProps = {
   selectedMapPlace: string
@@ -25,6 +47,24 @@ type MapPreviewProps = {
   onSelectMapPlace: (placeId: string) => void
   onAddStop: (place: Place) => void
   onRemoveStop: (placeId: string) => void
+}
+
+function pointFromPosition(place: Place) {
+  return {
+    x: Number.parseFloat(place.position.x),
+    y: Number.parseFloat(place.position.y),
+  }
+}
+
+function buildRoutePath(stops: Place[]) {
+  if (stops.length < 2) return ''
+
+  return stops
+    .map((stop, index) => {
+      const point = pointFromPosition(stop)
+      return `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`
+    })
+    .join(' ')
 }
 
 export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, onAddStop, onRemoveStop }: MapPreviewProps) {
@@ -57,6 +97,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
   const activePlace = filteredPlaces.find((place) => place.id === selectedMapPlace) ?? filteredPlaces[0]
   const activePlaceIsAdded = activePlace ? selectedStops.some((stop) => stop.id === activePlace.id) : false
   const routeIsFull = selectedStops.length >= 4
+  const routePath = buildRoutePath(selectedStops)
   const routeMood = selectedStops.some((stop) => stop.category === 'Clubs' || stop.category === 'Bars')
     ? 'night route'
     : selectedStops.some((stop) => stop.area === 'Nessebar')
@@ -64,6 +105,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
       : selectedStops.some((stop) => stop.area === 'Sveti Vlas')
         ? 'marina day'
         : 'beach day'
+  const currentViewLabel = `${selectedArea === 'All' ? 'All areas' : selectedArea} / ${selectedCategory === 'All' ? 'all categories' : selectedCategory}`
 
   function addActivePlaceToRoute() {
     if (!activePlace) return
@@ -84,270 +126,396 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
   }
 
   return (
-    <MotionSection id="map" className="section-shell overflow-hidden bg-[radial-gradient(circle_at_14%_10%,rgba(32,199,189,0.28),transparent_22rem),linear-gradient(145deg,#071a2d,#063b5b_58%,#04111f)] text-white">
-      <div className="grain absolute inset-0 opacity-12" aria-hidden="true" />
+    <MotionSection id="map" className="section-shell overflow-hidden bg-[linear-gradient(180deg,#f3fbf8_0%,#e6f5f2_52%,#fff8e8_100%)] text-[color:var(--ink)]">
+      <div className="grain absolute inset-0 opacity-35" aria-hidden="true" />
       <div className="section-inner">
-        <motion.div className="grid gap-8 lg:grid-cols-[0.72fr_1fr] lg:items-end" variants={fadeUp}>
+        <motion.div className="grid gap-8 lg:grid-cols-[0.7fr_1fr] lg:items-end" variants={fadeUp}>
           <div>
             <SectionLabel>Map</SectionLabel>
             <h2 className="text-balance font-serif text-4xl font-semibold leading-tight sm:text-5xl">Interactive coast preview.</h2>
           </div>
-          <p className="max-w-2xl text-lg leading-8 text-white/68">
+          <p className="max-w-2xl text-lg leading-8 text-[color:var(--muted-foreground)]">
             Filter the coastal map by area or category, save up to four stops, and open Google Maps when you want real-world directions.
           </p>
         </motion.div>
 
-        <motion.div className="mt-9 grid gap-5 lg:grid-cols-[23rem_1fr]" variants={fadeUp}>
-          <aside className="glass-dark rounded-[1.35rem] p-4 shadow-soft sm:p-5">
-            <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/9 px-4 py-2.5 text-sm text-white/72">
-              <Search size={16} aria-hidden="true" />
-              <span>{filteredPlaces.length} matching places</span>
-              {(selectedArea !== 'All' || selectedCategory !== 'All') && (
-                <button type="button" onClick={resetFilters} className="interactive-control ml-auto rounded-full bg-white/10 px-2 py-1 text-[0.68rem] font-bold text-white/70 hover:bg-white/16 hover:text-white">
-                  Reset
-                </button>
-              )}
-            </div>
-
-            <div className="mt-5">
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/48">Area</p>
-              <div className="mt-2.5 flex flex-wrap gap-1.5">
-                {areaFilters.map((area) => (
-                  <motion.button
-                    key={area}
-                    type="button"
-                    whileTap={{ scale: 0.96 }}
-                    onClick={() => setSelectedArea(area)}
-                    className={`interactive-control rounded-full px-3 py-1.5 text-[0.72rem] font-bold ${
-                      selectedArea === area ? 'bg-[color:var(--sand)] text-[color:var(--ink)]' : 'bg-white/10 text-white/68 hover:bg-white/16'
-                    }`}
-                  >
-                    {area}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/48">Category</p>
-              <div className="mt-2.5 flex flex-wrap gap-1.5">
-                {categoryFilters.map((category) => (
-                  <motion.button
-                    key={category}
-                    type="button"
-                    whileTap={{ scale: 0.96 }}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`interactive-control rounded-full px-3 py-1.5 text-[0.72rem] font-bold ${
-                      selectedCategory === category ? 'bg-[color:var(--turquoise)] text-[color:var(--night)]' : 'bg-white/10 text-white/68 hover:bg-white/16'
-                    }`}
-                  >
-                    {category}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-5 rounded-2xl border border-white/10 bg-white/7 px-3.5 py-3 text-xs leading-5 text-white/62">
-              <p className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-white/46">Current view</p>
-              <p className="mt-1.5 font-semibold text-white/82">
-                {selectedArea === 'All' ? 'All areas' : selectedArea} / {selectedCategory === 'All' ? 'all categories' : selectedCategory}
-              </p>
-              <p className="mt-1">{filteredPlaces.length} place{filteredPlaces.length === 1 ? '' : 's'} available for this coastal read.</p>
-            </div>
-
-            <div className="mt-5 grid max-h-[18rem] gap-2.5 overflow-auto pr-1 sm:max-h-[22rem]">
-              {filteredPlaces.length > 0 ? (
-                filteredPlaces.map((place) => (
-                  <motion.button
-                    key={place.id}
-                    type="button"
-                    whileHover={{ x: 3 }}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={() => onSelectMapPlace(place.id)}
-                    data-active={activePlace?.id === place.id}
-                    className={`interactive-card rounded-2xl border p-3.5 text-left ${
-                      activePlace?.id === place.id ? 'border-[color:var(--turquoise)] bg-white/15 shadow-glow' : 'border-white/10 bg-white/8 hover:bg-white/12'
-                    }`}
-                  >
-                    <span className="flex items-start justify-between gap-2">
-                      <span className="font-serif text-lg leading-tight text-white">{place.name}</span>
-                      {activePlace?.id === place.id && <span className="rounded-full bg-[color:var(--turquoise)]/18 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-[color:var(--foam)]">Active</span>}
-                    </span>
-                    <span className="mt-1.5 block text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/52">
-                      {place.area} / {place.category}
-                    </span>
-                  </motion.button>
-                ))
-              ) : (
-                <div className="rounded-2xl border border-white/10 bg-white/7 p-4 text-sm leading-6 text-white/62">
-                  <p className="font-semibold text-white">No places match this filter pair.</p>
-                  <p className="mt-1">Reset filters or loosen one side to bring coast stops back.</p>
-                  <button type="button" onClick={resetFilters} className="interactive-control mt-3 inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/18">
-                    <RotateCcw size={13} aria-hidden="true" />
-                    Show all places
-                  </button>
+        <motion.div
+          className="mt-9 overflow-hidden rounded-[1.75rem] border border-white/70 bg-white/54 shadow-[0_32px_90px_rgba(9,58,82,0.14)] backdrop-blur"
+          variants={fadeUp}
+        >
+          <div className="grid min-w-0 gap-0 lg:grid-cols-[19rem_minmax(0,1fr)] xl:grid-cols-[20.5rem_minmax(0,1fr)_21rem]">
+            <aside className="min-w-0 border-b border-[color:var(--border)]/75 bg-white/62 p-4 sm:p-5 lg:border-b-0 lg:border-r">
+              <div className="rounded-[1.35rem] border border-[color:var(--border)]/70 bg-white/78 p-3 shadow-soft">
+                <div className="flex items-center gap-3 rounded-2xl bg-[color:var(--foam)] px-3 py-2.5 text-sm font-semibold text-[color:var(--sea-deep)]">
+                  <Search size={16} aria-hidden="true" />
+                  <span className="min-w-0 flex-1 whitespace-nowrap">
+                    {filteredPlaces.length} place{filteredPlaces.length === 1 ? '' : 's'}
+                  </span>
+                  {(selectedArea !== 'All' || selectedCategory !== 'All') && (
+                    <button
+                      type="button"
+                      onClick={resetFilters}
+                      className="interactive-control inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)] shadow-sm hover:bg-[color:var(--sand)]"
+                    >
+                      <RotateCcw size={12} aria-hidden="true" />
+                      Reset
+                    </button>
+                  )}
                 </div>
-              )}
-            </div>
-            <div className="mt-5 rounded-2xl border border-white/10 bg-white/8 p-3.5">
-              <div className="flex items-center justify-between gap-3">
-                <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/52">
-                  <GitBranch size={13} aria-hidden="true" />
-                  Route sketch
-                </p>
-                <span className={`rounded-full px-2 py-0.5 text-[0.68rem] font-bold ${routeIsFull ? 'bg-[color:var(--coral)]/22 text-[color:var(--coral-soft)]' : 'bg-white/10 text-white/62'}`}>{selectedStops.length}/4</span>
+
+                <div className="mt-4 rounded-[1.15rem] border border-[color:var(--border)]/70 bg-[color:var(--background)]/72 p-3">
+                  <p className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--muted-foreground)]">Current view</p>
+                  <p className="mt-1.5 text-sm font-bold text-[color:var(--ink)]">{currentViewLabel}</p>
+                  <p className="mt-1 text-xs leading-5 text-[color:var(--muted-foreground)]">
+                    {filteredPlaces.length} place{filteredPlaces.length === 1 ? '' : 's'} visible on the coast.
+                  </p>
+                </div>
               </div>
-              <AnimatePresence initial={false}>
-                {selectedStops.length > 0 ? (
-                  <motion.div className="mt-3 grid gap-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    {selectedStops.map((stop, index) => (
-                      <motion.div
-                        key={stop.id}
-                        initial={{ opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 8 }}
-                        className="flex items-center justify-between gap-2 rounded-2xl border border-white/10 bg-white/9 px-3 py-2 text-xs font-semibold text-white/78"
-                      >
-                        <span className="flex min-w-0 items-center gap-2">
-                          <span className="grid size-5 shrink-0 place-items-center rounded-full bg-white/12 font-mono text-[0.62rem] text-white/70">{index + 1}</span>
-                          <span className="truncate">{stop.name}</span>
-                        </span>
-                        <button type="button" onClick={() => onRemoveStop(stop.id)} className="interactive-control rounded-full p-1 text-white/54 hover:bg-white/12 hover:text-white" aria-label={`Remove ${stop.name}`}>
-                          <X size={12} aria-hidden="true" />
-                        </button>
-                      </motion.div>
-                    ))}
-                    <div className="rounded-2xl border border-white/10 bg-white/7 px-3 py-2 text-xs leading-5 text-white/62">
-                      <span className="font-bold text-white/82">{selectedStops.length} stops / {routeMood}</span>
-                      <br />
-                      {routeIsFull ? 'Adding another place replaces the oldest stop, keeping the route lightweight.' : 'Add up to four stops, then open each place in Google Maps for exact directions.'}
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-3 text-xs leading-5 text-white/48">
-                    Choose a place on the map, then add it here to build a lightweight coastal route.
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
-          </aside>
 
-          <div className="map-canvas">
-            <svg className="absolute inset-0 z-10 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M28 6 C 34 15, 36 24, 35 34 C 34 47, 41 57, 45 68 C 49 78, 43 86, 36 94" fill="none" stroke="rgba(255,248,226,0.72)" strokeWidth="1.05" />
-              <path d="M34 8 C 42 18, 45 31, 44 43 C 43 55, 51 67, 57 76 C 63 84, 64 91, 60 97" fill="none" stroke="rgba(255,255,255,0.38)" strokeDasharray="3 4" strokeWidth="0.52" />
-              <path d="M19 73 C 30 66, 42 59, 56 42 C 64 32, 72 24, 83 14" fill="none" stroke="rgba(240,111,97,0.72)" strokeDasharray="2 3" strokeWidth="0.48" />
-              <path d="M26 28 C 40 34, 54 38, 70 30" fill="none" stroke="rgba(32,199,189,0.72)" strokeDasharray="2 3" strokeWidth="0.48" />
-              <path d="M27 84 C 38 74, 48 65, 58 58" fill="none" stroke="rgba(242,217,170,0.78)" strokeDasharray="1 3" strokeWidth="0.42" />
-            </svg>
+              <div className="mt-5">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--sea-deep)]/62">Area</p>
+                  <span className="text-xs font-semibold text-[color:var(--muted-foreground)]">{selectedArea === 'All' ? 'whole coast' : selectedArea}</span>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  {areaFilters.map((area) => (
+                    <motion.button
+                      key={area}
+                      type="button"
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => setSelectedArea(area)}
+                      aria-pressed={selectedArea === area}
+                      className={`interactive-control min-h-11 rounded-2xl border px-3 py-2 text-sm font-bold ${
+                        selectedArea === area
+                          ? 'border-[color:var(--sea-deep)] bg-[color:var(--sea-deep)] text-white shadow-[0_14px_34px_rgba(6,59,91,0.22)]'
+                          : 'border-[color:var(--border)]/80 bg-white/76 text-[color:var(--sea-deep)] hover:border-[color:var(--turquoise)] hover:bg-white'
+                      }`}
+                    >
+                      {area}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
 
-            <div className="absolute left-5 top-5 z-20 flex flex-wrap gap-2">
-              <span className="rounded-full bg-[color:var(--coral)] px-3.5 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white shadow-coral">
-                Live preview
-              </span>
-              <span className="rounded-full border border-white/12 bg-white/16 px-3.5 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur">
-                Burgas Bay
-              </span>
-            </div>
+              <div className="mt-5">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--sea-deep)]/62">Category</p>
+                  <span className="text-xs font-semibold text-[color:var(--muted-foreground)]">{selectedCategory === 'All' ? 'all types' : selectedCategory}</span>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  {categoryFilters.map((category) => (
+                    <motion.button
+                      key={category}
+                      type="button"
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => setSelectedCategory(category)}
+                      aria-pressed={selectedCategory === category}
+                      className={`interactive-control min-h-11 rounded-2xl border px-3 py-2 text-sm font-bold ${
+                        selectedCategory === category
+                          ? 'border-[color:var(--turquoise)] bg-[color:var(--turquoise)] text-[color:var(--night)] shadow-[0_14px_34px_rgba(32,199,189,0.2)]'
+                          : 'border-[color:var(--border)]/80 bg-white/76 text-[color:var(--sea-deep)] hover:border-[color:var(--turquoise)] hover:bg-white'
+                      }`}
+                    >
+                      {category}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
 
-            <div className="pointer-events-none absolute inset-0 z-20 hidden sm:block">
-              {mapZones.map((zone) => (
-                <span
-                  key={zone.label}
-                  className="absolute rounded-full border border-white/14 bg-[color:var(--night)]/22 px-3 py-1.5 text-[0.68rem] font-semibold leading-none text-white/78 shadow-soft backdrop-blur"
-                  style={{ left: zone.x, top: zone.y }}
-                >
-                  {zone.label}
-                </span>
-              ))}
-            </div>
-
-            {filteredPlaces.map((place) => {
-              const isActive = activePlace?.id === place.id
-
-              return (
-                <motion.button
-                  key={place.id}
-                  type="button"
-                  whileHover={{ scale: 1.13 }}
-                  whileTap={{ scale: 0.94 }}
-                  onClick={() => onSelectMapPlace(place.id)}
-                  className={`marker-pulse absolute z-30 grid size-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border text-white ring-2 ring-white/18 transition ${
-                    isActive
-                      ? 'border-white bg-[color:var(--coral)] shadow-coral scale-110 ring-white/55'
-                      : 'border-white/80 bg-[color:var(--sea-deep)]/92 shadow-soft hover:border-white hover:bg-[color:var(--turquoise)]'
-                  }`}
-                  style={{ left: place.position.x, top: place.position.y }}
-                  aria-label={`Select ${place.name}`}
-                >
-                  <MapPin size={17} aria-hidden="true" />
-                </motion.button>
-              )
-            })}
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activePlace?.id ?? 'empty-map-result'}
-                initial={{ opacity: 0, y: 16, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                transition={{ duration: 0.22 }}
-                className="glass-dark absolute inset-x-4 bottom-4 z-40 max-h-[74%] overflow-auto rounded-[1.25rem] p-4 shadow-glow sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[min(22rem,calc(100%-2.5rem))] sm:max-h-none sm:overflow-visible sm:p-5"
-              >
-                {activePlace ? (
-                  <>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="rounded-full bg-[color:var(--sand)] px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink)]">{activePlace.category}</p>
-                      <p className="rounded-full border border-white/10 bg-white/8 px-3 py-1 text-xs font-semibold text-white/62">{activePlace.area}</p>
-                    </div>
-                    <h3 className="mt-3 font-serif text-[1.9rem] leading-tight text-white">{activePlace.name}</h3>
-                    <p className="mt-2.5 text-sm leading-6 text-white/72">{activePlace.description}</p>
-                    <p className="mt-3 rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-sm font-semibold leading-6 text-white">
-                      <span className="block font-mono text-[0.66rem] uppercase tracking-[0.14em] text-[color:var(--sand)]/78">Use it for</span>
-                      {activePlace.bestFor}
-                    </p>
-                    <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                      <a
-                        href={activePlace.googleMapsUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="interactive-control inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--sand)] px-3.5 py-2 text-center text-sm font-bold text-[color:var(--ink)]"
-                      >
-                        Open in Google Maps
-                        <ExternalLink size={15} aria-hidden="true" />
-                      </a>
-                      <button
+              <div className="mt-5">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--sea-deep)]/62">Places</p>
+                  <span className="rounded-full bg-[color:var(--foam)] px-2 py-1 text-xs font-bold text-[color:var(--sea-deep)]">{filteredPlaces.length}</span>
+                </div>
+                <div className="mt-3 grid max-h-[19rem] gap-2.5 overflow-auto pr-1 sm:max-h-[22rem] lg:max-h-[25rem]">
+                  {filteredPlaces.length > 0 ? (
+                    filteredPlaces.map((place) => (
+                      <motion.button
+                        key={place.id}
                         type="button"
-                        onClick={addActivePlaceToRoute}
-                        aria-pressed={activePlaceIsAdded}
-                        className={`interactive-control inline-flex items-center justify-center gap-2 rounded-full px-3.5 py-2 text-center text-sm font-bold text-white ${
-                          activePlaceIsAdded ? 'bg-[color:var(--turquoise)]/22 text-[color:var(--foam)]' : 'bg-white/12 hover:bg-white/18'
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.99 }}
+                        onClick={() => onSelectMapPlace(place.id)}
+                        data-active={activePlace?.id === place.id}
+                        className={`interactive-card active-rail rounded-[1.15rem] border p-3 text-left ${
+                          activePlace?.id === place.id
+                            ? 'border-[color:var(--turquoise)] bg-white shadow-glow'
+                            : 'border-[color:var(--border)]/74 bg-white/72 hover:bg-white'
                         }`}
                       >
-                        {activePlaceIsAdded || addedPlaceId === activePlace.id ? <Check size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}
-                        {activePlaceIsAdded ? 'Already in route' : routeIsFull ? 'Replace oldest stop' : addedPlaceId === activePlace.id ? 'Added to route' : 'Add to Route'}
+                        <span className="flex items-start justify-between gap-3">
+                          <span className="min-w-0">
+                            <span className="block truncate font-serif text-lg leading-tight text-[color:var(--ink)]">{place.name}</span>
+                            <span className="mt-1.5 block text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--muted-foreground)]">
+                              {place.area}
+                            </span>
+                          </span>
+                          <span className={`shrink-0 rounded-full px-2 py-1 text-[0.62rem] font-bold ${categoryTone[place.category]}`}>
+                            {categoryShort[place.category]}
+                          </span>
+                        </span>
+                      </motion.button>
+                    ))
+                  ) : (
+                    <div className="rounded-[1.15rem] border border-[color:var(--border)]/78 bg-white/72 p-4 text-sm leading-6 text-[color:var(--muted-foreground)]">
+                      <p className="font-bold text-[color:var(--ink)]">No places match this filter pair.</p>
+                      <p className="mt-1">Reset filters or loosen one side to bring coast stops back.</p>
+                      <button
+                        type="button"
+                        onClick={resetFilters}
+                        className="interactive-control mt-3 inline-flex items-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3 py-1.5 text-xs font-bold text-white hover:bg-[color:var(--sea)]"
+                      >
+                        <RotateCcw size={13} aria-hidden="true" />
+                        Show all places
                       </button>
                     </div>
-                    <p className="mt-3 rounded-2xl border border-white/10 bg-white/7 px-3 py-2 text-xs leading-5 text-white/58">
-                      {activePlaceIsAdded
-                        ? 'This stop is already part of the route sketch.'
-                        : routeIsFull
-                          ? 'Route sketch is full; adding this place keeps the latest four stops.'
-                          : 'Add this stop when it belongs in the same day, not just because it looks close on the map.'}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--sand)]">Filters</p>
-                    <h3 className="mt-2 font-serif text-[1.7rem] leading-tight text-white">No matching coast stops</h3>
-                    <p className="mt-2.5 text-sm leading-6 text-white/72">Try another area or category to bring places back onto the map.</p>
-                    <div className="mt-4 rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-sm font-semibold text-white/58">
-                      Map actions are available once a stop is visible.
-                    </div>
-                  </>
-                )}
-              </motion.div>
-            </AnimatePresence>
+                  )}
+                </div>
+              </div>
+            </aside>
+
+            <div className="min-w-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.42),rgba(223,246,237,0.36))] p-3 sm:p-5 xl:p-6">
+              <div className="map-canvas">
+                <svg className="absolute inset-0 z-10 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M27 2 C 33 12, 36 23, 34 34 C 32 47, 41 57, 44 68 C 48 80, 42 89, 36 98" fill="none" stroke="rgba(255,248,226,0.92)" strokeWidth="1.25" />
+                  <path d="M33 3 C 42 15, 45 30, 43 43 C 41 57, 52 68, 59 79 C 64 87, 64 94, 60 100" fill="none" stroke="rgba(255,255,255,0.48)" strokeDasharray="3 4" strokeWidth="0.62" />
+                  <path d="M18 74 C 30 68, 42 59, 56 43 C 65 31, 74 23, 86 13" fill="none" stroke="rgba(240,111,97,0.72)" strokeDasharray="1.4 3" strokeWidth="0.55" />
+                  <path d="M23 29 C 39 34, 55 39, 73 30" fill="none" stroke="rgba(255,255,255,0.38)" strokeDasharray="2 5" strokeWidth="0.5" />
+                  <path d="M26 85 C 37 75, 48 66, 59 59" fill="none" stroke="rgba(242,217,170,0.88)" strokeDasharray="1 3" strokeWidth="0.48" />
+                  {routePath && (
+                    <motion.path
+                      key={routePath}
+                      className="route-dash"
+                      d={routePath}
+                      fill="none"
+                      stroke="rgba(255,255,255,0.95)"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeDasharray="5 5"
+                      strokeWidth="1.15"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ duration: 0.55, ease: 'easeOut' }}
+                    />
+                  )}
+                </svg>
+
+                <div className="absolute left-4 right-4 top-4 z-20 flex flex-wrap items-center gap-2 sm:left-5 sm:right-auto sm:top-5">
+                  <span className="rounded-full bg-[color:var(--coral)] px-3.5 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white shadow-coral">
+                    Coastal explorer
+                  </span>
+                  <span className="rounded-full border border-white/30 bg-white/24 px-3.5 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur">
+                    Burgas Bay
+                  </span>
+                </div>
+
+                <div className="pointer-events-none absolute inset-0 z-20 hidden sm:block">
+                  {mapZones.map((zone) => (
+                    <span
+                      key={zone.label}
+                      className="absolute rounded-full border border-white/24 bg-[color:var(--night)]/24 px-3 py-1.5 text-[0.68rem] font-semibold leading-none text-white/82 shadow-soft backdrop-blur"
+                      style={{ left: zone.x, top: zone.y }}
+                    >
+                      {zone.label}
+                    </span>
+                  ))}
+                </div>
+
+                {filteredPlaces.map((place) => {
+                  const isActive = activePlace?.id === place.id
+                  const isStop = selectedStops.some((stop) => stop.id === place.id)
+
+                  return (
+                    <motion.button
+                      key={place.id}
+                      type="button"
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.94 }}
+                      onClick={() => onSelectMapPlace(place.id)}
+                      className={`interactive-control group absolute z-30 -translate-x-1/2 -translate-y-1/2 rounded-full focus-visible:outline-white ${
+                        isActive ? 'marker-pulse' : ''
+                      }`}
+                      style={{ left: place.position.x, top: place.position.y }}
+                      aria-label={`Select ${place.name}`}
+                    >
+                      <span
+                        className={`grid size-10 place-items-center rounded-full border text-white ring-2 transition ${
+                          isActive
+                            ? 'border-white bg-[color:var(--coral)] shadow-coral ring-white/65'
+                            : isStop
+                              ? 'border-white bg-[color:var(--turquoise)] text-[color:var(--night)] ring-white/42 shadow-glow'
+                              : 'border-white/82 bg-[color:var(--sea-deep)]/92 ring-white/18 shadow-soft group-hover:border-white group-hover:bg-[color:var(--turquoise)] group-hover:text-[color:var(--night)]'
+                        }`}
+                      >
+                        <MapPin size={17} aria-hidden="true" />
+                      </span>
+                      {isStop && (
+                        <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full border border-white bg-[color:var(--night)] font-mono text-[0.6rem] font-bold text-white">
+                          {selectedStops.findIndex((stop) => stop.id === place.id) + 1}
+                        </span>
+                      )}
+                      <span
+                        className={`pointer-events-none absolute left-1/2 top-[calc(100%+0.45rem)] max-w-[8rem] -translate-x-1/2 rounded-full border border-white/24 bg-[color:var(--night)]/72 px-2.5 py-1 text-center text-[0.68rem] font-bold leading-tight text-white shadow-soft backdrop-blur transition ${
+                          isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'
+                        }`}
+                      >
+                        {place.name}
+                      </span>
+                    </motion.button>
+                  )
+                })}
+
+                <div className="absolute inset-x-4 bottom-4 z-20 rounded-[1.15rem] border border-white/22 bg-[color:var(--night)]/36 p-3 text-white shadow-soft backdrop-blur sm:left-auto sm:right-5 sm:w-[18rem]">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-white/62">Map readout</p>
+                    <span className="rounded-full bg-white/16 px-2 py-0.5 text-[0.68rem] font-bold text-white/78">{filteredPlaces.length} pins</span>
+                  </div>
+                  <p className="mt-2 text-sm font-semibold leading-5 text-white">
+                    {activePlace ? `${activePlace.name} is selected.` : 'No stop selected.'}
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-white/62">
+                    {selectedStops.length > 1 ? `${selectedStops.length} route stops are connected on the map.` : 'Add two or more stops to draw a route line.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <aside className="min-w-0 border-t border-[color:var(--border)]/75 bg-white/64 p-4 sm:p-5 lg:col-span-2 xl:col-span-1 xl:border-l xl:border-t-0">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activePlace?.id ?? 'empty-map-result'}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.22 }}
+                  className="rounded-[1.35rem] border border-[color:var(--border)]/75 bg-white/84 p-4 shadow-soft sm:p-5"
+                >
+                  {activePlace ? (
+                    <>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className={`rounded-full px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${categoryTone[activePlace.category]}`}>
+                          {activePlace.category}
+                        </p>
+                        <p className="rounded-full border border-[color:var(--border)] bg-[color:var(--foam)] px-3 py-1 text-xs font-bold text-[color:var(--sea-deep)]">{activePlace.area}</p>
+                      </div>
+                      <h3 className="mt-3 font-serif text-[2rem] leading-tight text-[color:var(--ink)]">{activePlace.name}</h3>
+                      <p className="mt-2.5 text-sm leading-6 text-[color:var(--muted-foreground)]">{activePlace.description}</p>
+                      <div className="mt-4 rounded-[1.1rem] border border-[color:var(--border)]/78 bg-[color:var(--background)]/68 px-3.5 py-3">
+                        <p className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sea)]">Why go</p>
+                        <p className="mt-1 text-sm font-bold leading-6 text-[color:var(--ink)]">{activePlace.bestFor}</p>
+                      </div>
+                      <div className="mt-4 grid gap-2">
+                        <a
+                          href={activePlace.googleMapsUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="interactive-control inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3.5 py-2.5 text-center text-sm font-bold !text-white hover:bg-[color:var(--sea)] hover:!text-white focus-visible:!text-white active:!text-white"
+                        >
+                          <span className="!text-white">Open in Google Maps</span>
+                          <ExternalLink size={15} className="!text-white" aria-hidden="true" />
+                        </a>
+                        <button
+                          type="button"
+                          onClick={addActivePlaceToRoute}
+                          aria-pressed={activePlaceIsAdded}
+                          className={`interactive-control inline-flex items-center justify-center gap-2 rounded-full px-3.5 py-2.5 text-center text-sm font-bold ${
+                            activePlaceIsAdded
+                              ? 'bg-[color:var(--turquoise)]/22 text-[color:var(--sea-deep)]'
+                              : 'bg-[color:var(--coral)] text-white shadow-coral hover:bg-[#e55f52]'
+                          }`}
+                        >
+                          {activePlaceIsAdded || addedPlaceId === activePlace.id ? <Check size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}
+                          {activePlaceIsAdded ? 'Already in route' : routeIsFull ? 'Replace oldest stop' : addedPlaceId === activePlace.id ? 'Added to route' : 'Add to route'}
+                        </button>
+                      </div>
+                      <p className="mt-3 rounded-[1rem] border border-[color:var(--border)]/70 bg-white/72 px-3 py-2 text-xs leading-5 text-[color:var(--muted-foreground)]">
+                        {activePlaceIsAdded
+                          ? 'This stop is already part of the route sketch.'
+                          : routeIsFull
+                            ? 'Route sketch is full; adding this place keeps the latest four stops.'
+                            : 'Add this stop when it belongs in the same day, not just because it looks close on the map.'}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--sea)]">Filters</p>
+                      <h3 className="mt-2 font-serif text-[1.7rem] leading-tight text-[color:var(--ink)]">No matching coast stops</h3>
+                      <p className="mt-2.5 text-sm leading-6 text-[color:var(--muted-foreground)]">Try another area or category to bring places back onto the map.</p>
+                      <button
+                        type="button"
+                        onClick={resetFilters}
+                        className="interactive-control mt-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3.5 py-2 text-sm font-bold text-white hover:bg-[color:var(--sea)]"
+                      >
+                        <RotateCcw size={14} aria-hidden="true" />
+                        Reset filters
+                      </button>
+                    </>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+
+              <div className="mt-4 rounded-[1.35rem] border border-[color:var(--border)]/75 bg-white/84 p-4 shadow-soft sm:p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--sea-deep)]/62">
+                    <GitBranch size={13} aria-hidden="true" />
+                    Route sketch
+                  </p>
+                  <span className={`rounded-full px-2.5 py-1 text-[0.68rem] font-bold ${routeIsFull ? 'bg-[color:var(--coral-soft)] text-[color:var(--ink)]' : 'bg-[color:var(--foam)] text-[color:var(--sea-deep)]'}`}>
+                    {selectedStops.length}/4
+                  </span>
+                </div>
+                <AnimatePresence initial={false}>
+                  {selectedStops.length > 0 ? (
+                    <motion.div className="mt-4 grid gap-2.5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                      {selectedStops.map((stop, index) => (
+                        <motion.div
+                          key={stop.id}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 8 }}
+                          className="relative flex items-center justify-between gap-3 rounded-[1.1rem] border border-[color:var(--border)]/70 bg-[color:var(--background)]/76 px-3 py-2.5 text-sm font-semibold text-[color:var(--ink)]"
+                        >
+                          {index < selectedStops.length - 1 && <span className="absolute left-[1.38rem] top-[2.55rem] h-4 w-px bg-[color:var(--turquoise)]/55" aria-hidden="true" />}
+                          <span className="flex min-w-0 items-center gap-3">
+                            <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[color:var(--sea-deep)] font-mono text-[0.68rem] text-white">{index + 1}</span>
+                            <span className="min-w-0">
+                              <span className="block truncate">{stop.name}</span>
+                              <span className="mt-0.5 block text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--muted-foreground)]">
+                                {stop.area} / {categoryShort[stop.category]}
+                              </span>
+                            </span>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => onRemoveStop(stop.id)}
+                            className="interactive-control shrink-0 rounded-full p-1.5 text-[color:var(--muted-foreground)] hover:bg-[color:var(--coral-soft)] hover:text-[color:var(--ink)]"
+                            aria-label={`Remove ${stop.name}`}
+                          >
+                            <X size={14} aria-hidden="true" />
+                          </button>
+                        </motion.div>
+                      ))}
+                      <div className="rounded-[1.1rem] border border-[color:var(--border)]/70 bg-white/72 px-3 py-2.5 text-xs leading-5 text-[color:var(--muted-foreground)]">
+                        <span className="font-bold text-[color:var(--ink)]">
+                          {selectedStops.length} stops / {routeMood}
+                        </span>
+                        <br />
+                        {routeIsFull ? 'Adding another place replaces the oldest stop, keeping the route lightweight.' : 'Add up to four stops, then open each place in Google Maps for exact directions.'}
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="mt-4 rounded-[1.1rem] border border-dashed border-[color:var(--border)] bg-[color:var(--background)]/58 p-4 text-sm leading-6 text-[color:var(--muted-foreground)]"
+                    >
+                      <p className="font-bold text-[color:var(--ink)]">Start with one coast stop.</p>
+                      <p className="mt-1">Choose a marker or place card, then add it here to build a simple day route.</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </aside>
           </div>
         </motion.div>
       </div>

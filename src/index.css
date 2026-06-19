@@ -445,40 +445,60 @@ select {
 
 .map-canvas {
   position: relative;
-  min-height: 38rem;
+  isolation: isolate;
+  min-height: 42rem;
   overflow: hidden;
-  border-radius: 1.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 1.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.68);
   background:
-    radial-gradient(circle at 75% 12%, rgba(204, 255, 244, 0.58), transparent 9rem),
-    radial-gradient(circle at 18% 82%, rgba(242, 217, 170, 0.26), transparent 13rem),
-    linear-gradient(135deg, #052944 0%, #087996 48%, #20c7bd 100%);
-  box-shadow: 0 28px 76px rgba(0, 0, 0, 0.3);
+    radial-gradient(circle at 82% 14%, rgba(204, 255, 244, 0.6), transparent 11rem),
+    radial-gradient(circle at 63% 80%, rgba(32, 199, 189, 0.34), transparent 16rem),
+    linear-gradient(142deg, #052944 0%, #07647d 46%, #1fbdb5 100%);
+  box-shadow:
+    0 30px 78px rgba(9, 58, 82, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.28) inset;
 }
 
 .map-canvas::before {
   content: "";
   position: absolute;
-  inset: 2% 47% -12% -12%;
-  border-radius: 42% 46% 38% 30%;
+  inset: -4% 48% -14% -16%;
+  z-index: 0;
+  border-radius: 34% 52% 40% 28%;
   background:
-    linear-gradient(98deg, rgba(255, 255, 255, 0.34), transparent 12%),
-    repeating-linear-gradient(86deg, rgba(6, 59, 91, 0.12) 0 1px, transparent 1px 18px),
-    linear-gradient(145deg, rgba(242, 217, 170, 0.98), rgba(255, 248, 226, 0.84)),
-    radial-gradient(circle at 68% 30%, rgba(255, 255, 255, 0.55), transparent 8rem);
-  box-shadow: 22px 0 70px rgba(255, 255, 255, 0.2);
-  transform: rotate(6deg);
+    linear-gradient(92deg, rgba(255, 255, 255, 0.42), transparent 10%),
+    radial-gradient(circle at 70% 23%, rgba(255, 255, 255, 0.62), transparent 8rem),
+    radial-gradient(circle at 62% 68%, rgba(126, 166, 141, 0.28), transparent 11rem),
+    repeating-linear-gradient(84deg, rgba(6, 59, 91, 0.12) 0 1px, transparent 1px 18px),
+    linear-gradient(146deg, rgba(255, 248, 226, 0.98), rgba(242, 217, 170, 0.9) 58%, rgba(200, 148, 71, 0.72));
+  box-shadow:
+    24px 0 70px rgba(255, 255, 255, 0.24),
+    14px 0 0 rgba(255, 248, 226, 0.18);
+  transform: rotate(5deg);
 }
 
 .map-canvas::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(120deg, transparent, #000 24%, #000 82%, transparent);
+    radial-gradient(ellipse at 77% 20%, transparent 0 22%, rgba(255, 255, 255, 0.14) 22.4%, transparent 23%),
+    radial-gradient(ellipse at 72% 58%, transparent 0 30%, rgba(255, 255, 255, 0.12) 30.4%, transparent 31%),
+    linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size:
+    46rem 32rem,
+    40rem 30rem,
+    42px 42px,
+    42px 42px;
+  background-position:
+    42% 10%,
+    28% 42%,
+    0 0,
+    0 0;
+  mask-image: linear-gradient(120deg, transparent, #000 18%, #000 86%, transparent);
 }
 
 .archive-then {
