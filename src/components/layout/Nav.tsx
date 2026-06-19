@@ -79,7 +79,7 @@ export function Nav() {
               href={item.href}
               className={`interactive-control shrink-0 rounded-full px-2.5 py-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--turquoise)] ${
                 activeSection === item.href.slice(1)
-                  ? 'bg-[color:var(--sea-deep)] text-white shadow-glow'
+                  ? 'bg-[color:var(--sea-deep)] !text-white shadow-glow hover:!text-white focus-visible:!text-white active:!text-white'
                   : 'hover:bg-white/70 hover:text-[color:var(--sea-deep)]'
               }`}
             >
