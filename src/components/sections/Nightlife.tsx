@@ -1,53 +1,175 @@
-import { motion } from 'framer-motion'
-import { Clock, Martini, Music, Utensils, Waves } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { AlertTriangle, BadgeCheck, Clock, Compass, Martini, Moon, Music, Navigation, Sparkles, Utensils, Waves, Zap, type LucideIcon } from 'lucide-react'
 import { nightlife } from '../../data/nightlife'
+import type { NightlifeItem } from '../../types'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
 import { SectionLabel } from '../ui/SectionLabel'
 
-const nightlifeIcons = [Waves, Music, Martini, Music, Utensils, Martini]
+type NightMetricKey = 'energy' | 'crowd' | 'transport' | 'noise' | 'polish' | 'late'
 
-const nightPlans: Record<string, { startTime: string; bestArea: string; warning: string; afterHours: string; flow: string }> = {
+type NightMetric = {
+  label: string
+  value: number
+  note: string
+}
+
+type NightPlan = {
+  startTime: string
+  bestArea: string
+  mood: string
+  energyLabel: string
+  crowdLabel: string
+  transportNote: string
+  warning: string
+  whyWorks: string
+  afterHours: string
+  flow: string[]
+  flowNotes: string[]
+  cardHint: string
+  metrics: Record<NightMetricKey, NightMetric>
+}
+
+const nightlifeIcons: Record<string, LucideIcon> = {
+  'beach-bars': Waves,
+  'night-clubs': Music,
+  'pool-parties': Zap,
+  'live-music': Martini,
+  'late-night-food': Utensils,
+  'chill-cocktail-bars': Moon,
+}
+
+const nightPlans: Record<string, NightPlan> = {
   'beach-bars': {
-    startTime: 'Start around sunset.',
-    bestArea: 'South and central Sunny Beach.',
-    warning: 'Check where the quiet route back to your hotel is before drinks.',
+    startTime: 'Sunset to late evening',
+    bestArea: 'South and central Sunny Beach',
+    mood: 'Beach-bar warmup',
+    energyLabel: 'Medium-high',
+    crowdLabel: 'Busy near the sand',
+    transportNote: 'Walkable if you stay central or south; taxi back if your hotel sits outside the strip.',
+    warning: 'Beach bars work best before the loudest part of the night starts.',
+    whyWorks: 'It gives the night a coastal start: sunset, music, sand, and a simple exit before the club rhythm takes over.',
     afterHours: 'Late snacks are easiest around the main pedestrian areas.',
-    flow: 'Sunset drink -> beach bar cluster -> direct walk or taxi back.',
+    flow: ['Sunset drink', 'Beach bar cluster', 'Choose louder or quieter', 'Direct walk or taxi back'],
+    flowNotes: ['Start while the light is still soft.', 'Let the first venue set the volume.', 'Do not drift south by accident if you want a quiet night.', 'Keep the return route simple.'],
+    cardHint: 'Best for casual drinks that can stay easy or become louder.',
+    metrics: {
+      energy: { label: 'Energy', value: 72, note: 'Social without starting at club level' },
+      crowd: { label: 'Crowd', value: 70, note: 'Busy when sunset turns into evening' },
+      transport: { label: 'Transport', value: 52, note: 'Easy if you plan the way back' },
+      noise: { label: 'Noise', value: 70, note: 'Rises quickly after dark' },
+      polish: { label: 'Polish', value: 48, note: 'Casual rather than refined' },
+      late: { label: 'Late-night', value: 68, note: 'Can become a late route' },
+    },
   },
   'night-clubs': {
-    startTime: 'Start after midnight.',
-    bestArea: 'Central and south Sunny Beach.',
-    warning: 'Plan return transport before the night gets loud.',
+    startTime: 'After midnight',
+    bestArea: 'Central and south Sunny Beach',
+    mood: 'Full-volume club night',
+    energyLabel: 'Very high',
+    crowdLabel: 'Peak crowd risk',
+    transportNote: 'Plan return transport before the night gets loud, especially outside Sunny Beach.',
+    warning: 'Cacao and south-side beach bars change the rhythm quickly - useful for party routes, not quiet nights.',
+    whyWorks: 'It avoids wasting energy early and treats the club zone as the main event after food and a clear return plan.',
     afterHours: 'Late food is usually easier near the main pedestrian routes.',
-    flow: 'Dinner first -> one main club zone -> late food near the route home.',
+    flow: ['Dinner first', 'Main strip warmup', 'Club or Cacao zone', 'Food near the route home'],
+    flowNotes: ['Eat before the group starts splitting.', 'Choose one main direction instead of hopping randomly.', 'Make this the peak, not the first stop.', 'End near food, water and transport.'],
+    cardHint: 'For groups who want the loudest Sunny Beach rhythm.',
+    metrics: {
+      energy: { label: 'Energy', value: 96, note: 'The loudest option here' },
+      crowd: { label: 'Crowd', value: 90, note: 'Expect pressure around peak hours' },
+      transport: { label: 'Transport', value: 76, note: 'Return planning matters' },
+      noise: { label: 'Noise', value: 94, note: 'Not built for quiet' },
+      polish: { label: 'Polish', value: 42, note: 'More intensity than elegance' },
+      late: { label: 'Late-night', value: 98, note: 'Built around late hours' },
+    },
   },
   'pool-parties': {
-    startTime: 'Start in the afternoon.',
-    bestArea: 'Sunny Beach hotel and party zones.',
+    startTime: 'Afternoon to early evening',
+    bestArea: 'Sunny Beach hotel and party zones',
+    mood: 'Day-party bridge',
+    energyLabel: 'High',
+    crowdLabel: 'Event-dependent',
+    transportNote: 'Keep dinner nearby before deciding whether the night continues.',
     warning: 'Sun, drinks and transport make timing matter more than expected.',
+    whyWorks: 'It lets groups get the party atmosphere early, then decide whether to continue or reset before the night.',
     afterHours: 'Keep dinner simple nearby before moving into the night.',
-    flow: 'Afternoon event -> simple dinner -> decide whether the night continues.',
+    flow: ['Afternoon event', 'Hydrate and reset', 'Simple dinner', 'Continue or call it'],
+    flowNotes: ['Start earlier than a club night.', 'Build in a pause, not just another drink.', 'Avoid a long transfer while tired.', 'Choose the night only if the group still has energy.'],
+    cardHint: 'Good for groups who want resort energy before club hours.',
+    metrics: {
+      energy: { label: 'Energy', value: 84, note: 'High before night even starts' },
+      crowd: { label: 'Crowd', value: 74, note: 'Depends on the event' },
+      transport: { label: 'Transport', value: 58, note: 'Timing can get awkward' },
+      noise: { label: 'Noise', value: 78, note: 'Loud but earlier' },
+      polish: { label: 'Polish', value: 36, note: 'Resort party, not refined evening' },
+      late: { label: 'Late-night', value: 54, note: 'Optional continuation' },
+    },
   },
   'live-music': {
-    startTime: 'Start after dinner.',
-    bestArea: 'Central Sunny Beach, Nessebar or Sveti Vlas terraces.',
-    warning: 'Venue mood changes quickly by night and season.',
+    startTime: 'Evening',
+    bestArea: 'Central Sunny Beach, Nessebar or Sveti Vlas terraces',
+    mood: 'Relaxed atmosphere',
+    energyLabel: 'Medium',
+    crowdLabel: 'Moderate',
+    transportNote: 'Prefer a walkable area after dinner instead of chasing venues across the coast.',
+    warning: 'Live music and relaxed bars are better when you want atmosphere without committing to a club night.',
+    whyWorks: 'It keeps the evening human-scaled: dinner, music, short walk, and no pressure to turn it into a late route.',
     afterHours: 'Walkable food stops are easier than late transfers.',
-    flow: 'Dinner -> live terrace -> short walk instead of a second transfer.',
+    flow: ['Dinner', 'Live terrace', 'Short walk', 'Quiet finish'],
+    flowNotes: ['Pick the area first, then the venue.', 'Let the music be the anchor.', 'Stay walkable if the night is low-key.', 'Do not force a second transfer.'],
+    cardHint: 'For atmosphere without the commitment of a club night.',
+    metrics: {
+      energy: { label: 'Energy', value: 52, note: 'Warm, not overwhelming' },
+      crowd: { label: 'Crowd', value: 46, note: 'Usually manageable' },
+      transport: { label: 'Transport', value: 42, note: 'Low if you choose one area' },
+      noise: { label: 'Noise', value: 48, note: 'Venue-dependent' },
+      polish: { label: 'Polish', value: 64, note: 'Can feel nicely grown-up' },
+      late: { label: 'Late-night', value: 38, note: 'Better as an earlier finish' },
+    },
   },
   'late-night-food': {
-    startTime: 'Useful after midnight.',
-    bestArea: 'Main resort center and busy pedestrian areas.',
-    warning: 'Do not assume quieter edges have many late options.',
+    startTime: 'Late night',
+    bestArea: 'Main resort center and busy pedestrian areas',
+    mood: 'Practical reset',
+    energyLabel: 'Low-medium',
+    crowdLabel: 'Busy after venues close',
+    transportNote: 'Keep it near the route home; quieter edges may not have many late options.',
+    warning: 'Do not assume quieter edges have food late at night.',
+    whyWorks: 'It makes the end of the night safer and simpler: food, water, orientation, then a direct way back.',
     afterHours: 'Keep it practical: quick food, water, and a direct route back.',
-    flow: 'Exit the venue -> food and water -> simple route back.',
+    flow: ['Exit the venue', 'Food and water', 'Re-group', 'Simple route back'],
+    flowNotes: ['Leave before everyone scatters.', 'Choose practical over scenic.', 'Check who needs a taxi.', 'Do not add a new party stop by accident.'],
+    cardHint: 'The useful late-night move, not the glamorous one.',
+    metrics: {
+      energy: { label: 'Energy', value: 36, note: 'Recovery mode' },
+      crowd: { label: 'Crowd', value: 64, note: 'Busy around closing times' },
+      transport: { label: 'Transport', value: 46, note: 'Works best on the way home' },
+      noise: { label: 'Noise', value: 42, note: 'Street energy, not venue noise' },
+      polish: { label: 'Polish', value: 24, note: 'Functional, not fancy' },
+      late: { label: 'Late-night', value: 90, note: 'Only useful late' },
+    },
   },
   'chill-cocktail-bars': {
-    startTime: 'Start at golden hour.',
-    bestArea: 'Sveti Vlas marina or quieter hotel zones.',
-    warning: 'Check return timing if staying outside Sveti Vlas.',
+    startTime: 'Sunset to evening',
+    bestArea: 'Sveti Vlas marina or quieter hotel zones',
+    mood: 'Polished slow evening',
+    energyLabel: 'Calm',
+    crowdLabel: 'Lower, reservation-dependent',
+    transportNote: 'Check return timing if staying outside Sveti Vlas.',
+    warning: 'Sveti Vlas evenings work best when you treat the marina as the finish.',
+    whyWorks: 'It keeps the night elegant and readable: view, cocktail, conversation, then a quiet return instead of forcing a club route.',
     afterHours: 'A slow walk beats trying to turn it into a club route.',
-    flow: 'Viewpoint or marina walk -> cocktails -> quiet return.',
+    flow: ['Viewpoint or marina walk', 'Cocktails', 'Conversation', 'Quiet return'],
+    flowNotes: ['Start with the light, not the drink.', 'Let the marina set the pace.', 'Keep the night small and intentional.', 'Return before transport becomes the problem.'],
+    cardHint: 'For a polished evening with views and lower noise.',
+    metrics: {
+      energy: { label: 'Energy', value: 34, note: 'Slow and controlled' },
+      crowd: { label: 'Crowd', value: 38, note: 'Usually easier than the strip' },
+      transport: { label: 'Transport', value: 62, note: 'Return timing needs attention' },
+      noise: { label: 'Noise', value: 26, note: 'The quietest night option' },
+      polish: { label: 'Polish', value: 88, note: 'Best for refined evenings' },
+      late: { label: 'Late-night', value: 34, note: 'Better before midnight' },
+    },
   },
 }
 
@@ -56,100 +178,261 @@ type NightlifeProps = {
   onSelectNightlife: (nightlifeId: string) => void
 }
 
-export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifeProps) {
-  const selectedPlan = nightPlans[selectedNightlife]
-  const selectedItem = nightlife.find((item) => item.id === selectedNightlife) ?? nightlife[0]
+function MetricBar({ metric }: { metric: NightMetric }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-[0.82rem] font-bold text-white">{metric.label}</p>
+        <span className="font-mono text-[0.68rem] font-semibold text-white/58">{metric.value}/100</span>
+      </div>
+      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/10">
+        <motion.span
+          className="block h-full rounded-full bg-[linear-gradient(90deg,var(--coral),var(--turquoise))]"
+          initial={{ width: 0 }}
+          animate={{ width: `${metric.value}%` }}
+          transition={{ duration: 0.42, ease: 'easeOut' }}
+        />
+      </div>
+      <p className="mt-1 text-xs leading-5 text-white/58">{metric.note}</p>
+    </div>
+  )
+}
+
+function InfoTile({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
+  return (
+    <div className="rounded-[1rem] border border-white/10 bg-white/7 px-3.5 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+      <span className="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--coral-soft)]/72">
+        <Icon size={14} aria-hidden="true" />
+        {label}
+      </span>
+      <span className="mt-1 block text-sm font-bold leading-5 text-white">{value}</span>
+    </div>
+  )
+}
+
+function FlowStep({ label, note, index, total }: { label: string; note: string; index: number; total: number }) {
+  const isFirst = index === 0
+  const isLast = index === total - 1
 
   return (
-    <MotionSection id="nightlife" className="section-shell overflow-hidden bg-[radial-gradient(circle_at_18%_12%,rgba(32,199,189,0.2),transparent_24rem),linear-gradient(150deg,#071a2d,#04111f_64%,#082c46)] text-white">
+    <motion.li
+      initial={{ opacity: 0, x: -8 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.24, delay: index * 0.035 }}
+      className="relative grid gap-3 rounded-[1.05rem] border border-white/10 bg-white/7 px-3.5 py-3 sm:grid-cols-[2.15rem_1fr]"
+    >
+      {!isLast && <span className="absolute left-[1.5rem] top-11 hidden h-[calc(100%+0.8rem)] w-px bg-[linear-gradient(180deg,var(--coral),rgba(32,199,189,0.38))] sm:block" aria-hidden="true" />}
+      <span className={`relative z-10 grid size-8 place-items-center rounded-full border font-mono text-[0.68rem] font-bold ${
+        isFirst
+          ? 'border-[color:var(--coral)] bg-[color:var(--coral)] text-white'
+          : isLast
+            ? 'border-[color:var(--turquoise)] bg-[color:var(--turquoise)] text-[color:var(--night)]'
+            : 'border-white/18 bg-white/12 text-white'
+      }`}>
+        {index + 1}
+      </span>
+      <span>
+        <span className="flex flex-wrap items-center gap-2">
+          <span className="font-serif text-lg leading-tight text-white">{label}</span>
+          <span className="rounded-full bg-white/9 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.1em] text-white/62">
+            {isFirst ? 'Start' : isLast ? 'Return' : index === 1 ? 'Middle' : 'Late'}
+          </span>
+        </span>
+        <span className="mt-1.5 block text-sm leading-6 text-white/64">{note}</span>
+      </span>
+    </motion.li>
+  )
+}
+
+function NightlifeCard({ item, isSelected, onSelect }: { item: NightlifeItem; isSelected: boolean; onSelect: () => void }) {
+  const Icon = nightlifeIcons[item.id] ?? Music
+  const plan = nightPlans[item.id]
+
+  return (
+    <motion.button
+      type="button"
+      variants={fadeUp}
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.99 }}
+      onClick={onSelect}
+      data-active={isSelected}
+      aria-pressed={isSelected}
+      aria-label={`Select ${item.title}`}
+      className={`interactive-card active-rail group min-w-0 overflow-hidden rounded-[1.25rem] border p-0 text-left shadow-soft ${
+        isSelected ? 'border-[color:var(--coral)]/62 bg-white/13 ring-2 ring-[color:var(--coral)]/20' : 'border-white/10 bg-white/7 hover:border-[color:var(--coral)]/38 hover:bg-white/10'
+      }`}
+    >
+      <div className="nightlife-card-strip border-b border-white/10 p-4">
+        <div className="relative z-10 flex items-start justify-between gap-3">
+          <span className="rounded-full bg-white/12 px-3 py-1 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.12em] text-white/76">
+            {plan.mood}
+          </span>
+          <span className={`grid size-10 shrink-0 place-items-center rounded-full border transition ${
+            isSelected ? 'border-[color:var(--coral)] bg-[color:var(--coral)] text-white shadow-coral' : 'border-white/18 bg-white/12 text-[color:var(--coral-soft)] group-hover:bg-[color:var(--turquoise)] group-hover:text-[color:var(--night)]'
+          }`}>
+            {isSelected ? <BadgeCheck size={18} aria-hidden="true" /> : <Icon size={18} aria-hidden="true" />}
+          </span>
+        </div>
+      </div>
+      <div className="p-4 sm:p-5">
+        <div className="flex flex-wrap gap-2">
+          <span className="rounded-full bg-[color:var(--coral)] px-3 py-1.5 text-[0.68rem] font-bold leading-none text-white">{item.bestTime}</span>
+          <span className="rounded-full border border-white/10 bg-white/8 px-3 py-1.5 text-[0.68rem] font-bold leading-none text-white/74">{plan.energyLabel}</span>
+        </div>
+        <h3 className="mt-4 font-serif text-2xl leading-tight text-white">{item.title}</h3>
+        <p className="mt-2 text-sm leading-6 text-white/68">{plan.cardHint}</p>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <div className="rounded-[0.95rem] bg-white/7 px-3 py-2">
+            <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/42">Crowd</p>
+            <p className="mt-1 text-sm font-bold text-white">{plan.crowdLabel}</p>
+          </div>
+          <div className="rounded-[0.95rem] bg-white/7 px-3 py-2">
+            <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/42">Noise</p>
+            <p className="mt-1 text-sm font-bold text-white">{plan.metrics.noise.value}/100</p>
+          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {item.tags.map((tag) => (
+            <span key={tag} className="rounded-full border border-white/10 bg-white/8 px-2.5 py-1 text-[0.72rem] font-semibold text-white/72">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.button>
+  )
+}
+
+export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifeProps) {
+  const selectedItem = nightlife.find((item) => item.id === selectedNightlife) ?? nightlife[0]
+  const selectedPlan = nightPlans[selectedItem.id]
+
+  return (
+    <MotionSection id="nightlife" className="section-shell overflow-hidden bg-[radial-gradient(circle_at_18%_12%,rgba(32,199,189,0.16),transparent_24rem),radial-gradient(circle_at_82%_20%,rgba(240,111,97,0.14),transparent_22rem),linear-gradient(150deg,#071a2d,#04111f_62%,#082c46)] text-white">
       <div className="grain absolute inset-0 opacity-12" aria-hidden="true" />
       <div className="nightlife-glow absolute left-1/4 top-16 size-72 rounded-full bg-[color:var(--coral)]/12 blur-3xl" aria-hidden="true" />
       <div className="section-inner">
-        <motion.div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]" variants={staggerContainer}>
-          <motion.div variants={fadeUp}>
+        <motion.div className="grid gap-8 lg:grid-cols-[0.75fr_1fr] lg:items-end" variants={fadeUp}>
+          <div>
             <SectionLabel>Nightlife</SectionLabel>
             <h2 className="text-balance font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-              The coast doesn&apos;t sleep until you do.
+              A cinematic evening guide for the coast after dark.
             </h2>
-            <p className="mt-4 text-lg leading-8 text-white/68">
-              From low-lit cocktail terraces to loud open-air clubs, the summer night changes fast from Sunny Beach to Sveti Vlas and Nessebar.
-            </p>
-          </motion.div>
-          <motion.div className="grid gap-4 sm:grid-cols-2" variants={staggerContainer}>
-            {nightlife.map((item, index) => {
-              const Icon = nightlifeIcons[index] ?? Music
-              const isSelected = selectedNightlife === item.id
-
-              return (
-                <motion.button
-                  key={item.id}
-                  type="button"
-                  variants={fadeUp}
-                  whileHover={{ y: -5, scale: 1.01 }}
-                  onClick={() => onSelectNightlife(item.id)}
-                  data-active={isSelected}
-                  className={`interactive-card active-rail glass-dark group rounded-[1.35rem] p-5 pl-6 text-left shadow-soft hover:border-[color:var(--coral)]/45 hover:shadow-glow sm:p-6 ${
-                    isSelected ? 'border-[color:var(--coral)]/60 bg-white/12 ring-2 ring-[color:var(--coral)]/18' : ''
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="grid size-10 place-items-center rounded-full bg-[color:var(--coral)]/16 text-[color:var(--coral-soft)] transition group-hover:-translate-y-1 group-hover:bg-[color:var(--coral)]/28 group-data-[active=true]:bg-[color:var(--coral)]/34">
-                      <Icon size={18} aria-hidden="true" />
-                    </span>
-                    <span className="flex items-center gap-1.5 rounded-full bg-white/9 px-3 py-1 font-mono text-[0.66rem] uppercase tracking-[0.13em] text-white/72">
-                      <Clock size={13} aria-hidden="true" />
-                      {item.bestTime}
-                    </span>
-                  </div>
-                  <h3 className="mt-5 font-serif text-2xl">{item.title}</h3>
-                  <p className="mt-2 leading-7 text-white/72">{item.description}</p>
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {item.tags.map((tag) => (
-                      <span key={tag} className="interactive-control rounded-full border border-white/10 bg-white/8 px-2.5 py-1 text-[0.72rem] font-semibold text-white/76 group-hover:bg-white/12">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="soft-reveal mt-4">
-                    <p className="rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-sm font-medium leading-6 text-white/78">
-                      <span className="block font-mono text-[0.64rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--coral-soft)]/78">Plan logic</span>
-                      <span className="mt-1 block">{nightPlans[item.id].flow}</span>
-                    </p>
-                  </div>
-                </motion.button>
-              )
-            })}
-          </motion.div>
+          </div>
+          <p className="max-w-2xl text-lg leading-8 text-white/68">
+            Choose the night by mood, noise, transport and how you want the evening to end, from sunset cocktails to south-side club energy.
+          </p>
         </motion.div>
-        <motion.div
-          key={selectedNightlife}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="panel-sheen glass-dark mt-6 overflow-hidden rounded-[1.35rem] border-[color:var(--coral)]/24 shadow-glow"
-        >
-          <div className="grid gap-4 border-b border-white/10 bg-white/6 p-5 md:grid-cols-[0.72fr_1fr] sm:p-6">
-            <div>
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--coral-soft)]">Night plan</p>
-              <h3 className="mt-2 font-serif text-3xl leading-tight text-white">{selectedItem.title}</h3>
-            </div>
-            <p className="rounded-2xl border border-white/10 bg-white/9 px-4 py-3 text-sm font-medium leading-6 text-white/76">
-              {selectedItem.description}
-              <span className="mt-2 block border-t border-white/10 pt-2 font-semibold text-white">{selectedPlan.flow}</span>
-            </p>
-          </div>
-          <div className="grid gap-3 p-5 text-sm leading-6 text-white/72 sm:grid-cols-2 lg:grid-cols-4 sm:p-6">
-            {[
-              ['Start time', selectedPlan.startTime],
-              ['Best area', selectedPlan.bestArea],
-              ['Route warning', selectedPlan.warning],
-              ['After-hours', selectedPlan.afterHours],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-2xl border border-white/10 bg-white/7 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral-soft)]/72">{label}</span>
-                <span className="mt-1.5 block font-semibold leading-5 text-white">{value}</span>
+
+        <motion.div className="mt-8 overflow-hidden rounded-[1.75rem] border border-white/12 bg-white/7 shadow-[0_32px_90px_rgba(0,0,0,0.28)] backdrop-blur" variants={fadeUp}>
+          <div className="grid gap-0 xl:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)]">
+            <AnimatePresence mode="wait">
+              <motion.article
+                key={selectedItem.id}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.24 }}
+                className="min-w-0 border-b border-white/10 bg-white/5 p-4 xl:border-b-0 xl:border-r"
+              >
+                <div className="nightlife-cinema-hero rounded-[1.35rem] border border-white/14 p-4 shadow-glow sm:p-5">
+                  <div className="relative z-10 grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-full bg-white/14 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/80 backdrop-blur">
+                          Evening plan
+                        </span>
+                        <span className="rounded-full bg-[color:var(--coral)] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.11em] text-white shadow-coral">
+                          {selectedPlan.mood}
+                        </span>
+                      </div>
+                      <h3 className="mt-4 max-w-xl font-serif text-4xl font-semibold leading-[0.98] text-white sm:text-5xl">{selectedItem.title}</h3>
+                      <p className="mt-3 max-w-xl text-sm font-semibold leading-6 text-white/74">{selectedPlan.bestArea} / {selectedPlan.startTime}</p>
+                    </div>
+                    <div className="rounded-[1.15rem] border border-white/16 bg-white/12 p-4 backdrop-blur">
+                      <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral-soft)]">Why this works</p>
+                      <p className="mt-2 text-sm font-medium leading-6 text-white/84">{selectedPlan.whyWorks}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-[1.35rem] border border-white/10 bg-white/8 p-4 shadow-soft sm:p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral-soft)]">Night flow</p>
+                      <p className="mt-1 text-sm leading-6 text-white/62">A compact rhythm for how the evening usually moves.</p>
+                    </div>
+                    <span className="rounded-full bg-white/10 px-3 py-1.5 text-[0.72rem] font-bold text-white/76">{selectedPlan.energyLabel}</span>
+                  </div>
+                  <ol className="mt-4 grid gap-3">
+                    {selectedPlan.flow.map((step, index) => (
+                      <FlowStep key={step} label={step} note={selectedPlan.flowNotes[index]} index={index} total={selectedPlan.flow.length} />
+                    ))}
+                  </ol>
+                </div>
+              </motion.article>
+            </AnimatePresence>
+
+            <aside className="min-w-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.025))] p-4">
+              <div className="grid gap-2.5 sm:grid-cols-2">
+                {([
+                  ['Best time', selectedPlan.startTime, Clock],
+                  ['Area', selectedPlan.bestArea, Compass],
+                  ['Mood', selectedPlan.mood, Sparkles],
+                  ['Transport', selectedPlan.transportNote, Navigation],
+                ] satisfies [string, string, LucideIcon][]).map(([label, value, Icon]) => (
+                  <InfoTile key={label} icon={Icon} label={label} value={value} />
+                ))}
               </div>
-            ))}
+
+              <div className="mt-3 rounded-[1.25rem] border border-[color:var(--coral)]/18 bg-[color:var(--coral)]/10 p-4 shadow-soft">
+                <span className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral-soft)]">
+                  <AlertTriangle size={14} aria-hidden="true" />
+                  Local warning
+                </span>
+                <p className="mt-2 text-sm font-medium leading-6 text-white/86">{selectedPlan.warning}</p>
+              </div>
+
+              <div className="mt-3 rounded-[1.25rem] border border-white/10 bg-white/7 p-4 shadow-soft">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/52">Night indicators</p>
+                  <span className="rounded-full bg-white/9 px-2.5 py-1 text-[0.68rem] font-bold text-white/68">Decision layer</span>
+                </div>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <MetricBar metric={selectedPlan.metrics.energy} />
+                  <MetricBar metric={selectedPlan.metrics.crowd} />
+                  <MetricBar metric={selectedPlan.metrics.transport} />
+                  <MetricBar metric={selectedPlan.metrics.polish} />
+                </div>
+              </div>
+
+              <div className="mt-3 rounded-[1.25rem] border border-white/10 bg-white/7 p-4 shadow-soft">
+                <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/52">After-hours read</p>
+                <p className="mt-2 text-sm font-medium leading-6 text-white/74">{selectedPlan.afterHours}</p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  <div className="rounded-[1rem] bg-white/7 px-3 py-2">
+                    <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/42">Crowd</p>
+                    <p className="mt-1 text-sm font-bold text-white">{selectedPlan.crowdLabel}</p>
+                  </div>
+                  <div className="rounded-[1rem] bg-white/7 px-3 py-2">
+                    <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/42">Late value</p>
+                    <p className="mt-1 text-sm font-bold text-white">{selectedPlan.metrics.late.value}/100</p>
+                  </div>
+                </div>
+              </div>
+            </aside>
           </div>
+        </motion.div>
+
+        <motion.div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3" variants={staggerContainer}>
+          {nightlife.map((item) => (
+            <NightlifeCard
+              key={item.id}
+              item={item}
+              isSelected={selectedItem.id === item.id}
+              onSelect={() => onSelectNightlife(item.id)}
+            />
+          ))}
         </motion.div>
       </div>
     </MotionSection>

@@ -450,6 +450,45 @@ select {
     linear-gradient(118deg, rgba(7, 26, 45, 0.68), transparent 50%, rgba(255, 255, 255, 0.08));
 }
 
+.nightlife-cinema-hero,
+.nightlife-card-strip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(255, 214, 207, 0.24), transparent 9rem),
+    radial-gradient(circle at 24% 78%, rgba(32, 199, 189, 0.2), transparent 11rem),
+    linear-gradient(135deg, #03111f 0%, #071a2d 46%, #063b5b 100%);
+}
+
+.nightlife-cinema-hero::before,
+.nightlife-card-strip::before {
+  content: "";
+  position: absolute;
+  inset: 18% -18% auto 20%;
+  z-index: -1;
+  height: 54%;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(240, 111, 97, 0.32), transparent 58%),
+    repeating-linear-gradient(96deg, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px 20px);
+  filter: blur(0.2px);
+  transform: rotate(-7deg);
+}
+
+.nightlife-cinema-hero::after,
+.nightlife-card-strip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 28% 32%, rgba(255, 214, 207, 0.18) 0 0.18rem, transparent 0.22rem),
+    radial-gradient(circle at 48% 45%, rgba(32, 199, 189, 0.16) 0 0.17rem, transparent 0.22rem),
+    radial-gradient(circle at 68% 34%, rgba(255, 248, 226, 0.13) 0 0.2rem, transparent 0.25rem),
+    linear-gradient(118deg, rgba(7, 26, 45, 0.72), transparent 52%, rgba(255, 255, 255, 0.05));
+}
+
 .archive-museum-artifact {
   position: relative;
   isolation: isolate;

@@ -20,20 +20,45 @@ export function Nav() {
       .map((item) => document.querySelector(item.href))
       .filter((section): section is HTMLElement => section instanceof HTMLElement)
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+    let frameId = 0
 
-        if (visibleEntry?.target.id) {
-          setActiveSection(visibleEntry.target.id)
-        }
-      },
-      { rootMargin: '-32% 0px -50% 0px', threshold: [0.01, 0.18, 0.36, 0.6] },
-    )
+    function updateActiveSection() {
+      const activationLine = window.innerHeight * 0.36
+      const currentSection =
+        sections
+          .map((section) => ({
+            id: section.id,
+            top: section.getBoundingClientRect().top,
+          }))
+          .filter((section) => section.top <= activationLine)
+          .sort((a, b) => b.top - a.top)[0] ?? sections[0]
 
-    sections.forEach((section) => observer.observe(section))
+      if (currentSection?.id) {
+        setActiveSection(currentSection.id)
+      }
+    }
 
-    return () => observer.disconnect()
+    function requestUpdate() {
+      if (frameId) return
+
+      frameId = window.requestAnimationFrame(() => {
+        frameId = 0
+        updateActiveSection()
+      })
+    }
+
+    updateActiveSection()
+    window.addEventListener('scroll', requestUpdate, { passive: true })
+    window.addEventListener('resize', requestUpdate)
+
+    return () => {
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
+
+      window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('resize', requestUpdate)
+    }
   }, [])
 
   return (
