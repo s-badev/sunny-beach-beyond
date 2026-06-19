@@ -168,6 +168,11 @@ select {
 }
 
 @media (max-width: 639px) {
+  .section-shell {
+    padding-top: 4rem;
+    padding-bottom: 4.5rem;
+  }
+
   .section-shell :where(h2) {
     font-size: 2.35rem;
     line-height: 1.05;
@@ -192,6 +197,11 @@ select {
 }
 
 @media (max-width: 420px) {
+  .section-shell {
+    padding-top: 3.75rem;
+    padding-bottom: 4.25rem;
+  }
+
   .section-shell :where(h2) {
     font-size: 2.1rem;
   }

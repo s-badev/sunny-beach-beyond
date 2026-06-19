@@ -191,7 +191,7 @@ function MetricBar({ metric }: { metric: NightMetric }) {
     <div>
       <div className="flex items-center justify-between gap-3">
         <p className="text-[0.82rem] font-bold text-white">{metric.label}</p>
-        <span className="font-mono text-[0.68rem] font-semibold text-white/58">{metric.value}/100</span>
+        <span className="font-mono text-[0.68rem] font-semibold text-white/68">{metric.value}/100</span>
       </div>
       <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/10">
         <motion.span
@@ -201,7 +201,7 @@ function MetricBar({ metric }: { metric: NightMetric }) {
           transition={{ duration: 0.42, ease: 'easeOut' }}
         />
       </div>
-      <p className="mt-1 text-xs leading-5 text-white/58">{metric.note}</p>
+      <p className="mt-1 text-xs leading-5 text-white/66">{metric.note}</p>
     </div>
   )
 }
@@ -242,11 +242,11 @@ function FlowStep({ label, note, index, total }: { label: string; note: string; 
       <span>
         <span className="flex flex-wrap items-center gap-2">
           <span className="font-serif text-lg leading-tight text-white">{label}</span>
-          <span className="rounded-full bg-white/9 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.1em] text-white/62">
+          <span className="rounded-full bg-white/9 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.1em] text-white/72">
             {isFirst ? 'Start' : isLast ? 'Return' : index === 1 ? 'Middle' : 'Late'}
           </span>
         </span>
-        <span className="mt-1.5 block text-sm leading-6 text-white/64">{note}</span>
+        <span className="mt-1.5 block text-sm leading-6 text-white/72">{note}</span>
       </span>
     </motion.li>
   )
@@ -288,14 +288,14 @@ function NightlifeCard({ item, isSelected, onSelect }: { item: NightlifeItem; is
           <span className="rounded-full border border-white/10 bg-white/8 px-3 py-1.5 text-[0.68rem] font-bold leading-none text-white/74">{plan.energyLabel}</span>
         </div>
         <h3 className="mt-4 font-serif text-2xl leading-tight text-white">{item.title}</h3>
-        <p className="mt-2 text-sm leading-6 text-white/68">{plan.cardHint}</p>
+        <p className="mt-2 text-sm leading-6 text-white/74">{plan.cardHint}</p>
         <div className="mt-4 grid grid-cols-2 gap-2">
           <div className="rounded-[0.95rem] bg-white/7 px-3 py-2">
-            <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/42">Crowd</p>
+            <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/58">Crowd</p>
             <p className="mt-1 text-sm font-bold text-white">{plan.crowdLabel}</p>
           </div>
           <div className="rounded-[0.95rem] bg-white/7 px-3 py-2">
-            <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/42">Noise</p>
+            <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/58">Noise</p>
             <p className="mt-1 text-sm font-bold text-white">{plan.metrics.noise.value}/100</p>
           </div>
         </div>
@@ -368,7 +368,7 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral-soft)]">Night flow</p>
-                      <p className="mt-1 text-sm leading-6 text-white/62">A compact rhythm for how the evening usually moves.</p>
+                      <p className="mt-1 text-sm leading-6 text-white/72">A compact rhythm for how the evening usually moves.</p>
                     </div>
                     <span className="rounded-full bg-white/10 px-3 py-1.5 text-[0.72rem] font-bold text-white/76">{selectedPlan.energyLabel}</span>
                   </div>
@@ -403,7 +403,7 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
 
               <div className="mt-3 rounded-[1.25rem] border border-white/10 bg-white/7 p-4 shadow-soft">
                 <div className="flex items-center justify-between gap-3">
-                  <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/52">Night indicators</p>
+                  <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/66">Night indicators</p>
                   <span className="rounded-full bg-white/9 px-2.5 py-1 text-[0.68rem] font-bold text-white/68">Decision layer</span>
                 </div>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -415,15 +415,15 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
               </div>
 
               <div className="mt-3 rounded-[1.25rem] border border-white/10 bg-white/7 p-4 shadow-soft">
-                <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/52">After-hours read</p>
+                <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/66">After-hours read</p>
                 <p className="mt-2 text-sm font-medium leading-6 text-white/74">{selectedPlan.afterHours}</p>
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   <div className="rounded-[1rem] bg-white/7 px-3 py-2">
-                    <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/42">Crowd</p>
+                    <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/58">Crowd</p>
                     <p className="mt-1 text-sm font-bold text-white">{selectedPlan.crowdLabel}</p>
                   </div>
                   <div className="rounded-[1rem] bg-white/7 px-3 py-2">
-                    <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/42">Late value</p>
+                    <p className="font-mono text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/58">Late value</p>
                     <p className="mt-1 text-sm font-bold text-white">{selectedPlan.metrics.late.value}/100</p>
                   </div>
                 </div>

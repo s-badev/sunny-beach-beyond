@@ -31,8 +31,8 @@ export function SectionIntro({ label, tone = 'light', children }: SectionIntroPr
         {label}
       </p>
       <p
-        className={`mt-2 text-base font-semibold leading-7 sm:text-lg sm:leading-8 ${
-          isDark ? 'text-white/86' : 'text-[color:var(--ink)]/82'
+        className={`mt-2 text-base font-medium leading-7 sm:text-lg sm:leading-8 ${
+          isDark ? 'text-white/88' : 'text-[color:var(--ink)]/78'
         }`}
       >
         {children}
