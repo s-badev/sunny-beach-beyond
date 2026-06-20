@@ -1,5 +1,6 @@
 import { Compass, Waves } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import type { MouseEvent } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const navItems = [
   { href: '#vibes', label: 'Vibes' },
@@ -15,6 +16,61 @@ const navItems = [
 
 export function Nav() {
   const [activeSection, setActiveSection] = useState('vibes')
+
+  const goToSection = useCallback((href: string) => {
+    const sectionId = href.slice(1)
+    const section = document.getElementById(sectionId)
+
+    if (!section) return false
+
+    const sectionStyle = window.getComputedStyle(section)
+    const pageStyle = window.getComputedStyle(document.documentElement)
+    const sectionOffset = Number.parseFloat(sectionStyle.scrollMarginTop) || 0
+    const pageOffset = Number.parseFloat(pageStyle.scrollPaddingTop) || 0
+    const offset = Math.max(sectionOffset, pageOffset)
+    const top = Math.max(section.getBoundingClientRect().top + window.scrollY - offset, 0)
+
+    window.scrollTo({ top, behavior: 'auto' })
+    setActiveSection(sectionId)
+
+    return true
+  }, [])
+
+  function scrollToSection(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    if (!href.startsWith('#')) return
+
+    event.preventDefault()
+    window.history.pushState(null, '', href)
+    goToSection(href)
+  }
+
+  useEffect(() => {
+    let frameId = 0
+
+    function requestHashScroll() {
+      if (!window.location.hash) return
+
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
+
+      frameId = window.requestAnimationFrame(() => {
+        frameId = 0
+        goToSection(window.location.hash)
+      })
+    }
+
+    requestHashScroll()
+    window.addEventListener('hashchange', requestHashScroll)
+
+    return () => {
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
+
+      window.removeEventListener('hashchange', requestHashScroll)
+    }
+  }, [goToSection])
 
   useEffect(() => {
     const sections = navItems
@@ -78,6 +134,7 @@ export function Nav() {
             <a
               key={item.href}
               href={item.href}
+              onClick={(event) => scrollToSection(event, item.href)}
               className={`interactive-control shrink-0 rounded-full px-2.5 py-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--turquoise)] ${
                 activeSection === item.href.slice(1)
                   ? 'bg-[color:var(--sea-deep)] !text-white shadow-glow hover:!text-white focus-visible:!text-white active:!text-white'

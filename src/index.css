@@ -339,6 +339,148 @@ select {
   pointer-events: none;
 }
 
+.photo-frame-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  background: #063b5b;
+  box-shadow: 0 22px 58px rgba(9, 58, 82, 0.14);
+}
+
+.photo-frame-fallback {
+  z-index: 0;
+  background:
+    linear-gradient(112deg, var(--photo-shade, rgba(7, 26, 45, 0.62)), transparent 54%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px),
+    repeating-linear-gradient(var(--photo-line-angle, 98deg), rgba(255, 255, 255, 0.12) 0 1px, transparent 1px var(--photo-line-gap, 20px)),
+    var(--photo-fallback-gradient, linear-gradient(135deg, #063b5b 0%, #087996 48%, #20c7bd 76%, #f2d9aa 100%));
+  background-size:
+    auto,
+    34px 100%,
+    auto,
+    auto;
+}
+
+.photo-frame-fallback::before {
+  content: "";
+  position: absolute;
+  inset: var(--photo-band-inset, 16% -12% auto 24%);
+  height: var(--photo-band-height, 54%);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(94deg, var(--photo-band, rgba(255, 255, 255, 0.22)), transparent 66%),
+    repeating-linear-gradient(92deg, rgba(255, 255, 255, 0.11) 0 1px, transparent 1px 18px);
+  transform: rotate(var(--photo-band-rotate, -8deg));
+}
+
+.photo-frame-fallback::after {
+  content: "";
+  position: absolute;
+  inset: auto -18% -30% 18%;
+  height: 48%;
+  border-radius: 999px;
+  background:
+    linear-gradient(110deg, transparent, var(--photo-accent, rgba(255, 248, 226, 0.34)) 48%, transparent 78%),
+    repeating-linear-gradient(86deg, rgba(7, 26, 45, 0.1) 0 1px, transparent 1px 16px);
+  transform: rotate(var(--photo-accent-rotate, -7deg));
+  opacity: var(--photo-accent-opacity, 0.78);
+}
+
+.photo-tone-coastal {
+  --photo-fallback-gradient: linear-gradient(135deg, #063b5b 0%, #087996 46%, #20c7bd 76%, #f2d9aa 100%);
+}
+
+.photo-tone-food {
+  --photo-shade: rgba(64, 38, 22, 0.5);
+  --photo-fallback-gradient: linear-gradient(135deg, #063b5b 0%, #c89447 44%, #f2d9aa 70%, #ffd6cf 100%);
+  --photo-band: rgba(255, 248, 226, 0.34);
+  --photo-accent: rgba(240, 111, 97, 0.26);
+  --photo-line-angle: 86deg;
+}
+
+.photo-tone-cafe {
+  --photo-shade: rgba(6, 59, 91, 0.36);
+  --photo-fallback-gradient: linear-gradient(135deg, #087996 0%, #dff6ed 46%, #fff8e8 78%, #f2d9aa 100%);
+  --photo-band: rgba(255, 255, 255, 0.38);
+  --photo-accent: rgba(32, 199, 189, 0.24);
+  --photo-line-gap: 24px;
+}
+
+.photo-tone-nightlife {
+  --photo-shade: rgba(3, 17, 31, 0.76);
+  --photo-fallback-gradient: linear-gradient(135deg, #03111f 0%, #071a2d 42%, #063b5b 72%, #f06f61 100%);
+  --photo-band: rgba(240, 111, 97, 0.34);
+  --photo-accent: rgba(32, 199, 189, 0.28);
+  --photo-line-angle: 104deg;
+}
+
+.photo-tone-attraction {
+  --photo-shade: rgba(7, 26, 45, 0.5);
+  --photo-fallback-gradient: linear-gradient(135deg, #063b5b 0%, #087996 34%, #f06f61 68%, #f2d9aa 100%);
+  --photo-band: rgba(255, 214, 207, 0.34);
+  --photo-accent: rgba(255, 248, 226, 0.4);
+  --photo-band-rotate: -4deg;
+}
+
+.photo-tone-premium {
+  --photo-shade: rgba(3, 17, 31, 0.62);
+  --photo-fallback-gradient: linear-gradient(135deg, #03192e 0%, #064765 42%, #087996 66%, #f2d9aa 100%);
+  --photo-band: rgba(242, 217, 170, 0.32);
+  --photo-accent: rgba(255, 248, 226, 0.32);
+  --photo-line-gap: 28px;
+}
+
+.photo-tone-budget {
+  --photo-shade: rgba(6, 59, 91, 0.34);
+  --photo-fallback-gradient: linear-gradient(135deg, #087996 0%, #20c7bd 38%, #dff6ed 68%, #fff8e8 100%);
+  --photo-band: rgba(255, 255, 255, 0.42);
+  --photo-accent: rgba(242, 217, 170, 0.3);
+  --photo-line-gap: 18px;
+}
+
+.photo-tone-walk {
+  --photo-shade: rgba(6, 59, 91, 0.42);
+  --photo-fallback-gradient: linear-gradient(135deg, #063b5b 0%, #7db9b3 42%, #dff6ed 66%, #f2d9aa 100%);
+  --photo-band: rgba(255, 255, 255, 0.3);
+  --photo-accent: rgba(200, 148, 71, 0.24);
+  --photo-band-inset: 22% -18% auto 18%;
+}
+
+.photo-tone-sea {
+  --photo-fallback-gradient: linear-gradient(135deg, #063b5b 0%, #087996 46%, #20c7bd 76%, #f2d9aa 100%);
+}
+
+.photo-tone-sand {
+  --photo-fallback-gradient: linear-gradient(135deg, #063b5b 0%, #20c7bd 40%, #f2d9aa 76%, #c89447 100%);
+}
+
+.photo-tone-marina {
+  --photo-fallback-gradient: linear-gradient(135deg, #03192e 0%, #064765 42%, #087996 66%, #20c7bd 100%);
+}
+
+.photo-tone-old-town {
+  --photo-fallback-gradient: linear-gradient(135deg, #72583d 0%, #c89447 46%, #f2d9aa 68%, #063b5b 100%);
+}
+
+.photo-tone-night {
+  --photo-fallback-gradient: linear-gradient(135deg, #03111f 0%, #071a2d 46%, #063b5b 72%, #f06f61 100%);
+}
+
+.photo-tone-family {
+  --photo-fallback-gradient: linear-gradient(135deg, #073b58 0%, #087996 38%, #20c7bd 68%, #ffd6cf 100%);
+}
+
+.photo-tone-water {
+  --photo-fallback-gradient: linear-gradient(135deg, #052944 0%, #087996 36%, #20c7bd 62%, #dff6ed 100%);
+}
+
+.photo-tone-calm {
+  --photo-fallback-gradient: linear-gradient(135deg, #064765 0%, #7db9b3 44%, #dff6ed 70%, #f2d9aa 100%);
+}
+
 .guide-photo-slot {
   position: relative;
   isolation: isolate;

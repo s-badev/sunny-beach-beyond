@@ -1,6 +1,6 @@
-import type { ExperienceScenario, GuidePlace } from '../types'
+import type { ExperienceScenario, GuideFitLevel, GuidePlace, GuidePriceFeel, LocalMediaKey } from '../types'
 
-export const guidePlaces: GuidePlace[] = [
+const guidePlaceDrafts: GuidePlace[] = [
   {
     id: 'marina-dinevi-dinner-terraces',
     name: 'Marina Dinevi dinner terraces',
@@ -352,7 +352,7 @@ export const guidePlaces: GuidePlace[] = [
     bestTime: 'sunset',
     bestFor: 'Golden-hour views, history texture and a slower alternative to the resort strip.',
     avoidIf: 'you need flat surfaces, empty lanes or a zero-crowd experience in peak season.',
-    description: 'A compact walk through one of the coast’s strongest memory-making areas: stone, sea, churches and light.',
+    description: "A compact walk through one of the coast's strongest memory-making areas: stone, sea, churches and light.",
     localTip: 'Let the walk breathe. Rushing Nessebar turns the best part into a checklist.',
     transportNote: 'Arrive with buffer time; parking and road access can compress the experience.',
     goodNextMove: 'Pair with old-town dinner lanes or morning coffee if avoiding crowds.',
@@ -409,7 +409,276 @@ export const guidePlaces: GuidePlace[] = [
     goodNextMove: 'Pair with Elenite slow resort dinner or an early return.',
     photoReady: true,
   },
+  {
+    id: 'central-promenade-evening-walk',
+    name: 'Central promenade evening walk',
+    area: 'Sunny Beach',
+    type: 'walk',
+    audience: ['families', 'young', 'budget'],
+    budget: 'low',
+    noise: 'medium',
+    bestTime: 'evening',
+    bestFor: 'A flexible resort walk when the group wants lights, snacks and easy exits.',
+    avoidIf: 'you need a silent evening or want to avoid the central resort crowd completely.',
+    description: 'A practical central walk that links beach frontage, simple food, amusement lights and people-watching without committing to a late night.',
+    localTip: 'Keep it short if the group includes kids or tired walkers; the promenade can stretch longer than expected.',
+    transportNote: 'Best for central stays. If you are staying north or south, pick a clear turn-back point first.',
+    goodNextMove: 'Pair with Luna Park, a simple coffee stop or a direct return before the loudest hours.',
+    photoReady: true,
+  },
+  {
+    id: 'central-simple-coffee-stop',
+    name: 'Central simple coffee stop',
+    area: 'Sunny Beach',
+    type: 'cafe',
+    audience: ['young', 'budget', 'families'],
+    budget: 'low',
+    noise: 'medium',
+    bestTime: 'morning',
+    bestFor: 'A quick meeting point before beach time, errands or a promenade plan.',
+    avoidIf: 'you are looking for a destination cafe with calm views and slow service.',
+    description: 'A functional central coffee move for groups who need orientation, caffeine and a simple start before the resort gets busier.',
+    localTip: 'Use it to agree the beach zone and lunch plan before everyone disperses.',
+    transportNote: 'Works best as a walkable checkpoint near your stay, not as a cross-resort destination.',
+    goodNextMove: 'Pair with Central Sunny Beach or a budget food window later in the day.',
+    photoReady: true,
+  },
+  {
+    id: 'marina-slow-evening-coffee',
+    name: 'Marina slow evening coffee',
+    area: 'Sveti Vlas',
+    type: 'cafe',
+    audience: ['couples', 'older-visitors', 'premium', 'calm'],
+    budget: 'medium',
+    noise: 'quiet',
+    bestTime: 'sunset',
+    bestFor: 'A slower marina pause for people who want the evening without a full dinner commitment.',
+    avoidIf: 'the group wants cheap central nightlife or a fast Sunny Beach return.',
+    description: 'A low-pressure Sveti Vlas stop: coffee, marina light, boats and an easy decision about whether to stay for dinner.',
+    localTip: 'Treat coffee as the hinge: if the light and mood are working, stay nearby instead of adding another transfer.',
+    transportNote: 'Return planning matters if your base is outside Sveti Vlas.',
+    goodNextMove: 'Pair with the marina walk, cocktails or a terrace dinner if the group wants to extend.',
+    photoReady: true,
+  },
+  {
+    id: 'nessebar-calm-dinner-view',
+    name: 'Nessebar calm dinner with view',
+    area: 'Nessebar',
+    type: 'restaurant',
+    audience: ['couples', 'older-visitors', 'calm'],
+    budget: 'medium',
+    noise: 'quiet',
+    bestTime: 'sunset',
+    bestFor: 'Dinner atmosphere with sea-view value while staying away from club routes.',
+    avoidIf: 'you dislike old-town walking surfaces or want a very fast central resort meal.',
+    description: 'A calmer dinner pattern around Nessebar: walk first, settle near the view, and let the meal become the destination.',
+    localTip: 'Do not arrive exactly at peak hunger time; a short walk first makes table decisions easier.',
+    transportNote: 'Parking and road timing can compress sunset plans, so add a buffer.',
+    goodNextMove: 'Pair with the sea-wall walk or viewpoint before dinner.',
+    photoReady: true,
+  },
+  {
+    id: 'old-nessebar-sunset-viewpoint',
+    name: 'Old Nessebar sunset viewpoint',
+    area: 'Nessebar',
+    type: 'viewpoint',
+    audience: ['couples', 'older-visitors', 'budget', 'calm'],
+    budget: 'low',
+    noise: 'medium',
+    bestTime: 'sunset',
+    bestFor: 'A low-cost visual anchor before dinner or a slower old-town loop.',
+    avoidIf: 'you need empty streets, flat surfaces or a zero-crowd golden hour.',
+    description: 'A compact old-town viewpoint stop that gives the evening a sense of place before food or the return route.',
+    localTip: 'Arrive with enough time to wander; the best view is often the one you reach without rushing.',
+    transportNote: 'Useful only if the arrival and return are already realistic for the group.',
+    goodNextMove: 'Pair with Old Nessebar dinner lanes or a quiet return toward Sunny Beach.',
+    photoReady: true,
+  },
+  {
+    id: 'main-beach-parasailing-window',
+    name: 'Main beach parasailing window',
+    area: 'Sunny Beach',
+    type: 'water-sport',
+    audience: ['young', 'couples', 'premium'],
+    budget: 'high',
+    noise: 'medium',
+    bestTime: 'day',
+    bestFor: 'A big-view daytime sea activity when weather, season and safety checks line up.',
+    avoidIf: 'conditions feel uncertain, visibility is poor or anyone is uneasy with height.',
+    description: 'A photo-worthy water-sport idea for the main beach zone, best treated as weather-dependent and locally verified.',
+    localTip: 'Ask about conditions, operator rules and timing before paying or committing the group.',
+    transportNote: 'Choose the closest reputable activity point to your current beach base.',
+    goodNextMove: 'Pair with shade, water and a simple beach lunch instead of stacking too many activities.',
+    photoReady: true,
+  },
+  {
+    id: 'banana-boat-inflatable-rides',
+    name: 'Banana boat and inflatable rides',
+    area: 'Sunny Beach',
+    type: 'water-sport',
+    audience: ['young', 'families', 'budget'],
+    budget: 'medium',
+    noise: 'loud',
+    bestTime: 'day',
+    bestFor: 'Short, social water activity for families or friends who want quick fun near the sand.',
+    avoidIf: 'anyone is nervous in fast water, tired, sunburned or looking for a quiet swim.',
+    description: 'A classic Sunny Beach activity layer: quick, loud, wet and easiest when it stays close to your beach base.',
+    localTip: 'Keep towels, valuables and dry clothes solved before joining any inflatable ride.',
+    transportNote: 'Do not cross the resort just for it; use the nearest suitable beach activity zone.',
+    goodNextMove: 'Recover with shade, water and a low-friction food stop.',
+    photoReady: true,
+  },
+  {
+    id: 'main-beach-activity-desk',
+    name: 'Main beach activity desk',
+    area: 'Sunny Beach',
+    type: 'water-sport',
+    audience: ['young', 'families', 'budget'],
+    budget: 'medium',
+    noise: 'medium',
+    bestTime: 'day',
+    bestFor: 'Comparing daytime water activities without committing before checking conditions.',
+    avoidIf: 'the group wants a quiet day or weather and safety details feel unclear.',
+    description: 'A practical decision point for parasailing, jet skis or inflatables, useful when the day is still flexible.',
+    localTip: 'Ask locally, compare options and choose one activity rather than turning the day into a checklist.',
+    transportNote: 'Works best from the beach you are already using.',
+    goodNextMove: 'Pair with a simple beach lunch and skip heavy transfers afterward.',
+    photoReady: true,
+  },
+  {
+    id: 'family-promenade-attractions-evening',
+    name: 'Family promenade attractions evening',
+    area: 'Sunny Beach',
+    type: 'family',
+    audience: ['families', 'budget'],
+    budget: 'medium',
+    noise: 'medium',
+    bestTime: 'evening',
+    bestFor: 'A kid-friendly evening built around lights, snacks and one or two simple attractions.',
+    avoidIf: 'children are already tired or the route would cross too many loud central blocks.',
+    description: 'A compact family route that uses the promenade as a controlled evening plan rather than an endless walk.',
+    localTip: 'Choose the attraction limit before starting; two good stops beat six tired arguments.',
+    transportNote: 'Keep the walk close to your accommodation or a known taxi point.',
+    goodNextMove: 'Pair with early dinner, Luna Park or the mini train.',
+    photoReady: true,
+  },
+  {
+    id: 'rainy-low-energy-coffee-food-plan',
+    name: 'Rainy or low-energy coffee and food plan',
+    area: 'Sunny Beach',
+    type: 'cafe',
+    audience: ['families', 'older-visitors', 'calm', 'budget'],
+    budget: 'low',
+    noise: 'quiet',
+    bestTime: 'day',
+    bestFor: 'A backup plan when heat, rain or tired legs make big movement unwise.',
+    avoidIf: 'the group still wants full beach activity or a destination-level dining experience.',
+    description: 'A practical travel guide still needs a soft day: coffee, simple food, short movement and an early reset when the coast is not cooperating.',
+    localTip: 'Use low-energy days to protect the rest of the trip instead of forcing a heroic itinerary.',
+    transportNote: 'Stay close to your base and avoid cross-area transfers unless conditions improve.',
+    goodNextMove: 'Pair with a short promenade check or a return to the hotel before evening.',
+    photoReady: true,
+  },
 ]
+
+const defaultSourceNote = 'Editorial starter guidance based on stable local place concepts. Seasonal details, pricing and availability can change; verify locally before committing a plan.'
+
+const priceFeelByBudget: Record<GuidePlace['budget'], GuidePriceFeel> = {
+  low: 'budget',
+  medium: 'mid-range',
+  high: 'premium',
+}
+
+const mediaKeyByPlaceId: Record<string, LocalMediaKey> = {
+  'marina-dinevi-dinner-terraces': 'sveti-vlas-marina-dinner',
+  'old-nessebar-dinner-lanes': 'old-nessebar-dinner',
+  'restaurant-djanny-family-table': 'central-casual-dinner',
+  'north-sunny-beach-family-food-strip': 'family-food-strip',
+  'central-budget-food-window': 'central-food-window',
+  'elenite-slow-resort-dinner': 'elenite-dinner',
+  'sveti-vlas-morning-coffee': 'sveti-vlas-coffee',
+  'old-nessebar-morning-coffee': 'old-nessebar-coffee',
+  'north-strip-quiet-coffee': 'quiet-coffee-strip',
+  'cacao-beach-party-zone': 'cacao-beach-area',
+  'guava-beach-club-sunset-drinks': 'beach-bar-warmup',
+  'planet-yacht-marina-cocktails': 'marina-cocktails',
+  'central-late-food-route': 'central-late-food',
+  'sunny-beach-luna-park': 'luna-park-evening',
+  'central-ferris-wheel-lights': 'ferris-wheel-evening',
+  'slingshot-sunny-beach': 'slingshot-attraction',
+  'mini-train-sunny-beach': 'mini-train-family',
+  'action-aquapark-day': 'action-aquapark-day',
+  'surf-academy-water-sports': 'water-sports-zone',
+  'jet-ski-banana-boat-zone': 'jet-ski-zone',
+  'old-nessebar-sea-wall-walk': 'old-nessebar-walk',
+  'sveti-vlas-marina-walk': 'sveti-vlas-marina',
+  'sveti-vlas-viewpoint': 'sveti-vlas-viewpoint',
+  'elenite-bay-quiet-walk': 'elenite-bay',
+  'central-promenade-evening-walk': 'sunny-beach-promenade',
+  'central-simple-coffee-stop': 'central-coffee-stop',
+  'marina-slow-evening-coffee': 'sveti-vlas-coffee',
+  'nessebar-calm-dinner-view': 'calm-dinner-view',
+  'old-nessebar-sunset-viewpoint': 'old-nessebar-viewpoint',
+  'main-beach-parasailing-window': 'parasailing-main-beach',
+  'banana-boat-inflatable-rides': 'banana-boat-rides',
+  'main-beach-activity-desk': 'beach-activity-desk',
+  'family-promenade-attractions-evening': 'family-promenade-evening',
+  'rainy-low-energy-coffee-food-plan': 'rainy-low-energy',
+}
+
+const nearbyByArea: Record<GuidePlace['area'], string[]> = {
+  'Sunny Beach': ['Central promenade', 'Beach atlas', 'Local Routes'],
+  Nessebar: ['Old town sea wall', 'Archive lens', 'Nessebar route'],
+  'Sveti Vlas': ['Marina Dinevi walk', 'Sveti Vlas viewpoint', 'Premium evening route'],
+  Elenite: ['Quiet bay', 'Northern edge', 'Easy return plan'],
+}
+
+function fitLevel(condition: boolean, fallback: GuideFitLevel = 'medium'): GuideFitLevel {
+  return condition ? 'high' : fallback
+}
+
+function deriveSeasonality(place: GuidePlace) {
+  if (place.type === 'water-sport') return 'Daytime and weather-dependent; check conditions, safety rules and availability locally in season.'
+  if (place.type === 'club' || place.noise === 'loud') return 'Most useful in high season and louder evening windows; confirm current venue rhythm locally.'
+  if (place.type === 'walk' || place.type === 'viewpoint') return 'Best in morning or golden-hour light; crowd pressure changes strongly by season.'
+  if (place.type === 'family' || place.type === 'attraction') return 'Seasonal operating patterns can change; verify locally before promising it to kids.'
+  return 'Useful as a planning layer; exact opening, menu and table details can shift through the season.'
+}
+
+function deriveRoutePairing(place: GuidePlace) {
+  if (place.type === 'water-sport') return 'Pair with Beaches and a low-transfer daytime route.'
+  if (place.area === 'Nessebar') return 'Pair with Archive and the Old Nessebar route.'
+  if (place.area === 'Sveti Vlas') return 'Pair with the premium marina or calm evening route.'
+  if (place.area === 'Elenite') return 'Pair with the quiet northern bay route.'
+  if (place.type === 'club' || place.type === 'bar') return 'Pair with Nightlife and a clear return plan.'
+  if (place.type === 'family' || place.type === 'attraction') return 'Pair with an early family promenade route.'
+  return 'Pair with Local Routes after choosing your beach or dinner base.'
+}
+
+function enrichPlace(place: GuidePlace): GuidePlace {
+  const isFamily = place.audience.includes('families') || place.type === 'family' || place.type === 'transport'
+  const isParty = place.audience.includes('party') || place.type === 'club' || place.noise === 'loud'
+  const isViewLed = place.type === 'viewpoint' || place.type === 'walk' || place.area === 'Sveti Vlas' || place.area === 'Nessebar'
+  const isWalkable = place.type === 'walk' || place.type === 'viewpoint' || place.type === 'cafe' || place.area === 'Nessebar'
+  const photoKey = place.photoKey ?? mediaKeyByPlaceId[place.id]
+
+  return {
+    priceFeel: priceFeelByBudget[place.budget],
+    familyFit: fitLevel(isFamily, place.audience.includes('young') ? 'medium' : 'low'),
+    partyLevel: fitLevel(isParty, place.noise === 'medium' ? 'medium' : 'low'),
+    viewValue: fitLevel(isViewLed, place.type === 'restaurant' || place.type === 'bar' ? 'medium' : 'low'),
+    walkability: fitLevel(isWalkable, place.area === 'Elenite' ? 'low' : 'medium'),
+    seasonality: deriveSeasonality(place),
+    sourceNote: defaultSourceNote,
+    nearby: nearbyByArea[place.area],
+    routePairing: deriveRoutePairing(place),
+    photoReady: Boolean(photoKey),
+    ...place,
+    photoKey,
+  }
+}
+
+export const guidePlaces: GuidePlace[] = guidePlaceDrafts.map(enrichPlace)
 
 export const experienceScenarios: ExperienceScenario[] = [
   {
@@ -424,6 +693,8 @@ export const experienceScenarios: ExperienceScenario[] = [
     avoidIf: 'you have not agreed on the route home.',
     primaryFilter: 'party',
     featuredPlaceId: 'cacao-beach-party-zone',
+    idealAudience: 'friends who want a loud night and can agree the way home before midnight',
+    routePairing: 'Nightlife / south-side party route',
   },
   {
     id: 'family-evening',
@@ -437,6 +708,8 @@ export const experienceScenarios: ExperienceScenario[] = [
     avoidIf: 'the plan starts too late or crosses too many zones.',
     primaryFilter: 'families',
     featuredPlaceId: 'sunny-beach-luna-park',
+    idealAudience: 'families who want one compact evening instead of an open-ended promenade crawl',
+    routePairing: 'Family promenade / early Local Routes loop',
   },
   {
     id: 'romantic-dinner-view',
@@ -450,6 +723,8 @@ export const experienceScenarios: ExperienceScenario[] = [
     avoidIf: 'sunset happens while you are still in transit.',
     primaryFilter: 'couples',
     featuredPlaceId: 'marina-dinevi-dinner-terraces',
+    idealAudience: 'couples or calm groups who value light, views and a solved return',
+    routePairing: 'Sveti Vlas marina evening route',
   },
   {
     id: 'budget-beach-day',
@@ -463,6 +738,8 @@ export const experienceScenarios: ExperienceScenario[] = [
     avoidIf: 'you chase every attraction in one day.',
     primaryFilter: 'budget',
     featuredPlaceId: 'central-budget-food-window',
+    idealAudience: 'budget travelers who want a full day without paying for too many transfers',
+    routePairing: 'Beach atlas / central resort day',
   },
   {
     id: 'premium-marina-evening',
@@ -476,6 +753,8 @@ export const experienceScenarios: ExperienceScenario[] = [
     avoidIf: 'the group wants cheap, loud, spontaneous club energy.',
     primaryFilter: 'premium',
     featuredPlaceId: 'planet-yacht-marina-cocktails',
+    idealAudience: 'couples, premium travelers and slower evening groups',
+    routePairing: 'Premium marina route',
   },
   {
     id: 'old-nessebar-golden-hour',
@@ -489,6 +768,8 @@ export const experienceScenarios: ExperienceScenario[] = [
     avoidIf: 'you arrive at peak afternoon expecting empty streets.',
     primaryFilter: 'older-visitors',
     featuredPlaceId: 'old-nessebar-sea-wall-walk',
+    idealAudience: 'visitors who want heritage texture, views and a slower route',
+    routePairing: 'Archive / Old Nessebar route',
   },
   {
     id: 'water-sports-day',
@@ -502,6 +783,8 @@ export const experienceScenarios: ExperienceScenario[] = [
     avoidIf: 'weather, safety or availability feels uncertain.',
     primaryFilter: 'water-sports',
     featuredPlaceId: 'surf-academy-water-sports',
+    idealAudience: 'active beach groups who can keep the plan daytime-only and weather-aware',
+    routePairing: 'Beaches / water-sports day',
   },
   {
     id: 'calm-coffee-walk',
@@ -515,5 +798,37 @@ export const experienceScenarios: ExperienceScenario[] = [
     avoidIf: 'the day needs high-energy attractions or nightlife.',
     primaryFilter: 'calm',
     featuredPlaceId: 'sveti-vlas-morning-coffee',
+    idealAudience: 'couples, older visitors and calm travelers who want lower friction',
+    routePairing: 'Calm Vlas morning route',
+  },
+  {
+    id: 'older-visitors-easy-evening',
+    title: 'Older Visitors Easy Evening',
+    bestArea: 'Nessebar',
+    bestTime: 'Late afternoon to early evening',
+    budgetFeel: 'Low to medium',
+    noiseLevel: 'Quiet to medium',
+    recommendedTypes: ['cafe', 'walk', 'restaurant'],
+    routeFlow: ['Arrive with buffer', 'Coffee or viewpoint', 'Short old-town loop', 'Dinner or early return'],
+    avoidIf: 'the route requires rushing over uneven lanes or late transport decisions.',
+    primaryFilter: 'older-visitors',
+    featuredPlaceId: 'old-nessebar-sunset-viewpoint',
+    idealAudience: 'older visitors or mixed-age groups who want charm without an exhausting route',
+    routePairing: 'Archive / easy Nessebar loop',
+  },
+  {
+    id: 'rainy-low-energy-plan',
+    title: 'Rainy / Low-Energy Plan',
+    bestArea: 'Sunny Beach',
+    bestTime: 'Any slow day',
+    budgetFeel: 'Low',
+    noiseLevel: 'Quiet',
+    recommendedTypes: ['cafe', 'restaurant', 'walk'],
+    routeFlow: ['Stay close to base', 'Coffee checkpoint', 'Simple food', 'Short weather check or hotel reset'],
+    avoidIf: 'the group is still trying to force a full beach-and-nightlife itinerary.',
+    primaryFilter: 'calm',
+    featuredPlaceId: 'rainy-low-energy-coffee-food-plan',
+    idealAudience: 'families, older visitors or tired groups protecting the rest of the trip',
+    routePairing: 'Low-transfer reset route',
   },
 ]

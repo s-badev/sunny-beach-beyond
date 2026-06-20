@@ -9,6 +9,7 @@ export const areas: Area[] = [
     practicalNote: 'Check the exact hotel zone before judging walk times, beach access, or nightlife noise.',
     tags: ['resort strip', 'nightlife access', 'easy logistics'],
     mood: 'Busy, flexible, seasonal',
+    photoKey: 'sunny-beach-promenade',
   },
   {
     id: 'nessebar',
@@ -18,6 +19,7 @@ export const areas: Area[] = [
     practicalNote: 'Go early or near golden hour if you want texture, photos, and breathing room in the old town.',
     tags: ['old town', 'sea walls', 'walking'],
     mood: 'Textured, scenic, crowded in season',
+    photoKey: 'old-nessebar-walk',
   },
   {
     id: 'sveti-vlas',
@@ -27,6 +29,7 @@ export const areas: Area[] = [
     practicalNote: 'It looks close on the map, but return timing still matters if dinner turns into a longer evening.',
     tags: ['marina', 'bay views', 'evening walks'],
     mood: 'Polished, quieter, sea-facing',
+    photoKey: 'sveti-vlas-marina',
   },
   {
     id: 'elenite',
@@ -36,5 +39,6 @@ export const areas: Area[] = [
     practicalNote: 'Plan transport before you go; it is quieter partly because movement is less flexible.',
     tags: ['quiet edge', 'bay', 'planned day'],
     mood: 'Quiet, tucked-away, planned',
+    photoKey: 'elenite-bay',
   },
 ]

@@ -8,6 +8,7 @@ export const beaches: Beach[] = [
     bestFor: 'First-timers, groups, and easy access',
     description: 'The most obvious beach zone, with quick access to hotels, food, loungers, and the busier promenade rhythm.',
     tags: ['central', 'loungers', 'busy'],
+    photoKey: 'central-beach-day',
   },
   {
     id: 'north-sunny-beach',
@@ -16,6 +17,7 @@ export const beaches: Beach[] = [
     bestFor: 'A slightly calmer Sunny Beach day',
     description: 'Still part of the main resort, but often a better fit if you want space and a softer edge than the central strip.',
     tags: ['north end', 'hotels', 'quieter'],
+    photoKey: 'north-sunny-beach',
   },
   {
     id: 'south-sunny-beach',
@@ -24,6 +26,7 @@ export const beaches: Beach[] = [
     bestFor: 'Beach bars and Nessebar-side walks',
     description: 'A busier southern zone that connects well with beach venues and the route toward Nessebar.',
     tags: ['south end', 'bars', 'Cacao area'],
+    photoKey: 'south-beach-night',
   },
   {
     id: 'nessebar-beach',
@@ -32,6 +35,7 @@ export const beaches: Beach[] = [
     bestFor: 'Combining beach time with an old-town visit',
     description: 'A practical beach option when the day includes Nessebar, with views and walks nearby but crowds in high season.',
     tags: ['Nessebar', 'old town nearby', 'seasonal crowds'],
+    photoKey: 'old-nessebar-walk',
   },
   {
     id: 'sveti-vlas-beach',
@@ -40,6 +44,7 @@ export const beaches: Beach[] = [
     bestFor: 'Quieter swims and marina evenings',
     description: 'Smaller beach sections with a more relaxed feel and an easy link to Marina Dinevi for a later walk.',
     tags: ['marina', 'calmer', 'views'],
+    photoKey: 'sveti-vlas-marina',
   },
   {
     id: 'elenite-beach',
@@ -48,5 +53,6 @@ export const beaches: Beach[] = [
     bestFor: 'Slow resort-style beach time',
     description: 'A quieter bay-side choice best treated as a planned beach day rather than a quick hop from the main strip.',
     tags: ['quiet', 'bay', 'planned transport'],
+    photoKey: 'elenite-bay',
   },
 ]

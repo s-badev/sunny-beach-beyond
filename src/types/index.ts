@@ -14,6 +14,7 @@ export type Area = {
   practicalNote: string
   tags: string[]
   mood: string
+  photoKey?: LocalMediaKey
 }
 
 export type Beach = {
@@ -23,6 +24,7 @@ export type Beach = {
   bestFor: string
   description: string
   tags: string[]
+  photoKey?: LocalMediaKey
 }
 
 export type NightlifeItem = {
@@ -31,6 +33,7 @@ export type NightlifeItem = {
   description: string
   bestTime: string
   tags: string[]
+  photoKey?: LocalMediaKey
 }
 
 export type LocalNote = {
@@ -84,6 +87,73 @@ export type ArchiveEntry = {
   title: string
   subtitle: string
   description: string
+  photoKey?: LocalMediaKey
+}
+
+export type LocalMediaKey =
+  | 'sunny-beach-promenade'
+  | 'central-beach-day'
+  | 'north-sunny-beach'
+  | 'south-beach-night'
+  | 'cacao-beach-area'
+  | 'old-nessebar-walk'
+  | 'old-nessebar-dinner'
+  | 'old-nessebar-coffee'
+  | 'old-nessebar-viewpoint'
+  | 'sveti-vlas-marina'
+  | 'sveti-vlas-marina-dinner'
+  | 'sveti-vlas-coffee'
+  | 'sveti-vlas-viewpoint'
+  | 'elenite-bay'
+  | 'elenite-dinner'
+  | 'luna-park-evening'
+  | 'ferris-wheel-evening'
+  | 'slingshot-attraction'
+  | 'mini-train-family'
+  | 'family-promenade-evening'
+  | 'action-aquapark-day'
+  | 'water-sports-zone'
+  | 'parasailing-main-beach'
+  | 'jet-ski-zone'
+  | 'banana-boat-rides'
+  | 'beach-activity-desk'
+  | 'central-food-window'
+  | 'central-casual-dinner'
+  | 'family-food-strip'
+  | 'calm-dinner-view'
+  | 'marina-cocktails'
+  | 'beach-bar-warmup'
+  | 'central-late-food'
+  | 'quiet-coffee-strip'
+  | 'central-coffee-stop'
+  | 'rainy-low-energy'
+  | 'archive-postcard'
+  | 'archive-modern-coast'
+
+export type MediaTone =
+  | 'coastal'
+  | 'food'
+  | 'cafe'
+  | 'nightlife'
+  | 'attraction'
+  | 'premium'
+  | 'budget'
+  | 'walk'
+  | 'sea'
+  | 'sand'
+  | 'marina'
+  | 'old-town'
+  | 'night'
+  | 'family'
+  | 'water'
+  | 'calm'
+
+export type LocalMediaAsset = {
+  alt: string
+  credit?: string
+  src?: string
+  tone?: MediaTone
+  caption?: string
 }
 
 export type GuidePlaceType =
@@ -114,6 +184,10 @@ export type GuideNoise = 'quiet' | 'medium' | 'loud'
 
 export type GuideBestTime = 'morning' | 'day' | 'sunset' | 'evening' | 'late-night'
 
+export type GuideFitLevel = 'low' | 'medium' | 'high'
+
+export type GuidePriceFeel = 'budget' | 'mid-range' | 'premium'
+
 export type GuidePlace = {
   id: string
   name: string
@@ -130,6 +204,16 @@ export type GuidePlace = {
   transportNote: string
   goodNextMove: string
   photoReady?: boolean
+  photoKey?: LocalMediaKey
+  priceFeel?: GuidePriceFeel
+  familyFit?: GuideFitLevel
+  partyLevel?: GuideFitLevel
+  viewValue?: GuideFitLevel
+  walkability?: GuideFitLevel
+  seasonality?: string
+  sourceNote?: string
+  nearby?: string[]
+  routePairing?: string
 }
 
 export type ExperienceFilterId =
@@ -159,4 +243,6 @@ export type ExperienceScenario = {
   avoidIf: string
   primaryFilter: ExperienceFilterId
   featuredPlaceId: string
+  idealAudience?: string
+  routePairing?: string
 }

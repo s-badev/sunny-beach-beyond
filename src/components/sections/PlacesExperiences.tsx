@@ -10,7 +10,6 @@ import {
   Coffee,
   Compass,
   Footprints,
-  MapPinned,
   Martini,
   Moon,
   Navigation,
@@ -24,8 +23,9 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { experienceScenarios, guidePlaces } from '../../data/experiences'
-import type { ExperienceFilterId, ExperienceScenario, GuideBestTime, GuideBudget, GuideNoise, GuidePlace, GuidePlaceType } from '../../types'
+import type { ExperienceFilterId, ExperienceScenario, GuideBestTime, GuideBudget, GuideFitLevel, GuideNoise, GuidePlace, GuidePlaceType, GuidePriceFeel, MediaTone } from '../../types'
 import { fadeUp, staggerContainer } from '../ui/motion'
+import { PhotoFrame } from '../ui/PhotoFrame'
 import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
@@ -85,12 +85,6 @@ const typeIcons: Record<GuidePlaceType, LucideIcon> = {
   transport: Navigation,
 }
 
-const budgetLabels: Record<GuideBudget, string> = {
-  low: 'Budget-friendly',
-  medium: 'Mid-range',
-  high: 'Premium',
-}
-
 const noiseLabels: Record<GuideNoise, string> = {
   quiet: 'Quiet',
   medium: 'Medium noise',
@@ -103,6 +97,18 @@ const bestTimeLabels: Record<GuideBestTime, string> = {
   sunset: 'Sunset',
   evening: 'Evening',
   'late-night': 'Late night',
+}
+
+const priceFeelLabels: Record<GuidePriceFeel, string> = {
+  budget: 'Budget',
+  'mid-range': 'Mid-range',
+  premium: 'Premium',
+}
+
+const fitLevelLabels: Record<GuideFitLevel, string> = {
+  low: 'Low',
+  medium: 'Medium',
+  high: 'High',
 }
 
 const budgetTone: Record<GuideBudget, string> = {
@@ -120,9 +126,15 @@ const noiseTone: Record<GuideNoise, string> = {
 const placeGroupOrder: Array<Omit<PlaceGroup, 'places'> & { types: GuidePlaceType[] }> = [
   {
     id: 'food-drinks',
-    label: 'Food & drinks',
-    description: 'Restaurants, cafes, bars and late food decisions.',
-    types: ['restaurant', 'bar', 'cafe', 'club'],
+    label: 'Food, dinner & coffee',
+    description: 'Restaurants, cafes, calm food stops and practical meal decisions.',
+    types: ['restaurant', 'cafe'],
+  },
+  {
+    id: 'nightlife',
+    label: 'Bars & nightlife',
+    description: 'Beach-bar warmups, south-side party logic and calmer drink choices.',
+    types: ['bar', 'club'],
   },
   {
     id: 'attractions',
@@ -173,16 +185,53 @@ function groupPlaces(places: GuidePlace[]): PlaceGroup[] {
     .filter((group) => group.places.length > 0)
 }
 
-function MetadataChip({ icon: Icon, label, value, className = '' }: { icon: LucideIcon; label: string; value: string; className?: string }) {
-  return (
-    <div className={`rounded-[1rem] border px-3 py-2.5 ${className || 'border-[color:var(--border)]/72 bg-white/72 text-[color:var(--sea-deep)]'}`}>
-      <span className="flex items-center gap-2 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.13em] opacity-70">
-        <Icon size={13} aria-hidden="true" />
-        {label}
-      </span>
-      <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{value}</p>
-    </div>
-  )
+function frameToneForPlace(place: GuidePlace): MediaTone {
+  if (place.priceFeel === 'premium' || place.area === 'Sveti Vlas') return 'premium'
+  if (place.priceFeel === 'budget' || place.budget === 'low') return 'budget'
+  if (place.type === 'restaurant') return 'food'
+  if (place.type === 'cafe') return 'cafe'
+  if (place.type === 'bar' || place.type === 'club') return 'nightlife'
+  if (place.type === 'attraction' || place.type === 'family' || place.type === 'transport') return 'attraction'
+  if (place.type === 'water-sport') return 'water'
+  if (place.type === 'walk' || place.type === 'viewpoint') return 'walk'
+
+  return 'coastal'
+}
+
+function editorialLabelForPlace(place: GuidePlace) {
+  if (place.priceFeel === 'premium' || place.area === 'Sveti Vlas') return 'Premium route'
+  if (place.priceFeel === 'budget' || place.budget === 'low') return 'Smart pick'
+  if (place.type === 'restaurant') return 'Food stop'
+  if (place.type === 'cafe') return 'Coffee pause'
+  if (place.type === 'bar') return 'Evening mood'
+  if (place.type === 'club') return 'Night route'
+  if (place.type === 'attraction') return 'Local attraction'
+  if (place.type === 'family' || place.type === 'transport') return 'Family stop'
+  if (place.type === 'water-sport') return 'Water activity'
+  if (place.type === 'walk' || place.type === 'viewpoint') return 'View route'
+
+  return 'Coastal guide'
+}
+
+function compactRouteLabel(place: GuidePlace) {
+  if (place.type === 'water-sport') return 'Use with beach route'
+  if (place.area === 'Sveti Vlas') return 'Use with marina route'
+  if (place.area === 'Nessebar') return 'Use with old-town route'
+  if (place.area === 'Elenite') return 'Use with quiet bay route'
+  if (place.type === 'bar' || place.type === 'club') return 'Use with nightlife route'
+  if (place.type === 'family' || place.type === 'attraction' || place.type === 'transport') return 'Use with family route'
+
+  return 'Use with Local Routes'
+}
+
+function groupGuidance(groupId: string) {
+  if (groupId === 'food-drinks') return 'Choose by noise first, then view, then return transport.'
+  if (groupId === 'nightlife') return 'Decide the end of the night before choosing the first drink.'
+  if (groupId === 'attractions') return 'Keep movement simple: one anchor, one food stop, one return plan.'
+  if (groupId === 'water-sports') return 'Daytime only: check conditions locally before committing.'
+  if (groupId === 'walks-views') return 'Protect the light and do not rush the transfer.'
+
+  return 'Use the cards as planning prompts, then refine the route.'
 }
 
 function FilterButton({ option, isSelected, count, onSelect }: { option: FilterOption; isSelected: boolean; count: number; onSelect: () => void }) {
@@ -208,7 +257,7 @@ function FilterButton({ option, isSelected, count, onSelect }: { option: FilterO
   )
 }
 
-function PlaceCard({ place, isSelected, onSelect }: { place: GuidePlace; isSelected: boolean; onSelect: () => void }) {
+function PlaceCard({ place, isSelected, isFeatured, onSelect }: { place: GuidePlace; isSelected: boolean; isFeatured?: boolean; onSelect: () => void }) {
   const TypeIcon = typeIcons[place.type]
 
   return (
@@ -221,35 +270,43 @@ function PlaceCard({ place, isSelected, onSelect }: { place: GuidePlace; isSelec
       data-active={isSelected}
       aria-pressed={isSelected}
       aria-label={`Select ${place.name}`}
-      className={`interactive-card active-rail group min-w-0 overflow-hidden rounded-[1.35rem] border p-0 text-left shadow-soft ${
-        isSelected ? 'border-[color:var(--coral)]/58 bg-white/88 ring-2 ring-[color:var(--coral)]/14' : 'border-white/72 bg-white/64 hover:bg-white/78'
+      className={`interactive-card active-rail group min-w-0 overflow-hidden rounded-[1.35rem] border p-0 text-left shadow-soft ${isFeatured ? 'md:col-span-2' : ''} ${
+        isSelected ? 'border-[color:var(--coral)]/78 bg-white/92 ring-2 ring-[color:var(--coral)]/26 shadow-coral' : 'border-white/72 bg-white/64 hover:bg-white/78'
       }`}
     >
-      <div className="guide-photo-slot h-28 border-b border-white/64 p-4 text-white">
-        <div className="relative z-10 flex items-start justify-between gap-3">
-          <span className="rounded-full bg-white/76 px-3 py-1 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sea-deep)] shadow-sm">
-            {typeLabels[place.type]}
-          </span>
-          <span className={`grid size-10 shrink-0 place-items-center rounded-full border border-white/72 transition ${
-            isSelected ? 'bg-[color:var(--coral)] text-white shadow-coral' : 'bg-white/62 text-[color:var(--sea-deep)] group-hover:bg-[color:var(--turquoise)] group-hover:text-[color:var(--night)]'
-          }`}>
-            {isSelected ? <BadgeCheck size={18} aria-hidden="true" /> : <TypeIcon size={18} aria-hidden="true" />}
-          </span>
-        </div>
-        <div className="absolute bottom-3 left-4 z-10 rounded-full border border-white/18 bg-white/18 px-2.5 py-1 font-mono text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-white/84 backdrop-blur">
-          {place.area}
-        </div>
-      </div>
+      <PhotoFrame
+        mediaKey={place.photoKey}
+        tone={frameToneForPlace(place)}
+        title={place.name}
+        subtitle={`${typeLabels[place.type]} / ${bestTimeLabels[place.bestTime]}`}
+        areaLabel={place.area}
+        categoryLabel={isSelected ? 'Selected pick' : typeLabels[place.type]}
+        editorialLabel={editorialLabelForPlace(place)}
+        icon={isSelected ? BadgeCheck : TypeIcon}
+        selected={isSelected}
+        heightClassName={isFeatured ? 'min-h-[13.5rem]' : 'min-h-[11.5rem]'}
+        className="rounded-b-none border-0 border-b border-white/64"
+      />
 
       <div className="p-5">
         <div className="flex flex-wrap gap-2">
-          <span className={`rounded-full border px-3 py-1.5 text-[0.68rem] font-bold leading-none ${budgetTone[place.budget]}`}>{budgetLabels[place.budget]}</span>
+          {isSelected && <span className="rounded-full bg-[color:var(--coral)] px-3 py-1.5 text-[0.68rem] font-bold leading-none text-white shadow-coral">Selected</span>}
+          <span className={`rounded-full border px-3 py-1.5 text-[0.68rem] font-bold leading-none ${budgetTone[place.budget]}`}>{priceFeelLabels[place.priceFeel ?? 'mid-range']}</span>
           <span className={`rounded-full border px-3 py-1.5 text-[0.68rem] font-bold leading-none ${noiseTone[place.noise]}`}>{noiseLabels[place.noise]}</span>
           <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-3 py-1.5 text-[0.68rem] font-bold leading-none text-[color:var(--sea-deep)]">{bestTimeLabels[place.bestTime]}</span>
         </div>
-        <h3 className="mt-4 font-serif text-[1.65rem] leading-tight text-[color:var(--ink)]">{place.name}</h3>
-        <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{place.bestFor}</p>
+        <p className="mt-4 font-serif text-[1.35rem] leading-tight text-[color:var(--ink)]">{place.bestFor}</p>
         <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">{place.description}</p>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+          <div className="rounded-[0.95rem] bg-[color:var(--foam)]/66 px-3 py-2">
+            <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">Family</p>
+            <p className="mt-1 text-sm font-bold text-[color:var(--ink)]">{fitLevelLabels[place.familyFit ?? 'medium']}</p>
+          </div>
+          <div className="rounded-[0.95rem] bg-white/66 px-3 py-2">
+            <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">Route</p>
+            <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{compactRouteLabel(place)}</p>
+          </div>
+        </div>
         <div className="mt-4 flex flex-wrap gap-1.5">
           {place.audience.slice(0, 4).map((audience) => (
             <span key={audience} className="rounded-full border border-white/80 bg-white/62 px-2.5 py-1 text-[0.72rem] font-semibold text-[color:var(--sea-deep)]">
@@ -281,66 +338,79 @@ function DetailPanel({ place }: { place: GuidePlace }) {
         transition={{ duration: 0.24 }}
         className="panel-sheen min-w-0 rounded-[1.55rem] border border-[color:var(--turquoise)]/24 bg-white/82 p-4 shadow-soft sm:p-5"
       >
-        <div className="guide-photo-slot min-h-[14rem] rounded-[1.25rem] border border-white/66 p-4 text-white shadow-soft">
-          <div className="relative z-10 flex h-full min-h-[12rem] flex-col justify-between">
-            <div className="flex items-start justify-between gap-3">
-              <span className="rounded-full bg-white/18 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur">
-                Selected guide
-              </span>
-              <span className="grid size-11 shrink-0 place-items-center rounded-full border border-white/28 bg-white/18 text-white backdrop-blur">
-                <TypeIcon size={20} aria-hidden="true" />
-              </span>
-            </div>
-            <div>
-              <p className="w-fit rounded-full bg-[color:var(--coral)] px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.11em] text-white shadow-coral">
-                {place.area}
-              </p>
-              <h3 className="mt-3 font-serif text-3xl font-semibold leading-[0.98] text-white sm:text-4xl">{place.name}</h3>
-              <p className="mt-2 text-sm font-semibold leading-6 text-white/78">{typeLabels[place.type]} / {bestTimeLabels[place.bestTime]}</p>
-            </div>
-          </div>
+        <PhotoFrame
+          mediaKey={place.photoKey}
+          tone={frameToneForPlace(place)}
+          title={place.name}
+          subtitle={`${typeLabels[place.type]} / ${bestTimeLabels[place.bestTime]}`}
+          areaLabel={place.area}
+          categoryLabel="Selected guide"
+          editorialLabel={editorialLabelForPlace(place)}
+          icon={TypeIcon}
+          selected
+          heightClassName="min-h-[16rem]"
+        />
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {[
+            priceFeelLabels[place.priceFeel ?? 'mid-range'],
+            noiseLabels[place.noise],
+            bestTimeLabels[place.bestTime],
+            `${fitLevelLabels[place.familyFit ?? 'medium']} family`,
+            `${fitLevelLabels[place.viewValue ?? 'medium']} view`,
+          ].map((item) => (
+            <span key={item} className="rounded-full border border-[color:var(--border)]/72 bg-white/72 px-3 py-1.5 text-[0.7rem] font-bold text-[color:var(--sea-deep)]">
+              {item}
+            </span>
+          ))}
         </div>
 
-        <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
-          <MetadataChip icon={CheckCircle2} label="Budget" value={budgetLabels[place.budget]} className={budgetTone[place.budget]} />
-          <MetadataChip icon={Moon} label="Noise" value={noiseLabels[place.noise]} className={noiseTone[place.noise]} />
-          <MetadataChip icon={Clock3} label="Best time" value={bestTimeLabels[place.bestTime]} />
-          <MetadataChip icon={MapPinned} label="Area" value={place.area} />
+        <div className="mt-4 rounded-[1.25rem] border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/66 p-4">
+          <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]">
+            <Compass size={14} aria-hidden="true" />
+            Local read
+          </p>
+          <p className="mt-2 font-serif text-xl leading-tight text-[color:var(--ink)]">{place.bestFor}</p>
+          <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{place.localTip}</p>
         </div>
 
-        <div className="mt-4 grid gap-3">
-          <div className="rounded-[1.15rem] border border-[color:var(--border)]/72 bg-white/72 p-4">
-            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
-              <BadgeCheck size={14} aria-hidden="true" />
-              Best for
-            </p>
-            <p className="mt-2 text-sm font-bold leading-6 text-[color:var(--ink)]">{place.bestFor}</p>
-          </div>
-          <div className="rounded-[1.15rem] border border-[color:var(--coral)]/18 bg-[color:var(--coral-soft)]/26 p-4">
-            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">
-              <AlertTriangle size={14} aria-hidden="true" />
-              Avoid if
-            </p>
-            <p className="mt-2 text-sm font-medium leading-6 text-[color:var(--ink)]">{place.avoidIf}</p>
-          </div>
-          <div className="rounded-[1.15rem] border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/68 p-4">
-            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]">
-              <Compass size={14} aria-hidden="true" />
-              Local tip
-            </p>
-            <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--ink)]">{place.localTip}</p>
-          </div>
-          <div className="route-connection-card rounded-[1.15rem] border border-[color:var(--border)]/72 bg-white/72 p-4">
+        <div className="mt-3 grid gap-3">
+          <div className="route-connection-card rounded-[1.2rem] border border-[color:var(--border)]/72 bg-white/76 p-4">
             <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
               <Route size={14} aria-hidden="true" />
-              Good next move
+              Next move
             </p>
             <p className="mt-2 text-sm font-bold leading-6 text-[color:var(--ink)]">{place.goodNextMove}</p>
-            <p className="mt-2 border-t border-[color:var(--border)]/70 pt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">{place.transportNote}</p>
+            <p className="mt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">{place.transportNote}</p>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {(place.nearby ?? [place.area]).map((item) => (
+                <span key={item} className="rounded-full border border-[color:var(--border)] bg-white/72 px-2.5 py-1 text-[0.72rem] font-semibold text-[color:var(--sea-deep)]">
+                  {item}
+                </span>
+              ))}
+            </div>
+            <a href="#routes" className="interactive-control mt-3 inline-flex items-center gap-2 rounded-full border border-[color:var(--turquoise)]/28 bg-white/72 px-3 py-1.5 text-xs font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
+              Open route pairings
+              <ArrowRight size={13} aria-hidden="true" />
+            </a>
           </div>
-          <p className="rounded-[1rem] border border-[color:var(--border)]/70 bg-[color:var(--background)]/58 px-3 py-2 text-xs leading-5 text-[color:var(--muted-foreground)]">
-            Seasonal details can shift. Verify exact opening, prices and availability locally before committing a plan.
-          </p>
+
+          <div className="rounded-[1.2rem] border border-[color:var(--coral)]/18 bg-[color:var(--coral-soft)]/24 p-4">
+            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">
+              <AlertTriangle size={14} aria-hidden="true" />
+              Skip if
+            </p>
+            <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--ink)]">{place.avoidIf}</p>
+          </div>
+
+          <div className="rounded-[1.2rem] border border-[color:var(--border)]/70 bg-[color:var(--background)]/64 p-4">
+            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
+              <Sun size={14} aria-hidden="true" />
+              Seasonal note
+            </p>
+            <p className="mt-2 text-xs font-semibold leading-5 text-[color:var(--ink)]">{place.seasonality}</p>
+            <p className="mt-2 border-t border-[color:var(--border)]/70 pt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">{place.sourceNote}</p>
+          </div>
         </div>
       </motion.aside>
     </AnimatePresence>
@@ -394,12 +464,20 @@ function ScenarioShortcut({
       <div className="mt-3 flex flex-wrap gap-1.5">
         <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">{scenario.bestArea}</span>
         <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">{scenario.bestTime}</span>
+        <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">{scenario.noiseLevel}</span>
         {scenario.recommendedTypes.slice(0, 2).map((type) => (
           <span key={type} className="rounded-full border border-white/80 bg-white/62 px-2.5 py-1 text-[0.72rem] font-semibold text-[color:var(--sea-deep)]">
             {typeLabels[type]}
           </span>
         ))}
       </div>
+      <p className="mt-3 text-sm font-semibold leading-5 text-[color:var(--sea-deep)]">{scenario.routePairing}</p>
+      <p className="mt-2 rounded-[0.95rem] border border-[color:var(--border)]/70 bg-white/58 px-3 py-2 text-xs font-medium leading-5 text-[color:var(--muted-foreground)]">
+        {scenario.routeFlow.slice(0, 2).join(' / ')}
+      </p>
+      <p className="mt-2 rounded-[0.95rem] border border-[color:var(--coral)]/16 bg-[color:var(--coral-soft)]/22 px-3 py-2 text-xs font-semibold leading-5 text-[color:var(--ink)]">
+        Skip if {scenario.avoidIf}
+      </p>
     </motion.button>
   )
 }
@@ -413,9 +491,29 @@ function PlannerRail({
   selectedScenarioId: string
   onSelectScenario: (scenario: ExperienceScenario) => void
 }) {
+  const activeScenario = experienceScenarios.find((scenario) => scenario.id === selectedScenarioId) ?? experienceScenarios[0]
+
   return (
     <aside className="grid min-w-0 gap-3 xl:sticky xl:top-28 xl:self-start">
       <DetailPanel place={selectedPlace} />
+
+      <RailModule title="Active mini-plan" icon={Route}>
+        <div className="mt-3 rounded-[1rem] border border-[color:var(--turquoise)]/24 bg-[color:var(--foam)]/62 p-3">
+          <p className="font-serif text-xl leading-tight text-[color:var(--ink)]">{activeScenario.title}</p>
+          <p className="mt-1 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{activeScenario.idealAudience}</p>
+        </div>
+        <ol className="mt-3 grid gap-2">
+          {activeScenario.routeFlow.map((step, index) => (
+            <li key={step} className="grid grid-cols-[1.65rem_1fr] gap-2 rounded-[0.9rem] bg-white/58 px-3 py-2 text-sm leading-5 text-[color:var(--muted-foreground)]">
+              <span className="grid size-6 place-items-center rounded-full bg-[color:var(--sea-deep)] font-mono text-[0.65rem] font-bold text-white">{index + 1}</span>
+              <span className="font-semibold text-[color:var(--ink)]">{step}</span>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-3 rounded-[0.9rem] border border-[color:var(--coral)]/18 bg-[color:var(--coral-soft)]/24 px-3 py-2 text-xs font-semibold leading-5 text-[color:var(--ink)]">
+          Avoid if {activeScenario.avoidIf}
+        </p>
+      </RailModule>
 
       <RailModule title="Scenario shortcuts" icon={Sparkles}>
         <div className="mt-3 grid gap-2">
@@ -432,9 +530,9 @@ function PlannerRail({
               }`}
             >
               <span className="min-w-0">
-                <span className="block truncate text-sm font-bold">{scenario.title}</span>
-                <span className="mt-0.5 block truncate text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[color:var(--muted-foreground)]">
-                  {scenario.bestArea} / {scenario.budgetFeel}
+                <span className="block text-sm font-bold leading-5">{scenario.title}</span>
+                <span className="mt-0.5 block text-[0.68rem] font-semibold uppercase leading-4 tracking-[0.1em] text-[color:var(--muted-foreground)]">
+                  {scenario.bestArea} / {scenario.budgetFeel} / {scenario.noiseLevel}
                 </span>
               </span>
               {selectedScenarioId === scenario.id ? <BadgeCheck size={15} aria-hidden="true" /> : <ArrowRight size={14} aria-hidden="true" />}
@@ -589,19 +687,23 @@ export function PlacesExperiences() {
                 <div className="grid gap-5">
                   {groupedPlaces.map((group) => (
                     <section key={group.id} className="rounded-[1.35rem] border border-white/72 bg-white/50 p-3 shadow-soft sm:p-4">
-                      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                          <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">{group.label}</p>
-                          <p className="mt-1 text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{group.description}</p>
+                      <div className="mb-4 rounded-[1.15rem] border border-white/72 bg-white/58 p-3 sm:p-4">
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div>
+                            <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">Guide chapter</p>
+                            <h3 className="mt-1 font-serif text-2xl leading-tight text-[color:var(--ink)]">{group.label}</h3>
+                            <p className="mt-1 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{groupGuidance(group.id)}</p>
+                            <p className="mt-1 text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{group.description}</p>
+                          </div>
+                          <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-3 py-1.5 text-[0.72rem] font-bold text-[color:var(--sea-deep)]">
+                            {group.places.length} {group.places.length === 1 ? 'place' : 'places'}
+                          </span>
                         </div>
-                        <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-3 py-1.5 text-[0.72rem] font-bold text-[color:var(--sea-deep)]">
-                          {group.places.length} {group.places.length === 1 ? 'place' : 'places'}
-                        </span>
                       </div>
 
                       <motion.div className="grid gap-3 md:grid-cols-2" variants={staggerContainer}>
-                        {group.places.map((place) => (
-                          <PlaceCard key={place.id} place={place} isSelected={selectedPlace.id === place.id} onSelect={() => setSelectedPlaceId(place.id)} />
+                        {group.places.map((place, index) => (
+                          <PlaceCard key={place.id} place={place} isFeatured={index === 0} isSelected={selectedPlace.id === place.id} onSelect={() => setSelectedPlaceId(place.id)} />
                         ))}
                       </motion.div>
                     </section>
