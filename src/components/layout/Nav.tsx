@@ -8,6 +8,7 @@ const navItems = [
   { href: '#nightlife', label: 'Nightlife' },
   { href: '#notes', label: 'Notes' },
   { href: '#map', label: 'Map' },
+  { href: '#places', label: 'Places' },
   { href: '#routes', label: 'Routes' },
   { href: '#archive', label: 'Archive' },
 ]

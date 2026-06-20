@@ -8,6 +8,7 @@ import { LocalNotes } from './components/sections/LocalNotes'
 import { LocalRoutes } from './components/sections/LocalRoutes'
 import { MapPreview } from './components/sections/MapPreview'
 import { Nightlife } from './components/sections/Nightlife'
+import { PlacesExperiences } from './components/sections/PlacesExperiences'
 import { ThenNow } from './components/sections/ThenNow'
 import { Vibes } from './components/sections/Vibes'
 import { areas } from './data/areas'
@@ -50,6 +51,7 @@ function App() {
         <Nightlife selectedNightlife={selectedNightlife} onSelectNightlife={setSelectedNightlife} />
         <LocalNotes />
         <MapPreview selectedMapPlace={selectedMapPlace} selectedStops={selectedStops} onSelectMapPlace={setSelectedMapPlace} onAddStop={addStop} onRemoveStop={removeStop} />
+        <PlacesExperiences />
         <LocalRoutes selectedRoute={selectedRoute} selectedStops={selectedStops} onSelectRoute={setSelectedRoute} />
         <ThenNow />
       </main>

@@ -1,0 +1,632 @@
+import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import {
+  AlertTriangle,
+  ArrowRight,
+  BadgeCheck,
+  Camera,
+  CheckCircle2,
+  Clock3,
+  Coffee,
+  Compass,
+  Footprints,
+  MapPinned,
+  Martini,
+  Moon,
+  Navigation,
+  Route,
+  Search,
+  Sparkles,
+  Sun,
+  Utensils,
+  Users,
+  Waves,
+  type LucideIcon,
+} from 'lucide-react'
+import { experienceScenarios, guidePlaces } from '../../data/experiences'
+import type { ExperienceFilterId, ExperienceScenario, GuideBestTime, GuideBudget, GuideNoise, GuidePlace, GuidePlaceType } from '../../types'
+import { fadeUp, staggerContainer } from '../ui/motion'
+import { SectionIntro } from '../ui/SectionIntro'
+import { SectionLabel } from '../ui/SectionLabel'
+
+type FilterOption = {
+  id: ExperienceFilterId
+  label: string
+  description: string
+  icon: LucideIcon
+}
+
+type PlaceGroup = {
+  id: string
+  label: string
+  description: string
+  places: GuidePlace[]
+}
+
+const filterOptions: FilterOption[] = [
+  { id: 'all', label: 'All', description: 'Everything in the guide layer', icon: Compass },
+  { id: 'party', label: 'Party', description: 'Loud nights and social routes', icon: Moon },
+  { id: 'families', label: 'Families', description: 'Kid-friendly and simple logistics', icon: Users },
+  { id: 'couples', label: 'Couples', description: 'Views, dinner and slower evenings', icon: Sparkles },
+  { id: 'older-visitors', label: 'Older visitors', description: 'Calmer, lower-friction choices', icon: Footprints },
+  { id: 'budget', label: 'Budget', description: 'Lower-cost or practical choices', icon: CheckCircle2 },
+  { id: 'premium', label: 'Premium', description: 'Marina polish and elevated evenings', icon: BadgeCheck },
+  { id: 'calm', label: 'Calm', description: 'Quiet, slower and less central', icon: Coffee },
+  { id: 'daytime', label: 'Daytime', description: 'Morning, beach and day activity plans', icon: Sun },
+  { id: 'evening', label: 'Evening', description: 'Sunset, dinner and night routes', icon: Clock3 },
+  { id: 'water-sports', label: 'Water sports', description: 'Sea activity and beach action', icon: Waves },
+  { id: 'attractions', label: 'Attractions', description: 'Amusements, rides and activity anchors', icon: Sparkles },
+  { id: 'food-drinks', label: 'Food & drinks', description: 'Restaurants, cafes, bars and late food', icon: Utensils },
+]
+
+const typeLabels: Record<GuidePlaceType, string> = {
+  restaurant: 'Restaurant',
+  bar: 'Bar',
+  cafe: 'Cafe',
+  club: 'Club',
+  attraction: 'Attraction',
+  'water-sport': 'Water sport',
+  walk: 'Walk',
+  viewpoint: 'Viewpoint',
+  family: 'Family',
+  transport: 'Transport',
+}
+
+const typeIcons: Record<GuidePlaceType, LucideIcon> = {
+  restaurant: Utensils,
+  bar: Martini,
+  cafe: Coffee,
+  club: Moon,
+  attraction: Sparkles,
+  'water-sport': Waves,
+  walk: Footprints,
+  viewpoint: Camera,
+  family: Users,
+  transport: Navigation,
+}
+
+const budgetLabels: Record<GuideBudget, string> = {
+  low: 'Budget-friendly',
+  medium: 'Mid-range',
+  high: 'Premium',
+}
+
+const noiseLabels: Record<GuideNoise, string> = {
+  quiet: 'Quiet',
+  medium: 'Medium noise',
+  loud: 'Loud',
+}
+
+const bestTimeLabels: Record<GuideBestTime, string> = {
+  morning: 'Morning',
+  day: 'Day',
+  sunset: 'Sunset',
+  evening: 'Evening',
+  'late-night': 'Late night',
+}
+
+const budgetTone: Record<GuideBudget, string> = {
+  low: 'border-[color:var(--turquoise)]/22 bg-[color:var(--foam)] text-[color:var(--sea-deep)]',
+  medium: 'border-[color:var(--border)] bg-white/72 text-[color:var(--sea-deep)]',
+  high: 'border-[color:var(--coral)]/20 bg-[color:var(--coral-soft)]/38 text-[color:var(--ink)]',
+}
+
+const noiseTone: Record<GuideNoise, string> = {
+  quiet: 'border-[color:var(--turquoise)]/22 bg-[color:var(--foam)] text-[color:var(--sea-deep)]',
+  medium: 'border-[color:var(--sand)]/70 bg-[color:var(--sand)]/34 text-[color:var(--ink)]',
+  loud: 'border-[color:var(--coral)]/22 bg-[color:var(--coral-soft)]/36 text-[color:var(--ink)]',
+}
+
+const placeGroupOrder: Array<Omit<PlaceGroup, 'places'> & { types: GuidePlaceType[] }> = [
+  {
+    id: 'food-drinks',
+    label: 'Food & drinks',
+    description: 'Restaurants, cafes, bars and late food decisions.',
+    types: ['restaurant', 'bar', 'cafe', 'club'],
+  },
+  {
+    id: 'attractions',
+    label: 'Attractions & family moves',
+    description: 'Amusement lights, family anchors and easy resort movement.',
+    types: ['attraction', 'family', 'transport'],
+  },
+  {
+    id: 'water-sports',
+    label: 'Water sports',
+    description: 'Daytime sea activity and beach action.',
+    types: ['water-sport'],
+  },
+  {
+    id: 'walks-views',
+    label: 'Walks & views',
+    description: 'Golden-hour routes, marina walks and calmer scenic choices.',
+    types: ['walk', 'viewpoint'],
+  },
+]
+
+function matchesFilter(place: GuidePlace, filterId: ExperienceFilterId) {
+  if (filterId === 'all') return true
+  if (filterId === 'party') return place.audience.includes('party') || place.type === 'club' || place.noise === 'loud'
+  if (filterId === 'families') return place.audience.includes('families') || place.type === 'family'
+  if (filterId === 'couples') return place.audience.includes('couples')
+  if (filterId === 'older-visitors') return place.audience.includes('older-visitors')
+  if (filterId === 'budget') return place.audience.includes('budget') || place.budget === 'low'
+  if (filterId === 'premium') return place.audience.includes('premium') || place.budget === 'high'
+  if (filterId === 'calm') return place.audience.includes('calm') || place.noise === 'quiet'
+  if (filterId === 'daytime') return place.bestTime === 'morning' || place.bestTime === 'day'
+  if (filterId === 'evening') return place.bestTime === 'sunset' || place.bestTime === 'evening' || place.bestTime === 'late-night'
+  if (filterId === 'water-sports') return place.type === 'water-sport'
+  if (filterId === 'attractions') return place.type === 'attraction' || place.type === 'family'
+  if (filterId === 'food-drinks') return place.type === 'restaurant' || place.type === 'bar' || place.type === 'cafe' || place.type === 'club'
+
+  return true
+}
+
+function groupPlaces(places: GuidePlace[]): PlaceGroup[] {
+  return placeGroupOrder
+    .map((group) => ({
+      id: group.id,
+      label: group.label,
+      description: group.description,
+      places: places.filter((place) => group.types.includes(place.type)),
+    }))
+    .filter((group) => group.places.length > 0)
+}
+
+function MetadataChip({ icon: Icon, label, value, className = '' }: { icon: LucideIcon; label: string; value: string; className?: string }) {
+  return (
+    <div className={`rounded-[1rem] border px-3 py-2.5 ${className || 'border-[color:var(--border)]/72 bg-white/72 text-[color:var(--sea-deep)]'}`}>
+      <span className="flex items-center gap-2 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.13em] opacity-70">
+        <Icon size={13} aria-hidden="true" />
+        {label}
+      </span>
+      <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{value}</p>
+    </div>
+  )
+}
+
+function FilterButton({ option, isSelected, count, onSelect }: { option: FilterOption; isSelected: boolean; count: number; onSelect: () => void }) {
+  const Icon = option.icon
+
+  return (
+    <button
+      type="button"
+      aria-pressed={isSelected}
+      onClick={onSelect}
+      className={`interactive-control inline-flex min-h-11 items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-bold ${
+        isSelected
+          ? 'border-[color:var(--sea-deep)] bg-[color:var(--sea-deep)] text-white shadow-glow'
+          : 'border-[color:var(--border)]/76 bg-white/70 text-[color:var(--sea-deep)] hover:border-[color:var(--turquoise)] hover:bg-white'
+      }`}
+    >
+      <Icon size={15} aria-hidden="true" />
+      <span>{option.label}</span>
+      <span className={`rounded-full px-2 py-0.5 font-mono text-[0.62rem] ${isSelected ? 'bg-white/18 text-white/78' : 'bg-[color:var(--foam)] text-[color:var(--sea-deep)]/68'}`}>
+        {count}
+      </span>
+    </button>
+  )
+}
+
+function PlaceCard({ place, isSelected, onSelect }: { place: GuidePlace; isSelected: boolean; onSelect: () => void }) {
+  const TypeIcon = typeIcons[place.type]
+
+  return (
+    <motion.button
+      type="button"
+      variants={fadeUp}
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.99 }}
+      onClick={onSelect}
+      data-active={isSelected}
+      aria-pressed={isSelected}
+      aria-label={`Select ${place.name}`}
+      className={`interactive-card active-rail group min-w-0 overflow-hidden rounded-[1.35rem] border p-0 text-left shadow-soft ${
+        isSelected ? 'border-[color:var(--coral)]/58 bg-white/88 ring-2 ring-[color:var(--coral)]/14' : 'border-white/72 bg-white/64 hover:bg-white/78'
+      }`}
+    >
+      <div className="guide-photo-slot h-28 border-b border-white/64 p-4 text-white">
+        <div className="relative z-10 flex items-start justify-between gap-3">
+          <span className="rounded-full bg-white/76 px-3 py-1 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sea-deep)] shadow-sm">
+            {typeLabels[place.type]}
+          </span>
+          <span className={`grid size-10 shrink-0 place-items-center rounded-full border border-white/72 transition ${
+            isSelected ? 'bg-[color:var(--coral)] text-white shadow-coral' : 'bg-white/62 text-[color:var(--sea-deep)] group-hover:bg-[color:var(--turquoise)] group-hover:text-[color:var(--night)]'
+          }`}>
+            {isSelected ? <BadgeCheck size={18} aria-hidden="true" /> : <TypeIcon size={18} aria-hidden="true" />}
+          </span>
+        </div>
+        <div className="absolute bottom-3 left-4 z-10 rounded-full border border-white/18 bg-white/18 px-2.5 py-1 font-mono text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-white/84 backdrop-blur">
+          {place.area}
+        </div>
+      </div>
+
+      <div className="p-5">
+        <div className="flex flex-wrap gap-2">
+          <span className={`rounded-full border px-3 py-1.5 text-[0.68rem] font-bold leading-none ${budgetTone[place.budget]}`}>{budgetLabels[place.budget]}</span>
+          <span className={`rounded-full border px-3 py-1.5 text-[0.68rem] font-bold leading-none ${noiseTone[place.noise]}`}>{noiseLabels[place.noise]}</span>
+          <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-3 py-1.5 text-[0.68rem] font-bold leading-none text-[color:var(--sea-deep)]">{bestTimeLabels[place.bestTime]}</span>
+        </div>
+        <h3 className="mt-4 font-serif text-[1.65rem] leading-tight text-[color:var(--ink)]">{place.name}</h3>
+        <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{place.bestFor}</p>
+        <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">{place.description}</p>
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {place.audience.slice(0, 4).map((audience) => (
+            <span key={audience} className="rounded-full border border-white/80 bg-white/62 px-2.5 py-1 text-[0.72rem] font-semibold text-[color:var(--sea-deep)]">
+              {audience.replace('-', ' ')}
+            </span>
+          ))}
+        </div>
+        <div className="guide-action-row mt-4">
+          <span className="min-w-0 font-mono text-[0.64rem] font-semibold uppercase tracking-[0.13em] text-[color:var(--sea-deep)]/68">
+            {isSelected ? 'Recommendation active' : 'Open guide detail'}
+          </span>
+          <ArrowRight size={14} className="shrink-0 text-[color:var(--coral)]" aria-hidden="true" />
+        </div>
+      </div>
+    </motion.button>
+  )
+}
+
+function DetailPanel({ place }: { place: GuidePlace }) {
+  const TypeIcon = typeIcons[place.type]
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.aside
+        key={place.id}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 8 }}
+        transition={{ duration: 0.24 }}
+        className="panel-sheen min-w-0 rounded-[1.55rem] border border-[color:var(--turquoise)]/24 bg-white/82 p-4 shadow-soft sm:p-5"
+      >
+        <div className="guide-photo-slot min-h-[14rem] rounded-[1.25rem] border border-white/66 p-4 text-white shadow-soft">
+          <div className="relative z-10 flex h-full min-h-[12rem] flex-col justify-between">
+            <div className="flex items-start justify-between gap-3">
+              <span className="rounded-full bg-white/18 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur">
+                Selected guide
+              </span>
+              <span className="grid size-11 shrink-0 place-items-center rounded-full border border-white/28 bg-white/18 text-white backdrop-blur">
+                <TypeIcon size={20} aria-hidden="true" />
+              </span>
+            </div>
+            <div>
+              <p className="w-fit rounded-full bg-[color:var(--coral)] px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.11em] text-white shadow-coral">
+                {place.area}
+              </p>
+              <h3 className="mt-3 font-serif text-3xl font-semibold leading-[0.98] text-white sm:text-4xl">{place.name}</h3>
+              <p className="mt-2 text-sm font-semibold leading-6 text-white/78">{typeLabels[place.type]} / {bestTimeLabels[place.bestTime]}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+          <MetadataChip icon={CheckCircle2} label="Budget" value={budgetLabels[place.budget]} className={budgetTone[place.budget]} />
+          <MetadataChip icon={Moon} label="Noise" value={noiseLabels[place.noise]} className={noiseTone[place.noise]} />
+          <MetadataChip icon={Clock3} label="Best time" value={bestTimeLabels[place.bestTime]} />
+          <MetadataChip icon={MapPinned} label="Area" value={place.area} />
+        </div>
+
+        <div className="mt-4 grid gap-3">
+          <div className="rounded-[1.15rem] border border-[color:var(--border)]/72 bg-white/72 p-4">
+            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
+              <BadgeCheck size={14} aria-hidden="true" />
+              Best for
+            </p>
+            <p className="mt-2 text-sm font-bold leading-6 text-[color:var(--ink)]">{place.bestFor}</p>
+          </div>
+          <div className="rounded-[1.15rem] border border-[color:var(--coral)]/18 bg-[color:var(--coral-soft)]/26 p-4">
+            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">
+              <AlertTriangle size={14} aria-hidden="true" />
+              Avoid if
+            </p>
+            <p className="mt-2 text-sm font-medium leading-6 text-[color:var(--ink)]">{place.avoidIf}</p>
+          </div>
+          <div className="rounded-[1.15rem] border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/68 p-4">
+            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]">
+              <Compass size={14} aria-hidden="true" />
+              Local tip
+            </p>
+            <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--ink)]">{place.localTip}</p>
+          </div>
+          <div className="route-connection-card rounded-[1.15rem] border border-[color:var(--border)]/72 bg-white/72 p-4">
+            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
+              <Route size={14} aria-hidden="true" />
+              Good next move
+            </p>
+            <p className="mt-2 text-sm font-bold leading-6 text-[color:var(--ink)]">{place.goodNextMove}</p>
+            <p className="mt-2 border-t border-[color:var(--border)]/70 pt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">{place.transportNote}</p>
+          </div>
+          <p className="rounded-[1rem] border border-[color:var(--border)]/70 bg-[color:var(--background)]/58 px-3 py-2 text-xs leading-5 text-[color:var(--muted-foreground)]">
+            Seasonal details can shift. Verify exact opening, prices and availability locally before committing a plan.
+          </p>
+        </div>
+      </motion.aside>
+    </AnimatePresence>
+  )
+}
+
+function RailModule({ title, icon: Icon, children }: { title: string; icon: LucideIcon; children: ReactNode }) {
+  return (
+    <div className="route-connection-card rounded-[1.25rem] border border-[color:var(--border)]/72 bg-white/76 p-4 shadow-soft">
+      <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
+        <Icon size={14} aria-hidden="true" />
+        {title}
+      </p>
+      {children}
+    </div>
+  )
+}
+
+function ScenarioShortcut({
+  scenario,
+  isSelected,
+  onSelect,
+}: {
+  scenario: ExperienceScenario
+  isSelected: boolean
+  onSelect: () => void
+}) {
+  return (
+    <motion.button
+      type="button"
+      variants={fadeUp}
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.99 }}
+      onClick={onSelect}
+      aria-pressed={isSelected}
+      data-active={isSelected}
+      className={`interactive-card active-rail min-w-[15.5rem] rounded-[1.15rem] border p-3 text-left shadow-soft sm:min-w-0 ${
+        isSelected ? 'border-[color:var(--turquoise)]/58 bg-white/86 ring-2 ring-[color:var(--turquoise)]/16' : 'border-white/70 bg-white/62 hover:bg-white/78'
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.15em] text-[color:var(--coral)]">Scenario</p>
+          <h3 className="mt-1.5 font-serif text-xl leading-tight text-[color:var(--ink)]">{scenario.title}</h3>
+        </div>
+        <span className={`grid size-8 shrink-0 place-items-center rounded-full border ${isSelected ? 'border-[color:var(--turquoise)] bg-[color:var(--turquoise)] text-[color:var(--night)]' : 'border-white bg-white/66 text-[color:var(--sea-deep)]'}`}>
+          {isSelected ? <BadgeCheck size={15} aria-hidden="true" /> : <Route size={15} aria-hidden="true" />}
+        </span>
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">{scenario.bestArea}</span>
+        <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">{scenario.bestTime}</span>
+        {scenario.recommendedTypes.slice(0, 2).map((type) => (
+          <span key={type} className="rounded-full border border-white/80 bg-white/62 px-2.5 py-1 text-[0.72rem] font-semibold text-[color:var(--sea-deep)]">
+            {typeLabels[type]}
+          </span>
+        ))}
+      </div>
+    </motion.button>
+  )
+}
+
+function PlannerRail({
+  selectedPlace,
+  selectedScenarioId,
+  onSelectScenario,
+}: {
+  selectedPlace: GuidePlace
+  selectedScenarioId: string
+  onSelectScenario: (scenario: ExperienceScenario) => void
+}) {
+  return (
+    <aside className="grid min-w-0 gap-3 xl:sticky xl:top-28 xl:self-start">
+      <DetailPanel place={selectedPlace} />
+
+      <RailModule title="Scenario shortcuts" icon={Sparkles}>
+        <div className="mt-3 grid gap-2">
+          {experienceScenarios.slice(0, 6).map((scenario) => (
+            <button
+              key={scenario.id}
+              type="button"
+              onClick={() => onSelectScenario(scenario)}
+              aria-pressed={selectedScenarioId === scenario.id}
+              className={`interactive-control flex items-center justify-between gap-3 rounded-[1rem] border px-3 py-2 text-left ${
+                selectedScenarioId === scenario.id
+                  ? 'border-[color:var(--turquoise)] bg-[color:var(--foam)] text-[color:var(--sea-deep)]'
+                  : 'border-[color:var(--border)]/70 bg-white/62 text-[color:var(--ink)] hover:bg-white'
+              }`}
+            >
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-bold">{scenario.title}</span>
+                <span className="mt-0.5 block truncate text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[color:var(--muted-foreground)]">
+                  {scenario.bestArea} / {scenario.budgetFeel}
+                </span>
+              </span>
+              {selectedScenarioId === scenario.id ? <BadgeCheck size={15} aria-hidden="true" /> : <ArrowRight size={14} aria-hidden="true" />}
+            </button>
+          ))}
+        </div>
+      </RailModule>
+
+      <RailModule title="Quick decision rules" icon={Compass}>
+        <div className="mt-3 grid gap-2 text-sm leading-6 text-[color:var(--muted-foreground)]">
+          <p>
+            <span className="font-bold text-[color:var(--ink)]">Pick by noise first:</span> quiet, medium or loud changes the whole evening.
+          </p>
+          <p>
+            <span className="font-bold text-[color:var(--ink)]">Then check transport:</span> short map distances can still be slow in season.
+          </p>
+          <p>
+            <span className="font-bold text-[color:var(--ink)]">Build a route:</span> combine one food stop, one walk or activity, and one return plan.
+          </p>
+        </div>
+      </RailModule>
+    </aside>
+  )
+}
+
+export function PlacesExperiences() {
+  const [selectedFilter, setSelectedFilter] = useState<ExperienceFilterId>('all')
+  const [selectedPlaceId, setSelectedPlaceId] = useState(guidePlaces[0].id)
+  const [selectedScenarioId, setSelectedScenarioId] = useState(experienceScenarios[0].id)
+
+  const filterCounts = useMemo(
+    () =>
+      filterOptions.reduce<Record<ExperienceFilterId, number>>((counts, option) => {
+        counts[option.id] = guidePlaces.filter((place) => matchesFilter(place, option.id)).length
+        return counts
+      }, {} as Record<ExperienceFilterId, number>),
+    [],
+  )
+
+  const filteredPlaces = useMemo(() => guidePlaces.filter((place) => matchesFilter(place, selectedFilter)), [selectedFilter])
+  const groupedPlaces = useMemo(() => groupPlaces(filteredPlaces), [filteredPlaces])
+  const selectedPlace = filteredPlaces.find((place) => place.id === selectedPlaceId) ?? filteredPlaces[0] ?? guidePlaces[0]
+  const selectedFilterOption = filterOptions.find((option) => option.id === selectedFilter) ?? filterOptions[0]
+
+  useEffect(() => {
+    if (filteredPlaces.length > 0 && !filteredPlaces.some((place) => place.id === selectedPlaceId)) {
+      setSelectedPlaceId(filteredPlaces[0].id)
+    }
+  }, [filteredPlaces, selectedPlaceId])
+
+  function chooseFilter(filterId: ExperienceFilterId) {
+    setSelectedFilter(filterId)
+  }
+
+  function chooseScenario(scenario: ExperienceScenario) {
+    setSelectedScenarioId(scenario.id)
+    setSelectedFilter(scenario.primaryFilter)
+    setSelectedPlaceId(scenario.featuredPlaceId)
+  }
+
+  return (
+    <section id="places" className="section-shell overflow-x-clip bg-[linear-gradient(180deg,#fff8e8_0%,#f4fbf8_42%,#e8f6f2_100%)]">
+      <div className="grain absolute inset-0 opacity-28" aria-hidden="true" />
+      <div className="absolute -right-40 top-24 size-96 rounded-full bg-[color:var(--turquoise)]/16 blur-3xl" aria-hidden="true" />
+      <div className="absolute -left-40 bottom-16 size-80 rounded-full bg-[color:var(--coral-soft)]/34 blur-3xl" aria-hidden="true" />
+
+      <div className="section-inner">
+        <motion.div className="grid gap-8 lg:grid-cols-[0.74fr_1fr] lg:items-end" variants={fadeUp}>
+          <div>
+            <SectionLabel>Places &amp; Experiences</SectionLabel>
+            <h2 className="text-balance font-serif text-4xl font-semibold leading-tight text-[color:var(--ink)] sm:text-5xl">
+              Find the right place for the day you actually want.
+            </h2>
+          </div>
+          <SectionIntro label="Experience finder">
+            Browse real guide-style places and coastal experiences by audience, budget, noise, time of day and activity type, then open a practical detail panel before shaping a route.
+          </SectionIntro>
+        </motion.div>
+
+        <motion.div className="mt-8 rounded-[1.85rem] border border-white/72 bg-white/56 shadow-[0_32px_90px_rgba(9,58,82,0.13)] backdrop-blur" variants={fadeUp}>
+          <div className="border-b border-[color:var(--border)]/70 bg-white/58 p-4 sm:p-5">
+            <div className="grid gap-4 xl:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] xl:items-start">
+              <div className="route-connection-card rounded-[1.35rem] border border-[color:var(--border)]/72 bg-white/76 p-4 shadow-soft">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
+                      <Search size={14} aria-hidden="true" />
+                      Current finder
+                    </p>
+                    <p className="mt-2 font-serif text-2xl leading-tight text-[color:var(--ink)]">{selectedFilterOption.label}</p>
+                  </div>
+                  <span className="rounded-full bg-[color:var(--sea-deep)] px-3 py-1.5 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-white">
+                    {filteredPlaces.length} matches
+                  </span>
+                </div>
+                <p className="mt-3 text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{selectedFilterOption.description}</p>
+                <div className="mt-3 rounded-[1rem] border border-[color:var(--coral)]/16 bg-[color:var(--coral-soft)]/24 px-3 py-2 text-xs leading-5 text-[color:var(--ink)]">
+                  Starter content uses stable local anchors and editorial guidance. Verify live details locally in season.
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2" aria-label="Experience filters">
+                {filterOptions.map((option) => (
+                  <FilterButton
+                    key={option.id}
+                    option={option}
+                    count={filterCounts[option.id]}
+                    isSelected={selectedFilter === option.id}
+                    onSelect={() => chooseFilter(option.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="border-b border-[color:var(--border)]/70 bg-[color:var(--foam)]/34 p-4 sm:p-5">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">Scenario shortcuts</p>
+                <h3 className="mt-1 font-serif text-2xl leading-tight text-[color:var(--ink)] sm:text-3xl">Pick a plan shape, then refine the place.</h3>
+              </div>
+              <span className="rounded-full border border-[color:var(--border)] bg-white/70 px-3 py-1.5 text-[0.72rem] font-bold text-[color:var(--sea-deep)]">
+                {experienceScenarios.length} planner modes
+              </span>
+            </div>
+
+            <motion.div
+              className="-mx-1 mt-4 flex gap-3 overflow-x-auto px-1 pb-1 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 xl:grid-cols-4 [&::-webkit-scrollbar]:hidden"
+              variants={staggerContainer}
+            >
+              {experienceScenarios.map((scenario) => (
+                <ScenarioShortcut key={scenario.id} scenario={scenario} isSelected={selectedScenarioId === scenario.id} onSelect={() => chooseScenario(scenario)} />
+              ))}
+            </motion.div>
+          </div>
+
+          <div className="grid gap-5 p-4 sm:p-5 xl:grid-cols-[minmax(0,1fr)_25rem] xl:items-start">
+            <div className="min-w-0">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3" aria-live="polite">
+                <div>
+                  <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">Visible guide cards</p>
+                  <p className="mt-1 text-sm font-semibold text-[color:var(--muted-foreground)]">
+                    {filteredPlaces.length > 0 ? `${filteredPlaces.length} useful ${filteredPlaces.length === 1 ? 'match' : 'matches'} for ${selectedFilterOption.label.toLowerCase()}.` : 'No matches for this filter.'}
+                  </p>
+                </div>
+                <span className="rounded-full border border-[color:var(--border)] bg-white/70 px-3 py-1.5 text-[0.72rem] font-bold text-[color:var(--sea-deep)]">
+                  Selected: {selectedPlace.name}
+                </span>
+              </div>
+
+              {filteredPlaces.length > 0 ? (
+                <div className="grid gap-5">
+                  {groupedPlaces.map((group) => (
+                    <section key={group.id} className="rounded-[1.35rem] border border-white/72 bg-white/50 p-3 shadow-soft sm:p-4">
+                      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">{group.label}</p>
+                          <p className="mt-1 text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{group.description}</p>
+                        </div>
+                        <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-3 py-1.5 text-[0.72rem] font-bold text-[color:var(--sea-deep)]">
+                          {group.places.length} {group.places.length === 1 ? 'place' : 'places'}
+                        </span>
+                      </div>
+
+                      <motion.div className="grid gap-3 md:grid-cols-2" variants={staggerContainer}>
+                        {group.places.map((place) => (
+                          <PlaceCard key={place.id} place={place} isSelected={selectedPlace.id === place.id} onSelect={() => setSelectedPlaceId(place.id)} />
+                        ))}
+                      </motion.div>
+                    </section>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-[1.25rem] border border-dashed border-[color:var(--border)] bg-white/66 p-6 shadow-soft">
+                  <p className="font-serif text-2xl text-[color:var(--ink)]">No matches in this starter layer.</p>
+                  <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">Reset to all places or use a broader audience filter.</p>
+                  <button
+                    type="button"
+                    onClick={() => chooseFilter('all')}
+                    className="interactive-control mt-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-4 py-2 text-sm font-bold text-white hover:bg-[color:var(--sea)]"
+                  >
+                    <Compass size={14} aria-hidden="true" />
+                    Show all places
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <PlannerRail selectedPlace={selectedPlace} selectedScenarioId={selectedScenarioId} onSelectScenario={chooseScenario} />
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}

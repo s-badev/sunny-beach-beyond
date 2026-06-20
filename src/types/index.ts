@@ -85,3 +85,78 @@ export type ArchiveEntry = {
   subtitle: string
   description: string
 }
+
+export type GuidePlaceType =
+  | 'restaurant'
+  | 'bar'
+  | 'cafe'
+  | 'club'
+  | 'attraction'
+  | 'water-sport'
+  | 'walk'
+  | 'viewpoint'
+  | 'family'
+  | 'transport'
+
+export type GuideAudience =
+  | 'young'
+  | 'families'
+  | 'couples'
+  | 'older-visitors'
+  | 'party'
+  | 'calm'
+  | 'budget'
+  | 'premium'
+
+export type GuideBudget = 'low' | 'medium' | 'high'
+
+export type GuideNoise = 'quiet' | 'medium' | 'loud'
+
+export type GuideBestTime = 'morning' | 'day' | 'sunset' | 'evening' | 'late-night'
+
+export type GuidePlace = {
+  id: string
+  name: string
+  area: AreaName
+  type: GuidePlaceType
+  audience: GuideAudience[]
+  budget: GuideBudget
+  noise: GuideNoise
+  bestTime: GuideBestTime
+  bestFor: string
+  avoidIf: string
+  description: string
+  localTip: string
+  transportNote: string
+  goodNextMove: string
+  photoReady?: boolean
+}
+
+export type ExperienceFilterId =
+  | 'all'
+  | 'party'
+  | 'families'
+  | 'couples'
+  | 'older-visitors'
+  | 'budget'
+  | 'premium'
+  | 'calm'
+  | 'daytime'
+  | 'evening'
+  | 'water-sports'
+  | 'attractions'
+  | 'food-drinks'
+
+export type ExperienceScenario = {
+  id: string
+  title: string
+  bestArea: AreaName | 'Multiple areas'
+  bestTime: string
+  budgetFeel: string
+  noiseLevel: string
+  recommendedTypes: GuidePlaceType[]
+  routeFlow: string[]
+  avoidIf: string
+  primaryFilter: ExperienceFilterId
+  featuredPlaceId: string
+}
