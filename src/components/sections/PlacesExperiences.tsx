@@ -814,7 +814,7 @@ export function PlacesExperiences({ onOpenPlaceDetail }: PlacesExperiencesProps)
                           <PlaceCard
                             key={place.id}
                             place={place}
-                            isFeatured={index === 0}
+                            isFeatured={index === 0 || (group.places.length % 2 === 0 && index === group.places.length - 1)}
                             isSelected={selectedPlace.id === place.id}
                             onSelect={() => {
                               setSelectedPlaceId(place.id)
