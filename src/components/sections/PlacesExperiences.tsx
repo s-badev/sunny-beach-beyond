@@ -10,6 +10,7 @@ import {
   Coffee,
   Compass,
   Footprints,
+  MapPinned,
   Martini,
   Moon,
   Navigation,
@@ -229,7 +230,7 @@ function groupGuidance(groupId: string) {
   if (groupId === 'nightlife') return 'Decide the end of the night before choosing the first drink.'
   if (groupId === 'attractions') return 'Keep movement simple: one anchor, one food stop, one return plan.'
   if (groupId === 'water-sports') return 'Daytime only: check conditions locally before committing.'
-  if (groupId === 'walks-views') return 'Protect the light and do not rush the transfer.'
+  if (groupId === 'walks-views') return 'Use walks and viewpoints before dinner, when transfers can stay simple.'
 
   return 'Use the cards as planning prompts, then refine the route.'
 }
@@ -482,6 +483,72 @@ function ScenarioShortcut({
   )
 }
 
+function ScenarioHelperCard({
+  title,
+  eyebrow,
+  icon: Icon,
+  variant,
+  metadata,
+  actionLabel,
+  onSelect,
+  children,
+}: {
+  title: string
+  eyebrow: string
+  icon: LucideIcon
+  variant: 'active' | 'note'
+  metadata: string[]
+  actionLabel: string
+  onSelect: () => void
+  children: ReactNode
+}) {
+  const isActive = variant === 'active'
+
+  return (
+    <motion.button
+      type="button"
+      variants={fadeUp}
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.99 }}
+      onClick={onSelect}
+      data-active={isActive}
+      className={`interactive-card active-rail route-connection-card min-w-[15.5rem] rounded-[1.15rem] border p-3 text-left shadow-soft sm:min-w-0 ${
+        isActive
+          ? 'border-[color:var(--turquoise)]/68 bg-white/88 ring-2 ring-[color:var(--turquoise)]/18'
+          : 'border-white/72 bg-white/68 hover:border-[color:var(--turquoise)]/46 hover:bg-white/82'
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className={`inline-flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.15em] ${isActive ? 'text-[color:var(--coral)]' : 'text-[color:var(--sea-deep)]/62'}`}>
+            <Icon size={14} aria-hidden="true" />
+            {eyebrow}
+          </p>
+          <h3 className="mt-1.5 font-serif text-xl leading-tight text-[color:var(--ink)]">{title}</h3>
+        </div>
+        <span className={`grid size-8 shrink-0 place-items-center rounded-full border ${isActive ? 'border-[color:var(--turquoise)] bg-[color:var(--turquoise)] text-[color:var(--night)]' : 'border-white bg-white/68 text-[color:var(--sea-deep)]'}`}>
+          {isActive ? <BadgeCheck size={15} aria-hidden="true" /> : <Compass size={15} aria-hidden="true" />}
+        </span>
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {metadata.map((item) => (
+          <span key={item} className="rounded-full border border-[color:var(--border)] bg-white/72 px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">
+            {item}
+          </span>
+        ))}
+      </div>
+
+      <div className="mt-3 text-sm font-semibold leading-5 text-[color:var(--sea-deep)]">{children}</div>
+
+      <div className="guide-action-row mt-3">
+        <span className="min-w-0 font-mono text-[0.64rem] font-semibold uppercase tracking-[0.13em] text-[color:var(--sea-deep)]/68">{actionLabel}</span>
+        <ArrowRight size={14} className="shrink-0 text-[color:var(--coral)]" aria-hidden="true" />
+      </div>
+    </motion.button>
+  )
+}
+
 function PlannerRail({
   selectedPlace,
   selectedScenarioId,
@@ -496,6 +563,18 @@ function PlannerRail({
   return (
     <aside className="grid min-w-0 gap-3 xl:sticky xl:top-28 xl:self-start">
       <DetailPanel place={selectedPlace} />
+
+      <RailModule title="Use this with" icon={MapPinned}>
+        <p className="mt-3 font-serif text-xl leading-tight text-[color:var(--ink)]">{selectedPlace.routePairing ?? compactRouteLabel(selectedPlace)}</p>
+        <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{selectedPlace.goodNextMove}</p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {(selectedPlace.nearby ?? [selectedPlace.area]).map((item) => (
+            <span key={item} className="rounded-full border border-[color:var(--border)] bg-white/72 px-2.5 py-1 text-[0.72rem] font-semibold text-[color:var(--sea-deep)]">
+              {item}
+            </span>
+          ))}
+        </div>
+      </RailModule>
 
       <RailModule title="Active mini-plan" icon={Route}>
         <div className="mt-3 rounded-[1rem] border border-[color:var(--turquoise)]/24 bg-[color:var(--foam)]/62 p-3">
@@ -558,7 +637,11 @@ function PlannerRail({
   )
 }
 
-export function PlacesExperiences() {
+type PlacesExperiencesProps = {
+  onOpenPlaceDetail?: (place: GuidePlace) => void
+}
+
+export function PlacesExperiences({ onOpenPlaceDetail }: PlacesExperiencesProps) {
   const [selectedFilter, setSelectedFilter] = useState<ExperienceFilterId>('all')
   const [selectedPlaceId, setSelectedPlaceId] = useState(guidePlaces[0].id)
   const [selectedScenarioId, setSelectedScenarioId] = useState(experienceScenarios[0].id)
@@ -576,6 +659,7 @@ export function PlacesExperiences() {
   const groupedPlaces = useMemo(() => groupPlaces(filteredPlaces), [filteredPlaces])
   const selectedPlace = filteredPlaces.find((place) => place.id === selectedPlaceId) ?? filteredPlaces[0] ?? guidePlaces[0]
   const selectedFilterOption = filterOptions.find((option) => option.id === selectedFilter) ?? filterOptions[0]
+  const activeScenario = experienceScenarios.find((scenario) => scenario.id === selectedScenarioId) ?? experienceScenarios[0]
 
   useEffect(() => {
     if (filteredPlaces.length > 0 && !filteredPlaces.some((place) => place.id === selectedPlaceId)) {
@@ -594,11 +678,7 @@ export function PlacesExperiences() {
   }
 
   return (
-    <section id="places" className="section-shell overflow-x-clip bg-[linear-gradient(180deg,#fff8e8_0%,#f4fbf8_42%,#e8f6f2_100%)]">
-      <div className="grain absolute inset-0 opacity-28" aria-hidden="true" />
-      <div className="absolute -right-40 top-24 size-96 rounded-full bg-[color:var(--turquoise)]/16 blur-3xl" aria-hidden="true" />
-      <div className="absolute -left-40 bottom-16 size-80 rounded-full bg-[color:var(--coral-soft)]/34 blur-3xl" aria-hidden="true" />
-
+    <section id="places" className="section-shell overflow-x-clip">
       <div className="section-inner">
         <motion.div className="grid gap-8 lg:grid-cols-[0.74fr_1fr] lg:items-end" variants={fadeUp}>
           <div>
@@ -612,8 +692,8 @@ export function PlacesExperiences() {
           </SectionIntro>
         </motion.div>
 
-        <motion.div className="mt-8 rounded-[1.85rem] border border-white/72 bg-white/56 shadow-[0_32px_90px_rgba(9,58,82,0.13)] backdrop-blur" variants={fadeUp}>
-          <div className="border-b border-[color:var(--border)]/70 bg-white/58 p-4 sm:p-5">
+        <motion.div className="mt-8 grid gap-4" variants={fadeUp}>
+          <div>
             <div className="grid gap-4 xl:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] xl:items-start">
               <div className="route-connection-card rounded-[1.35rem] border border-[color:var(--border)]/72 bg-white/76 p-4 shadow-soft">
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -648,7 +728,7 @@ export function PlacesExperiences() {
             </div>
           </div>
 
-          <div className="border-b border-[color:var(--border)]/70 bg-[color:var(--foam)]/34 p-4 sm:p-5">
+          <div>
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">Scenario shortcuts</p>
@@ -666,10 +746,38 @@ export function PlacesExperiences() {
               {experienceScenarios.map((scenario) => (
                 <ScenarioShortcut key={scenario.id} scenario={scenario} isSelected={selectedScenarioId === scenario.id} onSelect={() => chooseScenario(scenario)} />
               ))}
+              <ScenarioHelperCard
+                title={activeScenario.title}
+                eyebrow="Selected plan"
+                icon={Route}
+                variant="active"
+                metadata={[activeScenario.bestArea, activeScenario.bestTime, activeScenario.noiseLevel]}
+                actionLabel="Use this plan"
+                onSelect={() => chooseScenario(activeScenario)}
+              >
+                <p>{activeScenario.routePairing}</p>
+                <p className="mt-2 rounded-[0.9rem] border border-[color:var(--border)]/70 bg-white/58 px-3 py-2 text-xs leading-5 text-[color:var(--muted-foreground)]">
+                  Start with {activeScenario.routeFlow[0].toLowerCase()}, then keep the route close enough to finish without a rushed transfer.
+                </p>
+              </ScenarioHelperCard>
+              <ScenarioHelperCard
+                title="Planner note"
+                eyebrow="Guide rule"
+                icon={Compass}
+                variant="note"
+                metadata={['Noise first', 'Route second', 'Local check']}
+                actionLabel="Show all places"
+                onSelect={() => chooseFilter('all')}
+              >
+                <p>Pick the group energy first, then trade off noise, budget and return friction.</p>
+                <p className="mt-2 rounded-[0.9rem] border border-[color:var(--coral)]/16 bg-[color:var(--coral-soft)]/22 px-3 py-2 text-xs leading-5 text-[color:var(--ink)]">
+                  Tip: avoid stacking far stops just because they look close.
+                </p>
+              </ScenarioHelperCard>
             </motion.div>
           </div>
 
-          <div className="grid gap-5 p-4 sm:p-5 xl:grid-cols-[minmax(0,1fr)_25rem] xl:items-start">
+          <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_25rem] xl:items-start">
             <div className="min-w-0">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3" aria-live="polite">
                 <div>
@@ -686,7 +794,7 @@ export function PlacesExperiences() {
               {filteredPlaces.length > 0 ? (
                 <div className="grid gap-5">
                   {groupedPlaces.map((group) => (
-                    <section key={group.id} className="rounded-[1.35rem] border border-white/72 bg-white/50 p-3 shadow-soft sm:p-4">
+                    <section key={group.id} className="rounded-[1.35rem]">
                       <div className="mb-4 rounded-[1.15rem] border border-white/72 bg-white/58 p-3 sm:p-4">
                         <div className="flex flex-wrap items-start justify-between gap-3">
                           <div>
@@ -703,7 +811,16 @@ export function PlacesExperiences() {
 
                       <motion.div className="grid gap-3 md:grid-cols-2" variants={staggerContainer}>
                         {group.places.map((place, index) => (
-                          <PlaceCard key={place.id} place={place} isFeatured={index === 0} isSelected={selectedPlace.id === place.id} onSelect={() => setSelectedPlaceId(place.id)} />
+                          <PlaceCard
+                            key={place.id}
+                            place={place}
+                            isFeatured={index === 0}
+                            isSelected={selectedPlace.id === place.id}
+                            onSelect={() => {
+                              setSelectedPlaceId(place.id)
+                              onOpenPlaceDetail?.(place)
+                            }}
+                          />
                         ))}
                       </motion.div>
                     </section>

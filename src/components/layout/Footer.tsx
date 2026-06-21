@@ -8,6 +8,7 @@ const exploreLinks = [
 
 const toolLinks = [
   { href: '#map', label: 'Interactive Map' },
+  { href: '#places', label: 'Places & Experiences' },
   { href: '#routes', label: 'Local Routes' },
   { href: '#archive', label: 'Archive' },
 ]
