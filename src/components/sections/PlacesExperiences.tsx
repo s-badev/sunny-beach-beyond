@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import {
   AlertTriangle,
   ArrowRight,
@@ -225,6 +225,16 @@ function compactRouteLabel(place: GuidePlace) {
   return 'Use with Local Routes'
 }
 
+function experiencePaceLabel(place: GuidePlace) {
+  if (place.noise === 'loud') return 'High energy'
+  if (place.bestTime === 'morning') return 'Soft start'
+  if (place.bestTime === 'sunset') return 'Golden hour'
+  if (place.priceFeel === 'premium') return 'Polished'
+  if (place.priceFeel === 'budget') return 'Low friction'
+
+  return 'Flexible pace'
+}
+
 function groupGuidance(groupId: string) {
   if (groupId === 'food-drinks') return 'Choose by noise first, then view, then return transport.'
   if (groupId === 'nightlife') return 'Decide the end of the night before choosing the first drink.'
@@ -258,6 +268,123 @@ function FilterButton({ option, isSelected, count, onSelect }: { option: FilterO
   )
 }
 
+function PlacesCinematicIndex({
+  selectedPlace,
+  activeScenario,
+  previewPlaces,
+  onSelectPlace,
+  onSelectScenario,
+}: {
+  selectedPlace: GuidePlace
+  activeScenario: ExperienceScenario
+  previewPlaces: GuidePlace[]
+  onSelectPlace: (place: GuidePlace) => void
+  onSelectScenario: (scenario: ExperienceScenario) => void
+}) {
+  const TypeIcon = typeIcons[selectedPlace.type]
+
+  return (
+    <motion.div className="places-cinema-panel mt-8 grid gap-4 rounded-[1.65rem] border border-white/70 p-3 shadow-soft sm:p-4 lg:grid-cols-[minmax(0,1.18fr)_minmax(19rem,0.82fr)]" variants={fadeUp}>
+      <button type="button" onClick={() => onSelectPlace(selectedPlace)} className="interactive-card group min-w-0 overflow-hidden rounded-[1.35rem] text-left">
+        <PhotoFrame
+          mediaKey={selectedPlace.photoKey}
+          tone={frameToneForPlace(selectedPlace)}
+          title={selectedPlace.name}
+          subtitle={`${selectedPlace.area} / ${typeLabels[selectedPlace.type]} / ${bestTimeLabels[selectedPlace.bestTime]}`}
+          areaLabel={selectedPlace.area}
+          categoryLabel="Current guide focus"
+          editorialLabel={editorialLabelForPlace(selectedPlace)}
+          icon={TypeIcon}
+          selected
+          heightClassName="min-h-[20rem] sm:min-h-[24rem]"
+          className="border-white/72"
+        />
+      </button>
+
+      <div className="grid min-w-0 content-between gap-3">
+        <div className="rounded-[1.25rem] border border-white/72 bg-white/68 p-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">
+                <Camera size={14} aria-hidden="true" />
+                Gallery-ready focus
+              </p>
+              <h3 className="mt-2 font-serif text-2xl leading-tight text-[color:var(--ink)]">{selectedPlace.bestFor}</h3>
+            </div>
+            <span className="rounded-full border border-[color:var(--turquoise)]/28 bg-[color:var(--foam)] px-3 py-1.5 text-[0.72rem] font-bold text-[color:var(--sea-deep)]">
+              {experiencePaceLabel(selectedPlace)}
+            </span>
+          </div>
+          <p className="mt-3 text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{selectedPlace.description}</p>
+
+          <div className="mt-4 grid gap-2 sm:grid-cols-3">
+            {[
+              { label: 'Noise', value: noiseLabels[selectedPlace.noise] },
+              { label: 'Budget', value: priceFeelLabels[selectedPlace.priceFeel ?? 'mid-range'] },
+              { label: 'Best time', value: bestTimeLabels[selectedPlace.bestTime] },
+            ].map((item) => (
+              <div key={item.label} className="rounded-[0.95rem] border border-[color:var(--border)]/70 bg-white/70 px-3 py-2">
+                <p className="font-mono text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">{item.label}</p>
+                <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[1.25rem] border border-[color:var(--border)]/72 bg-white/62 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
+              <Route size={14} aria-hidden="true" />
+              Active route mood
+            </p>
+            <button type="button" onClick={() => onSelectScenario(activeScenario)} className="interactive-control inline-flex items-center gap-2 rounded-full border border-[color:var(--turquoise)]/30 bg-[color:var(--foam)] px-3 py-1.5 text-xs font-bold text-[color:var(--sea-deep)]">
+              Use plan
+              <ArrowRight size={13} aria-hidden="true" />
+            </button>
+          </div>
+          <p className="mt-2 font-serif text-xl leading-tight text-[color:var(--ink)]">{activeScenario.title}</p>
+          <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{activeScenario.routePairing}</p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {activeScenario.routeFlow.slice(0, 3).map((step, index) => (
+              <span key={step} className="rounded-full border border-white/80 bg-white/70 px-2.5 py-1 text-[0.7rem] font-bold text-[color:var(--sea-deep)]">
+                {index + 1}. {step}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2" aria-label="Featured guide previews">
+          {previewPlaces.map((place) => {
+            const PreviewIcon = typeIcons[place.type]
+
+            return (
+              <button
+                key={place.id}
+                type="button"
+                onClick={() => onSelectPlace(place)}
+                aria-label={`Preview ${place.name}`}
+                className="interactive-card group min-w-0 overflow-hidden rounded-[1rem] border border-white/70 bg-white/64 text-left shadow-soft"
+              >
+                <PhotoFrame
+                  mediaKey={place.photoKey}
+                  tone={frameToneForPlace(place)}
+                  title={place.name}
+                  subtitle={place.area}
+                  categoryLabel={typeLabels[place.type]}
+                  editorialLabel={experiencePaceLabel(place)}
+                  icon={PreviewIcon}
+                  heightClassName="min-h-[8.8rem]"
+                  className="rounded-none border-0"
+                />
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
 function PlaceCard({ place, isSelected, isFeatured, onSelect }: { place: GuidePlace; isSelected: boolean; isFeatured?: boolean; onSelect: () => void }) {
   const TypeIcon = typeIcons[place.type]
 
@@ -275,51 +402,71 @@ function PlaceCard({ place, isSelected, isFeatured, onSelect }: { place: GuidePl
         isSelected ? 'border-[color:var(--coral)]/78 bg-white/92 ring-2 ring-[color:var(--coral)]/26 shadow-coral' : 'border-white/72 bg-white/64 hover:bg-white/78'
       }`}
     >
-      <PhotoFrame
-        mediaKey={place.photoKey}
-        tone={frameToneForPlace(place)}
-        title={place.name}
-        subtitle={`${typeLabels[place.type]} / ${bestTimeLabels[place.bestTime]}`}
-        areaLabel={place.area}
-        categoryLabel={isSelected ? 'Selected pick' : typeLabels[place.type]}
-        editorialLabel={editorialLabelForPlace(place)}
-        icon={isSelected ? BadgeCheck : TypeIcon}
-        selected={isSelected}
-        heightClassName={isFeatured ? 'min-h-[13.5rem]' : 'min-h-[11.5rem]'}
-        className="rounded-b-none border-0 border-b border-white/64"
-      />
+      <div className={isFeatured ? 'grid h-full min-w-0 md:grid-cols-[minmax(15rem,0.95fr)_minmax(0,1.05fr)]' : ''}>
+        <PhotoFrame
+          mediaKey={place.photoKey}
+          tone={frameToneForPlace(place)}
+          title={place.name}
+          subtitle={`${typeLabels[place.type]} / ${bestTimeLabels[place.bestTime]}`}
+          areaLabel={place.area}
+          categoryLabel={isSelected ? 'Selected pick' : typeLabels[place.type]}
+          editorialLabel={editorialLabelForPlace(place)}
+          icon={isSelected ? BadgeCheck : TypeIcon}
+          selected={isSelected}
+          heightClassName={isFeatured ? 'min-h-[14.5rem] md:min-h-full' : 'min-h-[12.25rem]'}
+          className={isFeatured ? 'rounded-b-none border-0 border-b border-white/64 md:rounded-r-none md:border-b-0 md:border-r' : 'rounded-b-none border-0 border-b border-white/64'}
+        />
 
-      <div className="p-5">
-        <div className="flex flex-wrap gap-2">
-          {isSelected && <span className="rounded-full bg-[color:var(--coral)] px-3 py-1.5 text-[0.68rem] font-bold leading-none text-white shadow-coral">Selected</span>}
-          <span className={`rounded-full border px-3 py-1.5 text-[0.68rem] font-bold leading-none ${budgetTone[place.budget]}`}>{priceFeelLabels[place.priceFeel ?? 'mid-range']}</span>
-          <span className={`rounded-full border px-3 py-1.5 text-[0.68rem] font-bold leading-none ${noiseTone[place.noise]}`}>{noiseLabels[place.noise]}</span>
-          <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-3 py-1.5 text-[0.68rem] font-bold leading-none text-[color:var(--sea-deep)]">{bestTimeLabels[place.bestTime]}</span>
-        </div>
-        <p className="mt-4 font-serif text-[1.35rem] leading-tight text-[color:var(--ink)]">{place.bestFor}</p>
-        <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">{place.description}</p>
-        <div className="mt-4 grid gap-2 sm:grid-cols-2">
-          <div className="rounded-[0.95rem] bg-[color:var(--foam)]/66 px-3 py-2">
-            <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">Family</p>
-            <p className="mt-1 text-sm font-bold text-[color:var(--ink)]">{fitLevelLabels[place.familyFit ?? 'medium']}</p>
+        <div className="flex min-w-0 flex-col p-5">
+          <div className="flex flex-wrap items-center gap-2">
+            {isSelected && <span className="rounded-full bg-[color:var(--coral)] px-3 py-1.5 text-[0.68rem] font-bold leading-none text-white shadow-coral">Selected</span>}
+            <span className={`rounded-full border px-3 py-1.5 text-[0.68rem] font-bold leading-none ${budgetTone[place.budget]}`}>{priceFeelLabels[place.priceFeel ?? 'mid-range']}</span>
+            <span className={`rounded-full border px-3 py-1.5 text-[0.68rem] font-bold leading-none ${noiseTone[place.noise]}`}>{noiseLabels[place.noise]}</span>
+            <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-3 py-1.5 text-[0.68rem] font-bold leading-none text-[color:var(--sea-deep)]">{bestTimeLabels[place.bestTime]}</span>
           </div>
-          <div className="rounded-[0.95rem] bg-white/66 px-3 py-2">
-            <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">Route</p>
-            <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{compactRouteLabel(place)}</p>
-          </div>
-        </div>
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {place.audience.slice(0, 4).map((audience) => (
-            <span key={audience} className="rounded-full border border-white/80 bg-white/62 px-2.5 py-1 text-[0.72rem] font-semibold text-[color:var(--sea-deep)]">
-              {audience.replace('-', ' ')}
+
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/72 px-3 py-1.5 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">
+              <Compass size={13} aria-hidden="true" />
+              {experiencePaceLabel(place)}
             </span>
-          ))}
-        </div>
-        <div className="guide-action-row mt-4">
-          <span className="min-w-0 font-mono text-[0.64rem] font-semibold uppercase tracking-[0.13em] text-[color:var(--sea-deep)]/68">
-            {isSelected ? 'Recommendation active' : 'Open guide detail'}
-          </span>
-          <ArrowRight size={14} className="shrink-0 text-[color:var(--coral)]" aria-hidden="true" />
+            {place.photoReady && (
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/68 px-3 py-1.5 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">
+                <Camera size={13} aria-hidden="true" />
+                Photo-ready
+              </span>
+            )}
+          </div>
+
+          <p className="mt-4 font-serif text-[1.35rem] leading-tight text-[color:var(--ink)]">{place.bestFor}</p>
+          <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">{place.description}</p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-3">
+            <div className="rounded-[0.95rem] bg-[color:var(--foam)]/66 px-3 py-2">
+              <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">Family</p>
+              <p className="mt-1 text-sm font-bold text-[color:var(--ink)]">{fitLevelLabels[place.familyFit ?? 'medium']}</p>
+            </div>
+            <div className="rounded-[0.95rem] bg-white/66 px-3 py-2">
+              <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">View</p>
+              <p className="mt-1 text-sm font-bold text-[color:var(--ink)]">{fitLevelLabels[place.viewValue ?? 'medium']}</p>
+            </div>
+            <div className="rounded-[0.95rem] bg-white/66 px-3 py-2 sm:col-span-1">
+              <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">Route</p>
+              <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{compactRouteLabel(place)}</p>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {place.audience.slice(0, 4).map((audience) => (
+              <span key={audience} className="rounded-full border border-white/80 bg-white/62 px-2.5 py-1 text-[0.72rem] font-semibold text-[color:var(--sea-deep)]">
+                {audience.replace('-', ' ')}
+              </span>
+            ))}
+          </div>
+          <div className="guide-action-row mt-4">
+            <span className="min-w-0 font-mono text-[0.64rem] font-semibold uppercase tracking-[0.13em] text-[color:var(--sea-deep)]/68">
+              {isSelected ? 'Recommendation active' : 'Open guide detail'}
+            </span>
+            <ArrowRight size={14} className="shrink-0 text-[color:var(--coral)]" aria-hidden="true" />
+          </div>
         </div>
       </div>
     </motion.button>
@@ -660,12 +807,22 @@ export function PlacesExperiences({ onOpenPlaceDetail }: PlacesExperiencesProps)
   const selectedPlace = filteredPlaces.find((place) => place.id === selectedPlaceId) ?? filteredPlaces[0] ?? guidePlaces[0]
   const selectedFilterOption = filterOptions.find((option) => option.id === selectedFilter) ?? filterOptions[0]
   const activeScenario = experienceScenarios.find((scenario) => scenario.id === selectedScenarioId) ?? experienceScenarios[0]
+  const previewPlaces = useMemo(() => {
+    const seen = new Set<string>()
+    const activeScenarioPlace = guidePlaces.find((place) => place.id === activeScenario.featuredPlaceId)
+    const candidates = [
+      activeScenarioPlace,
+      ...guidePlaces.filter((place) => place.area !== selectedPlace.area),
+      ...guidePlaces.filter((place) => place.type !== selectedPlace.type),
+      ...guidePlaces,
+    ].filter((place): place is GuidePlace => place !== undefined && place.id !== selectedPlace.id)
 
-  useEffect(() => {
-    if (filteredPlaces.length > 0 && !filteredPlaces.some((place) => place.id === selectedPlaceId)) {
-      setSelectedPlaceId(filteredPlaces[0].id)
-    }
-  }, [filteredPlaces, selectedPlaceId])
+    return candidates.filter((place) => {
+      if (seen.has(place.id)) return false
+      seen.add(place.id)
+      return true
+    }).slice(0, 3)
+  }, [activeScenario.featuredPlaceId, selectedPlace.area, selectedPlace.id, selectedPlace.type])
 
   function chooseFilter(filterId: ExperienceFilterId) {
     setSelectedFilter(filterId)
@@ -675,6 +832,14 @@ export function PlacesExperiences({ onOpenPlaceDetail }: PlacesExperiencesProps)
     setSelectedScenarioId(scenario.id)
     setSelectedFilter(scenario.primaryFilter)
     setSelectedPlaceId(scenario.featuredPlaceId)
+  }
+
+  function choosePlace(place: GuidePlace, openDetail = false) {
+    if (!matchesFilter(place, selectedFilter)) {
+      setSelectedFilter('all')
+    }
+    setSelectedPlaceId(place.id)
+    if (openDetail) onOpenPlaceDetail?.(place)
   }
 
   return (
@@ -691,6 +856,8 @@ export function PlacesExperiences({ onOpenPlaceDetail }: PlacesExperiencesProps)
             Browse real guide-style places and coastal experiences by audience, budget, noise, time of day and activity type, then open a practical detail panel before shaping a route.
           </SectionIntro>
         </motion.div>
+
+        <PlacesCinematicIndex selectedPlace={selectedPlace} activeScenario={activeScenario} previewPlaces={previewPlaces} onSelectPlace={(place) => choosePlace(place, true)} onSelectScenario={chooseScenario} />
 
         <motion.div className="mt-8 grid gap-4" variants={fadeUp}>
           <div>
@@ -804,7 +971,7 @@ export function PlacesExperiences({ onOpenPlaceDetail }: PlacesExperiencesProps)
                             <p className="mt-1 text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{group.description}</p>
                           </div>
                           <span className="rounded-full border border-[color:var(--border)] bg-white/72 px-3 py-1.5 text-[0.72rem] font-bold text-[color:var(--sea-deep)]">
-                            {group.places.length} {group.places.length === 1 ? 'place' : 'places'}
+                        {`${group.places.length} ${group.places.length === 1 ? 'place' : 'places'}`}
                           </span>
                         </div>
                       </div>
@@ -816,10 +983,7 @@ export function PlacesExperiences({ onOpenPlaceDetail }: PlacesExperiencesProps)
                             place={place}
                             isFeatured={index === 0 || (group.places.length % 2 === 0 && index === group.places.length - 1)}
                             isSelected={selectedPlace.id === place.id}
-                            onSelect={() => {
-                              setSelectedPlaceId(place.id)
-                              onOpenPlaceDetail?.(place)
-                            }}
+                            onSelect={() => choosePlace(place, true)}
                           />
                         ))}
                       </motion.div>

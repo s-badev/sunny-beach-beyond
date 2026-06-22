@@ -11,7 +11,7 @@ export function SectionIntro({ label, tone = 'light', children }: SectionIntroPr
 
   return (
     <div
-      className={`relative max-w-2xl overflow-hidden rounded-[1.25rem] border p-4 shadow-soft backdrop-blur sm:p-5 ${
+      className={`relative w-full max-w-2xl justify-self-end overflow-hidden rounded-[1.25rem] border p-4 shadow-soft backdrop-blur sm:p-5 ${
         isDark
           ? 'border-white/12 bg-white/8 text-white'
           : 'border-white/72 bg-white/66 text-[color:var(--ink)]'

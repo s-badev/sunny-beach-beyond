@@ -3,6 +3,7 @@ import { ArrowRight, Check, Compass, MapPinned, Plus, Route, Search, Trash2, X }
 import { useEffect, useMemo, useState } from 'react'
 import { getPlacesByIntent, guideQuickActions, searchGuideItems, type GuideIntentId } from '../../lib/guideSearch'
 import type { GuidePlace, Place } from '../../types'
+import { useLanguage } from '../../i18n/useLanguage'
 
 type GuideCommandProps = {
   selectedStops: Place[]
@@ -20,7 +21,32 @@ function routeMessage(count: number) {
   return 'Too many stops for a relaxed coastal plan.'
 }
 
+const guideTypeLabels: Record<GuidePlace['type'], { en: string; bg: string }> = {
+  restaurant: { en: 'restaurant', bg: 'ресторант' },
+  bar: { en: 'bar', bg: 'бар' },
+  cafe: { en: 'cafe', bg: 'кафене' },
+  club: { en: 'club', bg: 'клуб' },
+  attraction: { en: 'attraction', bg: 'атракция' },
+  'water-sport': { en: 'water sport', bg: 'водни спортове' },
+  walk: { en: 'walk', bg: 'разходка' },
+  viewpoint: { en: 'viewpoint', bg: 'гледка' },
+  family: { en: 'family', bg: 'семейно' },
+  transport: { en: 'transport', bg: 'транспорт' },
+}
+
+const guideAudienceLabels: Record<GuidePlace['audience'][number], { en: string; bg: string }> = {
+  families: { en: 'families', bg: 'семейства' },
+  young: { en: 'young', bg: 'млади' },
+  couples: { en: 'couples', bg: 'двойки' },
+  'older-visitors': { en: 'older visitors', bg: 'по-възрастни посетители' },
+  budget: { en: 'budget', bg: 'бюджетно' },
+  premium: { en: 'premium', bg: 'премиум' },
+  calm: { en: 'calm', bg: 'спокойно' },
+  party: { en: 'party', bg: 'парти' },
+}
+
 export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPlaceToRoute, onRemoveStop, onClearRoute }: GuideCommandProps) {
+  const { language, t } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [activeIntent, setActiveIntent] = useState<GuideIntentId | null>(null)
@@ -51,13 +77,46 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
   function chooseIntent(intentId: GuideIntentId) {
     const action = guideQuickActions.find((item) => item.id === intentId)
     setActiveIntent(intentId)
-    setQuery(action?.query ?? '')
+    setQuery(action?.label ?? '')
   }
 
   function updateQuery(value: string) {
     setQuery(value)
     setActiveIntent(null)
   }
+
+  function guideReason(place: GuidePlace) {
+    const area = t(place.area)
+    const type = guideTypeLabels[place.type][language]
+    const audience = place.audience
+      .slice(0, 3)
+      .map((item) => guideAudienceLabels[item][language])
+      .join(', ')
+
+    return language === 'bg' ? `${area} / ${type} / подходящо за ${audience}` : `${area} / ${type} / good for ${audience}`
+  }
+
+  function resultsSummary() {
+    if (activeAction) {
+      const actionLabel = t(activeAction.label).toLowerCase()
+      const actionDescription = t(activeAction.description)
+      return language === 'bg'
+        ? `Показани са ${results.length} опции за ${actionLabel}. ${actionDescription}`
+        : `Showing ${results.length} options for ${actionLabel}. ${actionDescription}`
+    }
+
+    if (results.length > 0) {
+      return language === 'bg' ? `Показани са ${results.length} локални съвпадения.` : `Showing ${results.length} local matches.`
+    }
+
+    return t('No exact match yet. Try family, dinner, quiet, budget or party.')
+  }
+
+  const routePlanLabel =
+    language === 'bg'
+      ? `План на маршрута / ${selectedStops.length} ${selectedStops.length === 1 ? 'спирка' : 'спирки'}`
+      : `Route plan / ${selectedStops.length} ${selectedStops.length === 1 ? 'stop' : 'stops'}`
+  const visibleQuery = activeIntent ? t(query) : query
 
   return (
     <>
@@ -109,9 +168,9 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                   <Search size={18} aria-hidden="true" />
                   <span className="sr-only">Search Sunny Beach guide</span>
                   <input
-                    value={query}
+                    value={visibleQuery}
                     onChange={(event) => updateQuery(event.target.value)}
-                    placeholder="Try cheap food, quiet family, party night..."
+                    placeholder={t('Try cheap food, calm family evening, party night...')}
                     className="min-w-0 flex-1 bg-transparent text-base font-semibold text-[color:var(--ink)] outline-none placeholder:text-[color:var(--muted-foreground)]"
                     autoFocus
                   />
@@ -130,7 +189,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                           : 'border-[color:var(--border)] bg-white/80 text-[color:var(--sea-deep)] hover:border-[color:var(--turquoise)] hover:bg-white'
                       }`}
                     >
-                      {action.label}
+                      {t(action.label)}
                     </button>
                   ))}
                 </div>
@@ -139,11 +198,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
               <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
                 <div className="rounded-[1.15rem] border border-[color:var(--border)]/70 bg-white/72 p-3">
                   <p className="text-sm font-semibold leading-6 text-[color:var(--sea-deep)]" aria-live="polite">
-                    {activeAction
-                      ? `Showing ${results.length} options for ${activeAction.label.toLowerCase()}. ${activeAction.description}`
-                      : results.length > 0
-                        ? `Showing ${results.length} local matches.`
-                        : 'No exact match yet. Try family, dinner, quiet, budget or party.'}
+                    {resultsSummary()}
                   </p>
                 </div>
 
@@ -158,14 +213,14 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                             <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--coral)]">
                               {index === 0 ? 'Best match' : 'Guide result'}
                             </p>
-                            <h3 className="mt-1 font-serif text-xl leading-tight text-[color:var(--ink)]">{result.place.name}</h3>
-                            <p className="mt-1 text-sm font-semibold leading-5 text-[color:var(--sea-deep)]">{result.reason}</p>
+                            <h3 className="mt-1 font-serif text-xl leading-tight text-[color:var(--ink)]">{t(result.place.name)}</h3>
+                            <p className="mt-1 text-sm font-semibold leading-5 text-[color:var(--sea-deep)]">{guideReason(result.place)}</p>
                           </div>
-                          <span className="rounded-full bg-[color:var(--foam)] px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">{result.place.area}</span>
+                          <span className="rounded-full bg-[color:var(--foam)] px-2.5 py-1 text-[0.68rem] font-bold text-[color:var(--sea-deep)]">{t(result.place.area)}</span>
                         </div>
-                        <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">{result.place.bestFor}</p>
+                        <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">{t(result.place.bestFor)}</p>
                         <p className="mt-2 rounded-[0.95rem] border border-[color:var(--border)]/70 bg-[color:var(--background)]/70 px-3 py-2 text-xs font-semibold leading-5 text-[color:var(--ink)]">
-                          Next move: {result.nextMove}
+                          {t('Next move:')} {t(result.nextMove)}
                         </p>
                         <div className="mt-3 flex flex-wrap gap-2">
                           <button
@@ -176,7 +231,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                             }}
                             className="interactive-control inline-flex items-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3 py-2 text-xs font-bold text-white hover:bg-[color:var(--sea)]"
                           >
-                            Open detail
+                            {t('Open details')}
                             <ArrowRight size={13} aria-hidden="true" />
                           </button>
                           <button
@@ -187,7 +242,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                             }`}
                           >
                             {isAdded ? <Check size={13} aria-hidden="true" /> : <Plus size={13} aria-hidden="true" />}
-                            {isAdded ? 'In route' : 'Add to route'}
+                            {isAdded ? t('In route') : t('Add to route')}
                           </button>
                         </div>
                       </article>
@@ -201,10 +256,10 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                   <div className="min-w-0">
                     <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
                       <Route size={14} aria-hidden="true" />
-                      Route plan / {selectedStops.length} stops
+                      {routePlanLabel}
                     </p>
-                    <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{routeMessage(selectedStops.length)}</p>
-                    {routeStatus && <p className="mt-1 text-xs font-semibold leading-5 text-[color:var(--sea-deep)]">{routeStatus}</p>}
+                    <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{t(routeMessage(selectedStops.length))}</p>
+                    {routeStatus && <p className="mt-1 text-xs font-semibold leading-5 text-[color:var(--sea-deep)]">{t(routeStatus)}</p>}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <a href="#map" onClick={() => setIsOpen(false)} className="interactive-control inline-flex items-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3 py-2 text-xs font-bold text-white hover:bg-[color:var(--sea)]">

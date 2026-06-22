@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, ArrowRight, Check, Compass, MapPinned, Navigation, Plus, Route, Sun, X } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import type { GuidePlace, Place } from '../../types'
 import { guidePlaceToRoutePlace } from '../../lib/guideSearch'
 import { PhotoFrame } from './PhotoFrame'
@@ -61,16 +61,23 @@ function toneForPlace(place: GuidePlace) {
 export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, onClose, onAddToRoute }: PlaceDetailDrawerProps) {
   const routePlace = place ? guidePlaceToRoutePlace(place) : null
   const isInRoute = routePlace ? selectedStops.some((stop) => stop.id === routePlace.id) : false
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     if (!isOpen) return
+    const previousOverflow = document.body.style.overflow
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') onClose()
     }
 
+    document.body.style.overflow = 'hidden'
+    window.setTimeout(() => closeButtonRef.current?.focus(), 0)
     window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKeyDown)
+    }
   }, [isOpen, onClose])
 
   return (
@@ -94,7 +101,7 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
             animate={{ opacity: 1, x: 0, y: 0 }}
             exit={{ opacity: 0, x: 28, y: 18 }}
             transition={{ duration: 0.24, ease: 'easeOut' }}
-            className="absolute inset-x-2 bottom-2 max-h-[88vh] overflow-y-auto rounded-[1.65rem] border border-white/72 bg-[color:var(--background)] p-3 shadow-[0_28px_90px_rgba(7,26,45,0.32)] sm:inset-x-auto sm:bottom-4 sm:right-4 sm:top-4 sm:w-[min(31rem,calc(100vw-2rem))] sm:p-4"
+            className="drawer-product-sheet absolute inset-x-2 bottom-2 max-h-[88vh] overflow-y-auto rounded-[1.65rem] border border-white/72 bg-[color:var(--background)] p-3 shadow-[0_28px_90px_rgba(7,26,45,0.32)] sm:inset-x-auto sm:bottom-4 sm:right-4 sm:top-4 sm:w-[min(34rem,calc(100vw-2rem))] sm:p-4"
           >
             <div className="overflow-hidden rounded-[1.35rem] border border-white/72 bg-white/76 shadow-soft">
               <PhotoFrame
@@ -115,9 +122,22 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
                     <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">Guide detail</p>
                     <h2 className="mt-2 font-serif text-3xl leading-tight text-[color:var(--ink)]">{place.name}</h2>
                   </div>
-                  <button type="button" onClick={onClose} className="interactive-control shrink-0 rounded-full border border-[color:var(--border)] bg-white p-2 text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]" aria-label="Close guide detail">
+                  <button ref={closeButtonRef} type="button" onClick={onClose} className="interactive-control shrink-0 rounded-full border border-[color:var(--border)] bg-white p-2 text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]" aria-label="Close guide detail">
                     <X size={18} aria-hidden="true" />
                   </button>
+                </div>
+
+                <div className="mt-4 grid gap-2 rounded-[1.1rem] border border-[color:var(--turquoise)]/24 bg-[color:var(--foam)]/54 p-3 sm:grid-cols-3">
+                  {[
+                    { label: 'Route list', value: `${selectedStops.length}/4 stops` },
+                    { label: 'Status', value: isInRoute ? 'Added' : 'Ready' },
+                    { label: 'Next', value: place.type === 'club' || place.type === 'bar' ? 'Night route' : 'Day route' },
+                  ].map((item) => (
+                    <div key={item.label}>
+                      <p className="font-mono text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">{item.label}</p>
+                      <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{item.value}</p>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -167,38 +187,40 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
                   </div>
                 </div>
 
-                <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                  <button
-                    type="button"
-                    onClick={() => onAddToRoute(place)}
-                    aria-pressed={isInRoute}
-                    className={`interactive-control inline-flex items-center justify-center gap-2 rounded-full px-3.5 py-2.5 text-sm font-bold ${
-                      isInRoute ? 'bg-[color:var(--turquoise)]/24 text-[color:var(--sea-deep)]' : 'bg-[color:var(--coral)] text-white shadow-coral'
-                    }`}
-                  >
-                    {isInRoute ? <Check size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}
-                    {isInRoute ? 'Already in route' : 'Add to route'}
-                  </button>
-                  <a href="#map" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3.5 py-2.5 text-sm font-bold text-white hover:bg-[color:var(--sea)]">
-                    <MapPinned size={15} aria-hidden="true" />
-                    View on Map
-                  </a>
-                  <a href="#routes" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
-                    <Route size={15} aria-hidden="true" />
-                    Pair with Routes
-                  </a>
-                  <a href="#areas" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
-                    <Compass size={15} aria-hidden="true" />
-                    Compare area
-                  </a>
-                  <a href={place.type === 'club' || place.type === 'bar' ? '#nightlife' : '#beaches'} onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)] sm:col-span-2">
-                    <Sun size={15} aria-hidden="true" />
-                    {place.type === 'club' || place.type === 'bar' ? 'Check nightlife style' : 'Use this as a beach day'}
-                    <ArrowRight size={14} aria-hidden="true" />
-                  </a>
-                </div>
+                <div className="sticky bottom-0 -mx-4 -mb-4 mt-4 border-t border-[color:var(--border)]/70 bg-white/88 p-4 backdrop-blur sm:-mx-5 sm:-mb-5 sm:p-5">
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      onClick={() => onAddToRoute(place)}
+                      aria-pressed={isInRoute}
+                      className={`interactive-control inline-flex items-center justify-center gap-2 rounded-full px-3.5 py-2.5 text-sm font-bold ${
+                        isInRoute ? 'bg-[color:var(--turquoise)]/24 text-[color:var(--sea-deep)]' : 'bg-[color:var(--coral)] text-white shadow-coral'
+                      }`}
+                    >
+                      {isInRoute ? <Check size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}
+                      {isInRoute ? 'Already in route' : 'Add to route'}
+                    </button>
+                    <a href="#map" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3.5 py-2.5 text-sm font-bold text-white hover:bg-[color:var(--sea)]">
+                      <MapPinned size={15} aria-hidden="true" />
+                      View on Map
+                    </a>
+                    <a href="#routes" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
+                      <Route size={15} aria-hidden="true" />
+                      Pair with Routes
+                    </a>
+                    <a href="#areas" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
+                      <Compass size={15} aria-hidden="true" />
+                      Compare area
+                    </a>
+                    <a href={place.type === 'club' || place.type === 'bar' ? '#nightlife' : '#beaches'} onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)] sm:col-span-2">
+                      <Sun size={15} aria-hidden="true" />
+                      {place.type === 'club' || place.type === 'bar' ? 'Check nightlife style' : 'Use this as a beach day'}
+                      <ArrowRight size={14} aria-hidden="true" />
+                    </a>
+                  </div>
 
-                {routeStatus && <p className="mt-3 rounded-[1rem] border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/72 px-3 py-2 text-xs font-semibold leading-5 text-[color:var(--sea-deep)]">{routeStatus}</p>}
+                  {routeStatus && <p className="mt-3 rounded-[1rem] border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/72 px-3 py-2 text-xs font-semibold leading-5 text-[color:var(--sea-deep)]">{routeStatus}</p>}
+                </div>
               </div>
             </div>
           </motion.aside>

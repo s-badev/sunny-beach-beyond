@@ -89,12 +89,6 @@ select {
   backdrop-filter: blur(20px);
 }
 
-.glass-dark {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05));
-  backdrop-filter: blur(22px);
-}
-
 .shadow-soft {
   box-shadow: 0 22px 58px rgba(9, 58, 82, 0.12);
 }
@@ -578,6 +572,45 @@ select {
     linear-gradient(90deg, rgba(32, 199, 189, 0.12) 0 1px, transparent 1px),
     radial-gradient(circle at 18% 24%, rgba(255, 248, 226, 0.62), transparent 7rem);
   opacity: 0.78;
+}
+
+.places-cinema-panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(122deg, rgba(255, 255, 255, 0.76), rgba(223, 246, 237, 0.5) 48%, rgba(255, 248, 232, 0.68)),
+    linear-gradient(90deg, rgba(6, 59, 91, 0.05) 1px, transparent 1px);
+  background-size: auto, 32px 100%;
+}
+
+.places-cinema-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(115deg, rgba(6, 59, 91, 0.08), transparent 28% 72%, rgba(240, 111, 97, 0.08)),
+    repeating-linear-gradient(96deg, rgba(255, 255, 255, 0.28) 0 1px, transparent 1px 22px);
+  mask-image: linear-gradient(90deg, #000, rgba(0, 0, 0, 0.52) 54%, transparent);
+}
+
+.places-cinema-panel [aria-label="Featured guide previews"] .photo-frame-shell h3 {
+  font-size: 1rem;
+  line-height: 1.08;
+}
+
+.places-cinema-panel [aria-label="Featured guide previews"] .photo-frame-shell p {
+  font-size: 0.68rem;
+}
+
+.drawer-product-sheet {
+  scrollbar-gutter: stable;
+}
+
+.drawer-product-sheet > div {
+  position: relative;
 }
 
 .soft-reveal {

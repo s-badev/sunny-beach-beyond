@@ -143,6 +143,9 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
         : 'beach day'
   const currentViewLabel = `${selectedArea === 'All' ? 'All areas' : selectedArea} / ${selectedCategory === 'All' ? 'all categories' : selectedCategory}`
   const nextMove = activePlace ? getNextMove(activePlace) : null
+  const filteredPlacesCountLabel = `${filteredPlaces.length} ${filteredPlaces.length === 1 ? 'place' : 'places'}`
+  const visiblePlacesLabel = `${filteredPlaces.length} ${filteredPlaces.length === 1 ? 'place is' : 'places are'} visible on the coast.`
+  const pinsLabel = `${filteredPlaces.length} ${filteredPlaces.length === 1 ? 'pin' : 'pins'}`
   const checklistItems = [
     {
       label: 'Same-day fit',
@@ -203,7 +206,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                 <div className="flex items-center gap-3 rounded-2xl bg-[color:var(--foam)] px-3 py-2.5 text-sm font-semibold text-[color:var(--sea-deep)]">
                   <Search size={16} aria-hidden="true" />
                   <span className="min-w-0 flex-1 whitespace-nowrap">
-                    {filteredPlaces.length} place{filteredPlaces.length === 1 ? '' : 's'}
+                    {filteredPlacesCountLabel}
                   </span>
                   {(selectedArea !== 'All' || selectedCategory !== 'All') && (
                     <button
@@ -221,7 +224,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                   <p className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--muted-foreground)]">Current view</p>
                   <p className="mt-1.5 text-sm font-bold text-[color:var(--ink)]">{currentViewLabel}</p>
                   <p className="mt-1 text-xs leading-5 text-[color:var(--muted-foreground)]">
-                    {filteredPlaces.length} place{filteredPlaces.length === 1 ? '' : 's'} visible on the coast.
+                    {visiblePlacesLabel}
                   </p>
                 </div>
               </div>
@@ -458,7 +461,7 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
                 <div className="absolute inset-x-4 bottom-4 z-20 rounded-[1.15rem] border border-white/22 bg-[color:var(--night)]/36 p-3 text-white shadow-soft backdrop-blur sm:left-auto sm:right-5 sm:w-[18rem]">
                   <div className="flex items-center justify-between gap-3">
                     <p className="font-mono text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-white/62">Map readout</p>
-                    <span className="rounded-full bg-white/16 px-2 py-0.5 text-[0.68rem] font-bold text-white/78">{filteredPlaces.length} pins</span>
+                    <span className="rounded-full bg-white/16 px-2 py-0.5 text-[0.68rem] font-bold text-white/78">{pinsLabel}</span>
                   </div>
                   <p className="mt-2 text-sm font-semibold leading-5 text-white">
                     {activePlace ? `${activePlace.name} is selected.` : 'No stop selected.'}

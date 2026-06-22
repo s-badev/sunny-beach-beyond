@@ -1,12 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Compass, MapPinned, MousePointer2 } from 'lucide-react'
-import { useState } from 'react'
 import heroImage from '../../assets/sunny-beach-hero.png'
-
-const heroCards = [
-  { title: 'Beach Days', detail: 'sand / swim / shade', extra: 'pick the right strip', className: 'left-2 top-3 xl:left-4 xl:top-6 2xl:left-8 2xl:top-8' },
-  { title: 'Sveti Vlas Marina', detail: 'yachts / terraces / dusk', extra: 'slow evening mood', className: 'right-2 bottom-3 xl:right-4 xl:bottom-6 2xl:right-8 2xl:bottom-8' },
-]
 
 const heroStats = [
   ['4 zones', 'one coast'],
@@ -14,11 +8,8 @@ const heroStats = [
   ['map + routes', 'built in'],
 ]
 
-const coastIndex = ['Sunny Beach', 'Nessebar', 'Sveti Vlas', 'Elenite']
-
 export function Hero() {
   const prefersReducedMotion = useReducedMotion()
-  const [tilt, setTilt] = useState({ x: 0, y: 0 })
 
   return (
     <section id="hero" className="relative min-h-[100svh] overflow-hidden px-4 pb-14 pt-32 text-white sm:px-8 sm:pb-20 sm:pt-28 lg:pb-24">
@@ -36,9 +27,9 @@ export function Hero() {
       <div className="grain absolute inset-0 z-0 opacity-10" aria-hidden="true" />
       <div className="absolute inset-x-0 top-0 z-0 h-36 bg-[linear-gradient(180deg,rgba(7,26,45,0.32),transparent)]" aria-hidden="true" />
 
-      <div className="relative mx-auto grid max-w-7xl gap-8 sm:gap-12 lg:grid-cols-[1fr_0.92fr] lg:items-center">
+      <div className="relative mx-auto flex min-h-[calc(100svh-12rem)] w-full min-w-0 max-w-7xl items-center sm:min-h-[calc(100svh-10rem)]">
         <motion.div
-          className="relative pt-4 drop-shadow-[0_18px_45px_rgba(0,0,0,0.36)] sm:pt-8"
+          className="relative w-full min-w-0 max-w-4xl pt-4 drop-shadow-[0_18px_45px_rgba(0,0,0,0.36)] sm:pt-8"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
           animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -48,7 +39,7 @@ export function Hero() {
             <Compass size={14} aria-hidden="true" />
             Coastal Bulgaria field guide
           </p>
-          <h1 className="max-w-4xl text-balance font-serif text-5xl font-semibold leading-[0.92] sm:text-7xl lg:text-7xl xl:text-8xl">
+          <h1 className="max-w-full text-balance font-serif text-[2.65rem] font-semibold leading-[0.92] sm:text-7xl lg:text-7xl xl:text-8xl">
             Sunny Beach
             <span className="block text-[color:var(--sand)]">&amp; Beyond.</span>
           </h1>
@@ -77,51 +68,6 @@ export function Hero() {
             <MousePointer2 size={15} aria-hidden="true" />
             Continue the guide
           </a>
-        </motion.div>
-
-        <motion.div
-          className="pointer-events-none relative hidden min-h-[24rem] overflow-visible rounded-[2rem] lg:block lg:min-h-[33rem]"
-          onPointerMove={(event) => {
-            if (prefersReducedMotion) return
-            const rect = event.currentTarget.getBoundingClientRect()
-            setTilt({
-              x: ((event.clientY - rect.top) / rect.height - 0.5) * -5,
-              y: ((event.clientX - rect.left) / rect.width - 0.5) * 6,
-            })
-          }}
-          onPointerLeave={() => setTilt({ x: 0, y: 0 })}
-          animate={{ rotateX: tilt.x, rotateY: tilt.y }}
-          transition={{ type: 'spring', stiffness: 120, damping: 18 }}
-        >
-          <div className="absolute inset-8 rounded-[2rem] border border-white/12 bg-[color:var(--night)]/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-[2px]" aria-hidden="true" />
-          <div className="absolute left-1/2 top-1/2 z-20 w-[min(21rem,68%)] -translate-x-1/2 -translate-y-1/2 rounded-[1.6rem] border border-white/16 bg-white/10 p-4 shadow-soft backdrop-blur-md xl:w-[min(21rem,62%)]">
-            <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sand)]">Coast index</p>
-            <div className="mt-4 grid gap-2">
-              {coastIndex.map((place, index) => (
-                <div key={place} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/8 px-3 py-2">
-                  <span className="grid size-7 shrink-0 place-items-center rounded-full bg-white/12 font-mono text-[0.65rem] text-white/72">{index + 1}</span>
-                  <span className="font-serif text-lg leading-none text-white">{place}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          {heroCards.map((card) => (
-            <motion.div
-              key={card.title}
-              tabIndex={0}
-              className={`group/card glass-dark pointer-events-auto absolute z-10 max-w-[11.75rem] rounded-2xl px-3.5 py-3 text-white shadow-soft ring-1 ring-white/10 transition duration-300 hover:z-30 hover:bg-white/18 hover:shadow-glow focus-visible:z-30 focus-visible:bg-white/18 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${card.className}`}
-              animate={prefersReducedMotion ? undefined : { y: [0, -4, 0] }}
-              transition={{ duration: 7.5, repeat: Infinity, ease: 'easeInOut', delay: heroCards.indexOf(card) * 0.45 }}
-              whileHover={prefersReducedMotion ? undefined : { y: -7, scale: 1.02 }}
-              whileFocus={prefersReducedMotion ? undefined : { y: -7, scale: 1.02 }}
-            >
-              <p className="font-serif text-base sm:text-lg">{card.title}</p>
-              <p className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.16em] text-white/72 sm:text-[0.68rem]">{card.detail}</p>
-              <p className="mt-1 max-h-0 overflow-hidden font-mono text-[0.58rem] uppercase tracking-[0.14em] text-white/0 transition-all duration-300 group-hover/card:max-h-5 group-hover/card:text-white/78 group-focus-visible/card:max-h-5 group-focus-visible/card:text-white/78 sm:text-[0.62rem]">
-                {card.extra}
-              </p>
-            </motion.div>
-          ))}
         </motion.div>
       </div>
       <a href="#vibes" className="absolute bottom-5 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 rounded-full px-3 py-2 text-white/72 transition hover:bg-white/8 hover:text-white sm:flex">

@@ -31,11 +31,11 @@ export type GuideSearchResult = {
 
 export const guideQuickActions: GuideQuickAction[] = [
   { id: 'cheap-food', label: 'Cheap food', query: 'cheap food budget restaurant', description: 'Lower-cost food anchors and simple route fuel.' },
-  { id: 'quiet-family', label: 'Quiet family evening', query: 'quiet family kids evening calm', description: 'Lower-friction family plans with less noise.' },
+  { id: 'quiet-family', label: 'Calm family evening', query: 'quiet family kids evening calm', description: 'Lower-friction family plans with less noise.' },
   { id: 'party-night', label: 'Party night', query: 'party night clubs bars late food', description: 'Loud evening routes with a return plan.' },
   { id: 'dinner-view', label: 'Dinner with view', query: 'romantic dinner with view marina sunset', description: 'Dinner, views and slower evening pairings.' },
   { id: 'water-sports', label: 'Water sports', query: 'water sports parasailing jet ski banana boat', description: 'Daytime sea activity and weather-aware choices.' },
-  { id: 'old-nessebar', label: 'Old Nessebar walk', query: 'old nessebar walk sea wall history sunset', description: 'Old-town lanes, sea walls and golden-hour texture.' },
+  { id: 'old-nessebar', label: 'Old Nessebar', query: 'old nessebar walk sea wall history sunset', description: 'Old-town lanes, sea walls and golden-hour texture.' },
   { id: 'sveti-vlas-calm', label: 'Sveti Vlas calm', query: 'sveti vlas calm marina coffee dinner viewpoint', description: 'Marina, bay views and quieter polished stops.' },
   { id: 'kids-evening', label: 'Kids attractions', query: 'kids family attractions luna park evening', description: 'Simple amusement and family promenade ideas.' },
   { id: 'older-easy', label: 'Older visitors easy plan', query: 'older visitors easy calm coffee walk dinner', description: 'Shorter walks, calmer stops and transport-aware plans.' },

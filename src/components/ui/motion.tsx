@@ -1,6 +1,7 @@
 import { motion, type Variants } from 'framer-motion'
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
+/* eslint-disable react-refresh/only-export-components */
 export const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
   show: {
