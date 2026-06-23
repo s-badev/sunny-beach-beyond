@@ -1,9 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, Check, Compass, ExternalLink, GitBranch, MapPin, Plus, RotateCcw, Search, ShieldCheck, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import sunnyBeachPanorama from '../../assets/section-backgrounds/sunny-beach-day-panorama.png'
 import { places } from '../../data/places'
 import type { AreaName, Place, PlaceCategory } from '../../types'
 import { fadeUp, MotionSection } from '../ui/motion'
+import { SectionBackground } from '../ui/SectionBackground'
 import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
@@ -184,6 +186,12 @@ export function MapPreview({ selectedMapPlace, selectedStops, onSelectMapPlace, 
 
   return (
     <MotionSection id="map" className="section-shell overflow-hidden bg-[linear-gradient(180deg,#f3fbf8_0%,#e6f5f2_52%,#fff8e8_100%)] text-[color:var(--ink)]">
+      <SectionBackground
+        image={sunnyBeachPanorama}
+        position="center 52%"
+        imageClassName="opacity-78 saturate-[1.1] contrast-[1.04]"
+        overlay="bg-[linear-gradient(180deg,rgba(243,251,248,0.5)_0%,rgba(230,245,242,0.2)_52%,rgba(255,248,232,0.5)_100%),linear-gradient(115deg,rgba(255,255,255,0.58),rgba(255,255,255,0.12)_50%,rgba(223,246,237,0.34)),radial-gradient(circle_at_78%_14%,rgba(255,255,255,0.28),transparent_20rem)]"
+      />
       <div className="grain absolute inset-0 opacity-35" aria-hidden="true" />
       <div className="section-inner">
         <motion.div className="grid gap-8 lg:grid-cols-[0.7fr_1fr] lg:items-end" variants={fadeUp}>

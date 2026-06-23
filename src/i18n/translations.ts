@@ -1128,8 +1128,6 @@ Object.assign(bgTranslations, {
   'Museum note': 'Музейна бележка',
   'This is the foundation layer. Later Sunny Beach may look chaotic, but it starts with a clear plan.':
     'Това е основният слой. По-късно Слънчев бряг може да изглежда хаотичен, но започва с ясен план.',
-  'Select a postcard object below. Each period marks a different version of the same coastline, from planned resort to layered summer map.':
-    'Избери обект като пощенска картичка по-долу. Всеки период отбелязва различна версия на същото крайбрежие, от планиран курорт до многослойна лятна карта.',
   'Planned resort': 'Планиран курорт',
   'Postcard era': 'Ера на пощенските картички',
   'Postcards & state holidays': 'Пощенски картички и държавни почивки',
@@ -1154,8 +1152,6 @@ Object.assign(bgTranslations, {
     'Зоната вече се чете като няколко крайбрежни истории едновременно: парти зони, семейни хотели, стар Несебър, вечери около марината и по-тихи краища.',
   'Sunny Beach becomes one part of a wider coastal system, not the whole story.':
     'Слънчев бряг става една част от по-широка крайбрежна система, не цялата история.',
-  'Archive visuals use editorial reconstructions, personal photography, or credited source material where available.':
-    'Архивните визуали използват редакторски реконструкции, лична фотография или кредитирани източници, когато са налични.',
 
   'A compact walk through one of the coast\'s strongest memory-making areas: stone, sea, churches and light.':
     'Компактна разходка през една от най-силните зони за спомени по крайбрежието: камък, море, църкви и светлина.',

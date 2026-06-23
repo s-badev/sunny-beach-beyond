@@ -1,8 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Archive, BadgeCheck, Camera, Clock3, Layers, MapPinned, Stamp } from 'lucide-react'
 import { useState } from 'react'
-import { archiveDisclaimer, archiveEntries } from '../../data/archive'
+import archiveImage from '../../assets/section-backgrounds/sunny-beach-archive.png'
+import { archiveEntries } from '../../data/archive'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionBackground } from '../ui/SectionBackground'
 import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
@@ -82,6 +84,12 @@ export function ThenNow() {
 
   return (
     <MotionSection id="archive" className="section-shell overflow-hidden bg-[linear-gradient(180deg,#fff8e8_0%,#f3fbf8_48%,#eaf6f2_100%)]">
+      <SectionBackground
+        image={archiveImage}
+        position="center 46%"
+        imageClassName="opacity-78 sepia-[0.18] saturate-[0.98] contrast-[1.02]"
+        overlay="bg-[linear-gradient(180deg,rgba(255,248,232,0.5)_0%,rgba(243,251,248,0.24)_48%,rgba(234,246,242,0.56)_100%),linear-gradient(108deg,rgba(255,248,226,0.58),rgba(255,255,255,0.14)_50%,rgba(223,246,237,0.34)),radial-gradient(circle_at_18%_24%,rgba(200,148,71,0.18),transparent_18rem)]"
+      />
       <div className="grain absolute inset-0 opacity-25" aria-hidden="true" />
       <div className="section-inner">
         <motion.div className="grid gap-8 lg:grid-cols-[0.78fr_1fr] lg:items-end" variants={fadeUp}>
@@ -135,7 +143,7 @@ export function ThenNow() {
                     >
                       <div className="relative z-10 flex h-full flex-col justify-between">
                         <div className="flex items-start justify-between gap-3">
-                          <span className="rounded-full border border-white/20 bg-white/22 px-3 py-1 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur">
+                          <span className="rounded-full border border-white/70 bg-white/88 px-3 py-1 font-mono text-[0.66rem] font-bold uppercase tracking-[0.14em] text-[color:var(--sea-deep)] shadow-sm backdrop-blur">
                             {copy.eyebrow}
                           </span>
                           <span className="grid size-9 shrink-0 place-items-center rounded-full border border-white/28 bg-white/18 text-white backdrop-blur">
@@ -143,7 +151,7 @@ export function ThenNow() {
                           </span>
                         </div>
                         <div>
-                          <span className="rounded-full bg-white/18 px-3 py-1 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-white/86 backdrop-blur">
+                          <span className="rounded-full border border-white/70 bg-white/86 px-3 py-1 font-mono text-[0.66rem] font-bold uppercase tracking-[0.14em] text-[color:var(--ink)] shadow-sm backdrop-blur">
                             {copy.period}
                           </span>
                           <p className="mt-3 font-serif text-2xl leading-tight text-white sm:text-[1.65rem]">{copy.title}</p>
@@ -170,11 +178,11 @@ export function ThenNow() {
                     {selectedStory.stamp}
                   </div>
                   <div className="flex flex-wrap items-center gap-2 pr-0 sm:pr-28">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-[color:var(--coral)]/10 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)]/85 bg-white/88 px-3 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[color:var(--sea-deep)] shadow-sm backdrop-blur">
                       <Clock3 size={13} aria-hidden="true" />
                       {selectedArchive.year}
                     </span>
-                    <span className="rounded-full border border-[color:var(--sand-deep)]/22 bg-white/58 px-3 py-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sand-deep)]/78">
+                    <span className="rounded-full border border-[color:var(--border)]/85 bg-white/86 px-3 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[color:var(--ink)] shadow-sm backdrop-blur">
                       {archiveMode === 'then' ? 'Then lens' : 'Now lens'}
                     </span>
                   </div>
@@ -212,11 +220,8 @@ export function ThenNow() {
           </div>
         </motion.div>
 
-        <motion.div className="mt-5 flex flex-wrap items-center justify-between gap-3" variants={fadeUp}>
-          <p className="max-w-3xl text-sm leading-6 text-[color:var(--muted-foreground)]">
-            Select a postcard object below. Each period marks a different version of the same coastline, from planned resort to layered summer map.
-          </p>
-          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white/62 px-3 py-1.5 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sea-deep)]/68">
+        <motion.div className="mt-5 flex flex-wrap items-center justify-end gap-3" variants={fadeUp}>
+          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)]/85 bg-white/88 px-3 py-1.5 font-mono text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[color:var(--sea-deep)] shadow-sm backdrop-blur">
             <MapPinned size={14} aria-hidden="true" />
             {selectedStory.mood}
           </span>
@@ -243,10 +248,10 @@ export function ThenNow() {
                 }`}
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-[color:var(--coral)]/10 px-3 py-1 font-mono text-[0.68rem] font-semibold leading-none text-[color:var(--coral)] transition group-hover:text-[color:var(--sea-deep)]">
+                  <span className="rounded-full border border-[color:var(--border)]/85 bg-white/90 px-3 py-1 font-mono text-[0.68rem] font-bold leading-none text-[color:var(--sea-deep)] shadow-sm backdrop-blur transition group-hover:border-[color:var(--turquoise)]/40">
                     {archiveBadgeLabels[entry.id]}
                   </span>
-                  <span className="rounded-full border border-[color:var(--sand-deep)]/22 bg-white/50 px-3 py-1 font-mono text-[0.64rem] font-semibold leading-none text-[color:var(--sand-deep)]/78">
+                  <span className="rounded-full border border-[color:var(--border)]/85 bg-[color:var(--sand)]/82 px-3 py-1 font-mono text-[0.64rem] font-bold leading-none text-[color:var(--ink)] shadow-sm backdrop-blur">
                     {story.stamp}
                   </span>
                 </div>
@@ -260,10 +265,6 @@ export function ThenNow() {
             )
           })}
         </motion.div>
-
-        <motion.p variants={fadeUp} className="mt-5 max-w-3xl text-xs leading-5 text-[color:var(--muted-foreground)]/82">
-          {archiveDisclaimer}
-        </motion.p>
       </div>
     </MotionSection>
   )

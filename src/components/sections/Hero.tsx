@@ -55,9 +55,9 @@ export function Hero() {
             ))}
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row">
-            <a href="#vibes" className="group interactive-control inline-flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,var(--sand),#ffe7b8)] px-6 py-3.5 text-center text-sm font-extrabold text-[#071a2d] shadow-coral ring-1 ring-white/34 transition duration-300 hover:-translate-y-1 hover:text-[#071a2d] hover:shadow-glow focus-visible:text-[#071a2d] active:text-[#071a2d] sm:w-auto">
+            <a href="#vibes" className="group interactive-control inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/24 bg-[color:var(--sea-deep)] px-6 py-3.5 text-center text-sm font-extrabold text-white shadow-[0_18px_42px_rgba(3,17,31,0.36)] ring-1 ring-white/12 transition duration-300 hover:-translate-y-1 hover:border-white/32 hover:bg-[color:var(--sea)] hover:text-white hover:shadow-[0_22px_52px_rgba(3,17,31,0.42)] focus-visible:text-white active:text-white sm:w-auto">
               <span>Choose Your Vibe</span>
-              <ArrowRight className="text-[#071a2d] transition group-hover:translate-x-1" size={17} aria-hidden="true" />
+              <ArrowRight className="text-white transition group-hover:translate-x-1" size={17} aria-hidden="true" />
             </a>
             <a href="#map" className="group interactive-control inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/24 bg-white/10 px-6 py-3.5 text-center text-sm font-bold text-white backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/18 hover:shadow-glow sm:w-auto">
               <MapPinned className="transition group-hover:-translate-y-0.5" size={17} aria-hidden="true" />

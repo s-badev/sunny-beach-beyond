@@ -1,8 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, BadgeCheck, Clock, Compass, Martini, Moon, Music, Navigation, Sparkles, Utensils, Waves, Zap, type LucideIcon } from 'lucide-react'
+import nightlifeImage from '../../assets/section-backgrounds/sunny-beach-nightlife.png'
 import { nightlife } from '../../data/nightlife'
 import type { NightlifeItem } from '../../types'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionBackground } from '../ui/SectionBackground'
 import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
@@ -317,6 +319,12 @@ export function Nightlife({ selectedNightlife, onSelectNightlife }: NightlifePro
 
   return (
     <MotionSection id="nightlife" className="section-shell overflow-hidden bg-[radial-gradient(circle_at_18%_12%,rgba(32,199,189,0.16),transparent_24rem),radial-gradient(circle_at_82%_20%,rgba(240,111,97,0.14),transparent_22rem),linear-gradient(150deg,#071a2d,#04111f_62%,#082c46)] text-white">
+      <SectionBackground
+        image={nightlifeImage}
+        position="center 46%"
+        imageClassName="opacity-95 saturate-[1.26] contrast-[1.08]"
+        overlay="bg-[radial-gradient(circle_at_18%_20%,rgba(32,199,189,0.18),transparent_22rem),radial-gradient(circle_at_82%_16%,rgba(240,111,97,0.18),transparent_24rem),linear-gradient(180deg,rgba(3,17,31,0.62)_0%,rgba(3,17,31,0.42)_42%,rgba(4,17,31,0.72)_100%),linear-gradient(110deg,rgba(3,17,31,0.78),rgba(7,26,45,0.26)_48%,rgba(3,17,31,0.68))]"
+      />
       <div className="grain absolute inset-0 opacity-12" aria-hidden="true" />
       <div className="nightlife-glow absolute left-1/4 top-16 size-72 rounded-full bg-[color:var(--coral)]/12 blur-3xl" aria-hidden="true" />
       <div className="section-inner">

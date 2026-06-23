@@ -14,9 +14,11 @@ import {
   Waves,
   type LucideIcon,
 } from 'lucide-react'
+import vlasMarinaImage from '../../assets/section-backgrounds/vlas-marina.png'
 import { areas } from '../../data/areas'
 import type { Area } from '../../types'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionBackground } from '../ui/SectionBackground'
 import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
@@ -273,6 +275,12 @@ export function Areas({ selectedArea, onSelectArea }: AreasProps) {
 
   return (
     <MotionSection id="areas" className="section-shell overflow-hidden bg-[color:var(--foam)]/45">
+      <SectionBackground
+        image={vlasMarinaImage}
+        position="center 44%"
+        imageClassName="opacity-78 saturate-[1.1] contrast-[1.03]"
+        overlay="bg-[linear-gradient(180deg,rgba(223,246,237,0.54)_0%,rgba(246,251,248,0.24)_44%,rgba(223,246,237,0.52)_100%),linear-gradient(105deg,rgba(255,255,255,0.56),rgba(255,255,255,0.12)_48%,rgba(255,248,232,0.36)),radial-gradient(circle_at_76%_16%,rgba(255,255,255,0.28),transparent_18rem)]"
+      />
       <div className="absolute -right-32 top-16 size-96 rounded-full bg-[color:var(--turquoise)]/18 blur-3xl" aria-hidden="true" />
       <div className="absolute -left-36 bottom-8 size-80 rounded-full bg-[color:var(--sand)]/42 blur-3xl" aria-hidden="true" />
       <div className="section-inner">

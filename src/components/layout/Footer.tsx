@@ -1,3 +1,5 @@
+import nightlifeImage from '../../assets/section-backgrounds/sunny-beach-nightlife.png'
+
 const exploreLinks = [
   { href: '#vibes', label: 'Vibes' },
   { href: '#areas', label: 'Areas' },
@@ -31,11 +33,18 @@ export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[radial-gradient(circle_at_16%_0%,rgba(32,199,189,0.16),transparent_24rem),radial-gradient(circle_at_86%_16%,rgba(240,111,97,0.13),transparent_22rem),linear-gradient(150deg,#071a2d,#04111f_62%,#082c46)] px-5 py-16 text-white sm:px-8 sm:py-20 lg:py-24">
-      <div className="grain absolute inset-0 opacity-12" aria-hidden="true" />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--turquoise)]/46 to-transparent" aria-hidden="true" />
+    <footer className="relative overflow-hidden border-t border-white/10 bg-[#03111f] px-5 py-16 text-white sm:px-8 sm:py-20 lg:py-24">
+      <div
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40 saturate-[1.12] contrast-[1.06]"
+        style={{ backgroundImage: `url(${nightlifeImage})` }}
+        aria-hidden="true"
+      />
+      <div className="absolute inset-0 z-0 bg-[#03111f]/70" aria-hidden="true" />
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_16%_0%,rgba(32,199,189,0.2),transparent_24rem),radial-gradient(circle_at_86%_16%,rgba(240,111,97,0.14),transparent_22rem),linear-gradient(180deg,rgba(3,17,31,0.24)_0%,rgba(3,17,31,0.5)_62%,rgba(3,17,31,0.82)_100%),linear-gradient(115deg,rgba(3,17,31,0.72),rgba(7,26,45,0.36)_48%,rgba(3,17,31,0.72))]" aria-hidden="true" />
+      <div className="grain absolute inset-0 z-0 opacity-10" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-[color:var(--turquoise)]/46 to-transparent" aria-hidden="true" />
 
-      <div className="section-inner relative">
+      <div className="section-inner relative z-10">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.7fr)_minmax(0,0.7fr)_minmax(0,0.85fr)] lg:gap-12">
           <div className="max-w-xl">
             <p className="w-fit rounded-full border border-white/14 bg-white/8 px-3 py-1.5 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--coral-soft)]">

@@ -23,6 +23,7 @@ import {
   Waves,
   type LucideIcon,
 } from 'lucide-react'
+import placesSectionBg from '../../assets/section-backgrounds/places-section-bg.png'
 import { experienceScenarios, guidePlaces } from '../../data/experiences'
 import type { ExperienceFilterId, ExperienceScenario, GuideBestTime, GuideBudget, GuideFitLevel, GuideNoise, GuidePlace, GuidePlaceType, GuidePriceFeel, MediaTone } from '../../types'
 import { fadeUp, staggerContainer } from '../ui/motion'
@@ -843,7 +844,13 @@ export function PlacesExperiences({ onOpenPlaceDetail }: PlacesExperiencesProps)
   }
 
   return (
-    <section id="places" className="section-shell overflow-x-clip">
+    <section id="places" className="section-shell overflow-x-clip bg-[linear-gradient(180deg,#f6fbf8_0%,#fff8e8_48%,#eaf6f2_100%)]">
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,248,226,0.42),transparent_18rem),radial-gradient(circle_at_86%_28%,rgba(223,246,237,0.5),transparent_24rem),linear-gradient(180deg,#f6fbf8_0%,#fff8e8_48%,#eaf6f2_100%)]" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[38rem] overflow-hidden [mask-image:linear-gradient(180deg,#000_0%,#000_58%,rgba(0,0,0,0.58)_78%,transparent_100%)] sm:h-[44rem] lg:h-[50rem]" aria-hidden="true">
+        <img src={placesSectionBg} alt="" className="h-full w-full object-cover object-top opacity-55 saturate-[1.1] contrast-[1.05]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(246,251,248,0.12)_0%,rgba(255,248,232,0.28)_52%,rgba(255,248,232,0.78)_82%,rgba(255,248,232,1)_100%),linear-gradient(105deg,rgba(255,255,255,0.4),rgba(255,255,255,0.06)_50%,rgba(242,217,170,0.2)),radial-gradient(circle_at_18%_18%,rgba(255,248,226,0.18),transparent_20rem)]" />
+      </div>
+      <div className="pointer-events-none absolute inset-x-0 top-[34rem] z-0 h-[26rem] bg-[linear-gradient(180deg,rgba(255,248,232,0),#fff8e8_42%,#f6fbf8_76%,#eaf6f2_100%)] sm:top-[40rem] lg:top-[46rem]" aria-hidden="true" />
       <div className="section-inner">
         <motion.div className="grid gap-8 lg:grid-cols-[0.74fr_1fr] lg:items-end" variants={fadeUp}>
           <div>

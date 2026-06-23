@@ -1,7 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, BadgeCheck, Clock3, Compass, Footprints, Gauge, Navigation, ShieldCheck, Sun, Users, Waves, type LucideIcon } from 'lucide-react'
+import beachfrontImage from '../../assets/section-backgrounds/sunny-beach-beachfront.png'
 import { beaches } from '../../data/beaches'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionBackground } from '../ui/SectionBackground'
 import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
@@ -208,6 +210,12 @@ export function Beaches({ selectedBeach, onSelectBeach }: BeachesProps) {
 
   return (
     <MotionSection id="beaches" className="section-shell overflow-hidden bg-[linear-gradient(180deg,#fff8e8_0%,#f3fbf8_46%,#eaf6f2_100%)]">
+      <SectionBackground
+        image={beachfrontImage}
+        position="center 48%"
+        imageClassName="opacity-88 saturate-[1.16] contrast-[1.04]"
+        overlay="bg-[linear-gradient(180deg,rgba(255,248,232,0.5)_0%,rgba(243,251,248,0.2)_42%,rgba(234,246,242,0.52)_100%),linear-gradient(90deg,rgba(255,255,255,0.6),rgba(255,255,255,0.14)_46%,rgba(255,255,255,0.34)),radial-gradient(circle_at_18%_14%,rgba(255,248,226,0.3),transparent_18rem)]"
+      />
       <div className="grain absolute inset-0 opacity-25" aria-hidden="true" />
       <div className="section-inner">
         <motion.div className="grid gap-8 lg:grid-cols-[0.78fr_1fr] lg:items-end" variants={fadeUp}>

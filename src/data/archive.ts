@@ -34,6 +34,3 @@ export const archiveEntries: ArchiveEntry[] = [
     photoKey: 'archive-modern-coast',
   },
 ]
-
-export const archiveDisclaimer =
-  'Archive visuals use editorial reconstructions, personal photography, or credited source material where available.'

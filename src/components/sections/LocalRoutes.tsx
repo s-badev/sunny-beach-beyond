@@ -1,8 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, BadgeCheck, Camera, Clock3, Compass, Footprints, Moon, Route as RouteIcon, Sparkles, Timer, Users, type LucideIcon } from 'lucide-react'
+import vlasMarinaImage from '../../assets/section-backgrounds/vlas-marina.png'
 import { routes } from '../../data/routes'
 import type { LocalRoute, Place } from '../../types'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionBackground } from '../ui/SectionBackground'
 import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
@@ -307,6 +309,12 @@ export function LocalRoutes({ selectedRoute, selectedStops, onSelectRoute }: Loc
 
   return (
     <MotionSection id="routes" className="section-shell overflow-hidden bg-[linear-gradient(180deg,#eaf6f2_0%,#fff8e8_46%,#f6fbf8_100%)]">
+      <SectionBackground
+        image={vlasMarinaImage}
+        position="center 50%"
+        imageClassName="opacity-80 saturate-[1.12] contrast-[1.03]"
+        overlay="bg-[linear-gradient(180deg,rgba(234,246,242,0.54)_0%,rgba(255,248,232,0.24)_46%,rgba(246,251,248,0.56)_100%),radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.34),transparent_21rem),linear-gradient(100deg,rgba(255,255,255,0.58),rgba(255,255,255,0.12)_52%,rgba(223,246,237,0.38))]"
+      />
       <div className="grain absolute inset-0 opacity-25" aria-hidden="true" />
       <div className="section-inner">
         <motion.div className="grid gap-8 lg:grid-cols-[0.76fr_1fr] lg:items-end" variants={fadeUp}>

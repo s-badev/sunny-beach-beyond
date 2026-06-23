@@ -1,8 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, BadgeCheck, Camera, Clock3, Coffee, Compass, Footprints, Landmark, MapPinned, Music, Route, Ship, Sparkles, Sunset, Umbrella, Users, Waves, type LucideIcon } from 'lucide-react'
+import sunnyBeachPanorama from '../../assets/section-backgrounds/sunny-beach-day-panorama.png'
 import { vibes } from '../../data/vibes'
 import type { Vibe } from '../../types'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionBackground } from '../ui/SectionBackground'
 import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
@@ -321,6 +323,12 @@ export function Vibes({ selectedVibe, onSelectVibe }: VibesProps) {
 
   return (
     <MotionSection id="vibes" className="section-shell overflow-hidden bg-[linear-gradient(180deg,#f6fbf8_0%,#fff8e8_48%,#eaf6f2_100%)]">
+      <SectionBackground
+        image={sunnyBeachPanorama}
+        position="center 42%"
+        imageClassName="opacity-85 saturate-[1.12] contrast-[1.03]"
+        overlay="bg-[linear-gradient(180deg,rgba(246,251,248,0.54)_0%,rgba(255,248,232,0.28)_38%,rgba(234,246,242,0.56)_100%),linear-gradient(105deg,rgba(255,255,255,0.58),rgba(255,255,255,0.16)_48%,rgba(223,246,237,0.44)),radial-gradient(circle_at_82%_22%,rgba(255,255,255,0.26),transparent_22rem)]"
+      />
       <div className="grain absolute inset-0 opacity-25" aria-hidden="true" />
       <div className="section-inner">
         <motion.div className="grid gap-8 lg:grid-cols-[0.76fr_1fr] lg:items-end" variants={fadeUp}>

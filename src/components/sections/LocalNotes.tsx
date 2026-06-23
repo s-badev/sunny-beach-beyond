@@ -1,9 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, ArrowRight, BadgeCheck, CheckCircle2, Clock3, Compass, Footprints, MapPinned, Moon, Navigation, Pin, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
+import sunnyBeachPanorama from '../../assets/section-backgrounds/sunny-beach-day-panorama.png'
 import { localNotes } from '../../data/localNotes'
 import type { LocalNote } from '../../types'
 import { fadeUp, MotionSection, staggerContainer } from '../ui/motion'
+import { SectionBackground } from '../ui/SectionBackground'
 import { SectionIntro } from '../ui/SectionIntro'
 import { SectionLabel } from '../ui/SectionLabel'
 
@@ -237,6 +239,12 @@ export function LocalNotes() {
 
   return (
     <MotionSection id="notes" className="section-shell overflow-hidden bg-[linear-gradient(180deg,#fff8e8_0%,#f6fbf8_52%,#eaf6f2_100%)]">
+      <SectionBackground
+        image={sunnyBeachPanorama}
+        position="center 48%"
+        imageClassName="opacity-76 saturate-[1.12] contrast-[1.03]"
+        overlay="bg-[linear-gradient(180deg,rgba(255,248,232,0.48)_0%,rgba(246,251,248,0.22)_52%,rgba(234,246,242,0.5)_100%),linear-gradient(102deg,rgba(255,255,255,0.58),rgba(255,255,255,0.12)_48%,rgba(223,246,237,0.36)),radial-gradient(circle_at_18%_18%,rgba(255,248,226,0.32),transparent_20rem)]"
+      />
       <div className="grain absolute inset-0 opacity-25" aria-hidden="true" />
       <div className="section-inner">
         <motion.div className="grid gap-8 lg:grid-cols-[0.76fr_1fr] lg:items-end" variants={fadeUp}>
