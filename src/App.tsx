@@ -1,16 +1,9 @@
 import { useState } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { Footer } from './components/layout/Footer'
 import { Nav } from './components/layout/Nav'
-import { Areas } from './components/sections/Areas'
-import { Beaches } from './components/sections/Beaches'
-import { Hero } from './components/sections/Hero'
-import { LocalNotes } from './components/sections/LocalNotes'
-import { LocalRoutes } from './components/sections/LocalRoutes'
-import { MapPreview } from './components/sections/MapPreview'
-import { Nightlife } from './components/sections/Nightlife'
-import { PlacesExperiences } from './components/sections/PlacesExperiences'
-import { ThenNow } from './components/sections/ThenNow'
-import { Vibes } from './components/sections/Vibes'
+import { BackButton } from './components/navigation/BackButton'
+import { ScrollToTop } from './components/navigation/ScrollToTop'
 import { GuideCommand } from './components/ui/GuideCommand'
 import { PlaceDetailDrawer } from './components/ui/PlaceDetailDrawer'
 import { areas } from './data/areas'
@@ -20,6 +13,16 @@ import { routes } from './data/routes'
 import { vibes } from './data/vibes'
 import { nightlife } from './data/nightlife'
 import { guidePlaceToRoutePlace } from './lib/guideSearch'
+import { ArchivePage } from './pages/ArchivePage'
+import { AreasPage } from './pages/AreasPage'
+import { BeachesPage } from './pages/BeachesPage'
+import { HomePage } from './pages/HomePage'
+import { MapPage } from './pages/MapPage'
+import { NightlifePage } from './pages/NightlifePage'
+import { NotesPage } from './pages/NotesPage'
+import { PlacesPage } from './pages/PlacesPage'
+import { RoutesPage } from './pages/RoutesPage'
+import { VibesPage } from './pages/VibesPage'
 import type { GuidePlace, Place } from './types'
 
 function App() {
@@ -86,7 +89,9 @@ function App() {
 
   return (
     <>
+      <ScrollToTop />
       <Nav />
+      <BackButton />
       <GuideCommand
         selectedStops={selectedStops}
         routeStatus={routeStatus}
@@ -104,16 +109,30 @@ function App() {
         onAddToRoute={addGuidePlaceToRoute}
       />
       <main>
-        <Hero />
-        <Vibes selectedVibe={selectedVibe} onSelectVibe={setSelectedVibe} />
-        <Areas selectedArea={selectedArea} onSelectArea={setSelectedArea} />
-        <Beaches selectedBeach={selectedBeach} onSelectBeach={setSelectedBeach} />
-        <Nightlife selectedNightlife={selectedNightlife} onSelectNightlife={setSelectedNightlife} />
-        <LocalNotes />
-        <MapPreview selectedMapPlace={selectedMapPlace} selectedStops={selectedStops} onSelectMapPlace={setSelectedMapPlace} onAddStop={addStop} onRemoveStop={removeStop} />
-        <PlacesExperiences onOpenPlaceDetail={openGuidePlace} />
-        <LocalRoutes selectedRoute={selectedRoute} selectedStops={selectedStops} onSelectRoute={setSelectedRoute} />
-        <ThenNow />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/vibes" element={<VibesPage selectedVibe={selectedVibe} onSelectVibe={setSelectedVibe} />} />
+          <Route path="/areas" element={<AreasPage selectedArea={selectedArea} onSelectArea={setSelectedArea} />} />
+          <Route path="/beaches" element={<BeachesPage selectedBeach={selectedBeach} onSelectBeach={setSelectedBeach} />} />
+          <Route path="/nightlife" element={<NightlifePage selectedNightlife={selectedNightlife} onSelectNightlife={setSelectedNightlife} />} />
+          <Route path="/notes" element={<NotesPage />} />
+          <Route
+            path="/map"
+            element={
+              <MapPage
+                selectedMapPlace={selectedMapPlace}
+                selectedStops={selectedStops}
+                onSelectMapPlace={setSelectedMapPlace}
+                onAddStop={addStop}
+                onRemoveStop={removeStop}
+              />
+            }
+          />
+          <Route path="/places" element={<PlacesPage onOpenPlaceDetail={openGuidePlace} />} />
+          <Route path="/routes" element={<RoutesPage selectedRoute={selectedRoute} selectedStops={selectedStops} onSelectRoute={setSelectedRoute} />} />
+          <Route path="/archive" element={<ArchivePage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
       <Footer />
     </>

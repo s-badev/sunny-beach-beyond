@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Compass, MapPinned, MousePointer2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import heroImage from '../../assets/sunny-beach-hero.png'
 
 const heroStats = [
@@ -55,22 +56,22 @@ export function Hero() {
             ))}
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row">
-            <a href="#vibes" className="group interactive-control inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/24 bg-[color:var(--sea-deep)] px-6 py-3.5 text-center text-sm font-extrabold text-white shadow-[0_18px_42px_rgba(3,17,31,0.36)] ring-1 ring-white/12 transition duration-300 hover:-translate-y-1 hover:border-white/32 hover:bg-[color:var(--sea)] hover:text-white hover:shadow-[0_22px_52px_rgba(3,17,31,0.42)] focus-visible:text-white active:text-white sm:w-auto">
+            <Link to="/vibes" className="group interactive-control inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/24 bg-[color:var(--sea-deep)] px-6 py-3.5 text-center text-sm font-extrabold text-white shadow-[0_18px_42px_rgba(3,17,31,0.36)] ring-1 ring-white/12 transition duration-300 hover:-translate-y-1 hover:border-white/32 hover:bg-[color:var(--sea)] hover:text-white hover:shadow-[0_22px_52px_rgba(3,17,31,0.42)] focus-visible:text-white active:text-white sm:w-auto">
               <span>Choose Your Vibe</span>
               <ArrowRight className="text-white transition group-hover:translate-x-1" size={17} aria-hidden="true" />
-            </a>
-            <a href="#map" className="group interactive-control inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/24 bg-white/10 px-6 py-3.5 text-center text-sm font-bold text-white backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/18 hover:shadow-glow sm:w-auto">
+            </Link>
+            <Link to="/map" className="group interactive-control inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/24 bg-white/10 px-6 py-3.5 text-center text-sm font-bold text-white backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/18 hover:shadow-glow sm:w-auto">
               <MapPinned className="transition group-hover:-translate-y-0.5" size={17} aria-hidden="true" />
               Open Interactive Map
-            </a>
+            </Link>
           </div>
-          <a href="#vibes" className="interactive-control mt-7 inline-flex items-center gap-3 rounded-full border border-white/14 bg-white/8 px-3.5 py-2 text-sm font-semibold text-white/76 backdrop-blur hover:bg-white/12 hover:text-white sm:hidden">
+          <Link to="/vibes" className="interactive-control mt-7 inline-flex items-center gap-3 rounded-full border border-white/14 bg-white/8 px-3.5 py-2 text-sm font-semibold text-white/76 backdrop-blur hover:bg-white/12 hover:text-white sm:hidden">
             <MousePointer2 size={15} aria-hidden="true" />
             Continue the guide
-          </a>
+          </Link>
         </motion.div>
       </div>
-      <a href="#vibes" className="absolute bottom-5 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 rounded-full px-3 py-2 text-white/72 transition hover:bg-white/8 hover:text-white sm:flex">
+      <Link to="/vibes" className="absolute bottom-5 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 rounded-full px-3 py-2 text-white/72 transition hover:bg-white/8 hover:text-white sm:flex">
         <span className="font-mono text-[0.62rem] uppercase tracking-[0.2em]">Continue the guide</span>
         <span className="relative h-8 w-px overflow-hidden rounded-full bg-white/24">
           <motion.span
@@ -79,7 +80,7 @@ export function Hero() {
             transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
           />
         </span>
-      </a>
+      </Link>
     </section>
   )
 }

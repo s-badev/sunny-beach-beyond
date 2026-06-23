@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo, useState, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import {
   AlertTriangle,
   ArrowRight,
@@ -538,10 +539,10 @@ function DetailPanel({ place }: { place: GuidePlace }) {
                 </span>
               ))}
             </div>
-            <a href="#routes" className="interactive-control mt-3 inline-flex items-center gap-2 rounded-full border border-[color:var(--turquoise)]/28 bg-white/72 px-3 py-1.5 text-xs font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
+            <Link to="/routes" className="interactive-control mt-3 inline-flex items-center gap-2 rounded-full border border-[color:var(--turquoise)]/28 bg-white/72 px-3 py-1.5 text-xs font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
               Open route pairings
               <ArrowRight size={13} aria-hidden="true" />
-            </a>
+            </Link>
           </div>
 
           <div className="rounded-[1.2rem] border border-[color:var(--coral)]/18 bg-[color:var(--coral-soft)]/24 p-4">

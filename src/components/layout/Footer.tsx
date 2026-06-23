@@ -1,31 +1,32 @@
 import nightlifeImage from '../../assets/section-backgrounds/sunny-beach-nightlife.png'
+import { Link } from 'react-router-dom'
 
 const exploreLinks = [
-  { href: '#vibes', label: 'Vibes' },
-  { href: '#areas', label: 'Areas' },
-  { href: '#beaches', label: 'Beaches' },
-  { href: '#nightlife', label: 'Nightlife' },
-  { href: '#notes', label: 'Notes' },
+  { to: '/vibes', label: 'Vibes' },
+  { to: '/areas', label: 'Areas' },
+  { to: '/beaches', label: 'Beaches' },
+  { to: '/nightlife', label: 'Nightlife' },
+  { to: '/notes', label: 'Notes' },
 ]
 
 const toolLinks = [
-  { href: '#map', label: 'Interactive Map' },
-  { href: '#places', label: 'Places & Experiences' },
-  { href: '#routes', label: 'Local Routes' },
-  { href: '#archive', label: 'Archive' },
+  { to: '/map', label: 'Interactive Map' },
+  { to: '/places', label: 'Places & Experiences' },
+  { to: '/routes', label: 'Local Routes' },
+  { to: '/archive', label: 'Archive' },
 ]
 
 const coastNotes = ['Bulgarian Black Sea coast', 'Sunny Beach to Elenite', '42.7 N, 27.7 E']
 
-function FooterLink({ href, label }: { href: string; label: string }) {
+function FooterLink({ to, label }: { to: string; label: string }) {
   return (
-    <a
-      href={href}
+    <Link
+      to={to}
       className="group inline-flex w-fit items-center gap-2 rounded-full py-1.5 pr-3 text-sm font-semibold text-white/72 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--turquoise)]"
     >
       <span className="size-1.5 rounded-full bg-[color:var(--turquoise)]/42 transition group-hover:bg-[color:var(--coral)]" aria-hidden="true" />
       {label}
-    </a>
+    </Link>
   )
 }
 
@@ -33,15 +34,17 @@ export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#03111f] px-5 py-16 text-white sm:px-8 sm:py-20 lg:py-24">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-[#05233a] px-5 py-16 text-white sm:px-8 sm:py-20 lg:py-24">
       <div
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40 saturate-[1.12] contrast-[1.06]"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-44 saturate-[1.14] contrast-[1.04]"
         style={{ backgroundImage: `url(${nightlifeImage})` }}
         aria-hidden="true"
       />
-      <div className="absolute inset-0 z-0 bg-[#03111f]/70" aria-hidden="true" />
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_16%_0%,rgba(32,199,189,0.2),transparent_24rem),radial-gradient(circle_at_86%_16%,rgba(240,111,97,0.14),transparent_22rem),linear-gradient(180deg,rgba(3,17,31,0.24)_0%,rgba(3,17,31,0.5)_62%,rgba(3,17,31,0.82)_100%),linear-gradient(115deg,rgba(3,17,31,0.72),rgba(7,26,45,0.36)_48%,rgba(3,17,31,0.72))]" aria-hidden="true" />
+      <div className="absolute inset-0 z-0 bg-[#05233a]/62" aria-hidden="true" />
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(234,246,242,0.14)_0%,rgba(5,35,58,0.28)_18%,rgba(5,35,58,0.58)_58%,rgba(3,17,31,0.78)_100%)]" aria-hidden="true" />
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_16%_0%,rgba(32,199,189,0.28),transparent_24rem),radial-gradient(circle_at_86%_16%,rgba(240,111,97,0.17),transparent_22rem),linear-gradient(115deg,rgba(3,31,49,0.58),rgba(6,59,91,0.22)_48%,rgba(3,31,49,0.62))]" aria-hidden="true" />
       <div className="grain absolute inset-0 z-0 opacity-10" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 z-10 h-20 bg-[linear-gradient(180deg,rgba(234,246,242,0.2),rgba(234,246,242,0))]" aria-hidden="true" />
       <div className="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-[color:var(--turquoise)]/46 to-transparent" aria-hidden="true" />
 
       <div className="section-inner relative z-10">
@@ -68,7 +71,7 @@ export function Footer() {
             <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/48">Explore</p>
             <div className="mt-5 grid gap-1">
               {exploreLinks.map((link) => (
-                <FooterLink key={link.href} href={link.href} label={link.label} />
+                <FooterLink key={link.to} to={link.to} label={link.label} />
               ))}
             </div>
           </nav>
@@ -77,7 +80,7 @@ export function Footer() {
             <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/48">Tools</p>
             <div className="mt-5 grid gap-1">
               {toolLinks.map((link) => (
-                <FooterLink key={link.href} href={link.href} label={link.label} />
+                <FooterLink key={link.to} to={link.to} label={link.label} />
               ))}
             </div>
           </nav>

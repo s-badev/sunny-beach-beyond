@@ -1,0 +1,37 @@
+import { ArrowLeft } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useLanguage } from '../../i18n/useLanguage'
+
+export function BackButton() {
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const { language } = useLanguage()
+  const label = language === 'bg' ? 'Назад' : 'Back'
+
+  if (pathname === '/') return null
+
+  function handleBack() {
+    if (window.history.length > 1) {
+      navigate(-1)
+      return
+    }
+
+    navigate('/')
+  }
+
+  return (
+    <div className="relative z-20 px-4 pt-3 sm:px-8">
+      <div className="mx-auto flex max-w-7xl">
+        <button
+          type="button"
+          onClick={handleBack}
+          aria-label={label}
+          className="interactive-control group inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-4.5 py-2.5 text-sm font-extrabold text-[color:var(--sea-deep)] shadow-[0_16px_42px_rgba(9,58,82,0.16)] backdrop-blur-md transition-all duration-200 ease-out hover:!translate-y-[-1px] hover:!scale-105 hover:border-[color:var(--sea-deep)] hover:bg-[color:var(--sea-deep)] hover:!text-white hover:shadow-[0_20px_52px_rgba(9,58,82,0.24)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--turquoise)]"
+        >
+          <ArrowLeft className="transition-colors duration-200 group-hover:text-white" size={17} aria-hidden="true" />
+          <span data-no-translate>{label}</span>
+        </button>
+      </div>
+    </div>
+  )
+}

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { AlertTriangle, ArrowRight, Check, Compass, MapPinned, Navigation, Plus, Route, Sun, X } from 'lucide-react'
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import type { GuidePlace, Place } from '../../types'
 import { guidePlaceToRoutePlace } from '../../lib/guideSearch'
 import { PhotoFrame } from './PhotoFrame'
@@ -200,23 +201,23 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
                       {isInRoute ? <Check size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}
                       {isInRoute ? 'Already in route' : 'Add to route'}
                     </button>
-                    <a href="#map" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3.5 py-2.5 text-sm font-bold text-white hover:bg-[color:var(--sea)]">
+                    <Link to="/map" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3.5 py-2.5 text-sm font-bold text-white hover:bg-[color:var(--sea)]">
                       <MapPinned size={15} aria-hidden="true" />
                       View on Map
-                    </a>
-                    <a href="#routes" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
+                    </Link>
+                    <Link to="/routes" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
                       <Route size={15} aria-hidden="true" />
                       Pair with Routes
-                    </a>
-                    <a href="#areas" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
+                    </Link>
+                    <Link to="/areas" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
                       <Compass size={15} aria-hidden="true" />
                       Compare area
-                    </a>
-                    <a href={place.type === 'club' || place.type === 'bar' ? '#nightlife' : '#beaches'} onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)] sm:col-span-2">
+                    </Link>
+                    <Link to={place.type === 'club' || place.type === 'bar' ? '/nightlife' : '/beaches'} onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)] sm:col-span-2">
                       <Sun size={15} aria-hidden="true" />
                       {place.type === 'club' || place.type === 'bar' ? 'Check nightlife style' : 'Use this as a beach day'}
                       <ArrowRight size={14} aria-hidden="true" />
-                    </a>
+                    </Link>
                   </div>
 
                   {routeStatus && <p className="mt-3 rounded-[1rem] border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/72 px-3 py-2 text-xs font-semibold leading-5 text-[color:var(--sea-deep)]">{routeStatus}</p>}

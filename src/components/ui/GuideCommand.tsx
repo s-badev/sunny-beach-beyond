@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, Check, Compass, MapPinned, Plus, Route, Search, Trash2, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { getPlacesByIntent, guideQuickActions, searchGuideItems, type GuideIntentId } from '../../lib/guideSearch'
 import type { GuidePlace, Place } from '../../types'
 import { useLanguage } from '../../i18n/useLanguage'
@@ -262,14 +263,14 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                     {routeStatus && <p className="mt-1 text-xs font-semibold leading-5 text-[color:var(--sea-deep)]">{t(routeStatus)}</p>}
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <a href="#map" onClick={() => setIsOpen(false)} className="interactive-control inline-flex items-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3 py-2 text-xs font-bold text-white hover:bg-[color:var(--sea)]">
+                    <Link to="/map" onClick={() => setIsOpen(false)} className="interactive-control inline-flex items-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3 py-2 text-xs font-bold text-white hover:bg-[color:var(--sea)]">
                       <MapPinned size={13} aria-hidden="true" />
                       Map
-                    </a>
-                    <a href="#routes" onClick={() => setIsOpen(false)} className="interactive-control inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3 py-2 text-xs font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
+                    </Link>
+                    <Link to="/routes" onClick={() => setIsOpen(false)} className="interactive-control inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3 py-2 text-xs font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
                       <Route size={13} aria-hidden="true" />
                       Routes
-                    </a>
+                    </Link>
                     {selectedStops.length > 0 && (
                       <button type="button" onClick={onClearRoute} className="interactive-control inline-flex items-center gap-2 rounded-full border border-[color:var(--coral)]/22 bg-[color:var(--coral-soft)]/32 px-3 py-2 text-xs font-bold text-[color:var(--ink)] hover:bg-[color:var(--coral-soft)]">
                         <Trash2 size={13} aria-hidden="true" />
