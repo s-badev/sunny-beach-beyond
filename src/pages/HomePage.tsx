@@ -188,7 +188,7 @@ export function HomePage() {
   return (
     <>
       <Hero />
-      <MotionSection className="section-shell overflow-hidden bg-[linear-gradient(180deg,#eef8f5_0%,#fff8e8_46%,#f5ecda_100%)] py-12 sm:py-16 lg:py-20">
+      <MotionSection data-no-translate className="section-shell overflow-hidden bg-[linear-gradient(180deg,#eef8f5_0%,#fff8e8_46%,#f5ecda_100%)] py-12 sm:py-16 lg:py-20">
         <div
           className="pointer-events-none absolute -inset-x-12 -top-24 h-[28rem] z-0 bg-cover bg-center opacity-[0.18] saturate-[0.95] contrast-[0.96]"
           style={{ backgroundImage: `url(${heroImage})` }}
@@ -216,8 +216,8 @@ export function HomePage() {
             </p>
           </motion.div>
 
-          <motion.div className="mt-9 grid gap-4 lg:grid-cols-[1.2fr_0.9fr_0.9fr]" variants={staggerContainer}>
-            {primaryCards.map((card, index) => {
+          <motion.div className="mt-9 grid gap-4 md:grid-cols-3" variants={staggerContainer}>
+            {primaryCards.map((card) => {
               const Icon = card.icon
               const image = entryImages[card.to]
 
@@ -227,12 +227,13 @@ export function HomePage() {
                     to={card.to}
                     className="interactive-card group flex min-h-full flex-col overflow-hidden rounded-lg border border-[color:var(--sea-deep)]/14 bg-[color:var(--paper-soft)] shadow-[0_16px_38px_rgba(73,52,31,0.08)] hover:border-[color:var(--sea-deep)]/28"
                   >
-                    <span className={`relative block min-h-48 overflow-hidden bg-[color:var(--sea-deep)] ${index === 0 ? 'lg:min-h-64' : 'lg:min-h-52'}`}>
+                    <span className="relative block aspect-[16/9] w-full overflow-hidden bg-[color:var(--sea-deep)]">
                       {image ? (
-                        <span
-                          className="absolute inset-0 bg-cover bg-center opacity-82 saturate-[0.92] transition duration-500 group-hover:scale-[1.035]"
-                          style={{ backgroundImage: `url(${image})` }}
-                          aria-hidden="true"
+                        <img
+                          src={image}
+                          alt=""
+                          className="h-full w-full object-cover opacity-82 saturate-[0.92] transition duration-500 group-hover:scale-[1.035]"
+                          loading="lazy"
                         />
                       ) : null}
                       <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,26,45,0.08),rgba(7,26,45,0.58))]" aria-hidden="true" />
@@ -246,7 +247,7 @@ export function HomePage() {
                     <span className="flex flex-1 flex-col p-5 sm:p-6">
                       <span className="block font-serif text-3xl leading-tight text-[color:var(--ink)]">{card.title[language]}</span>
                       <span className="mt-3 block text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{card.description[language]}</span>
-                      <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[color:var(--sea-deep)]">
+                      <span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-bold text-[color:var(--sea-deep)]">
                         {language === 'bg' ? 'Отвори секцията' : 'Open section'}
                         <ArrowRight size={15} className="transition group-hover:translate-x-1" aria-hidden="true" />
                       </span>

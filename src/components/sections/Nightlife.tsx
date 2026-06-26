@@ -231,7 +231,6 @@ function FlowStep({ label, note, index, total }: { label: string; note: string; 
       transition={{ duration: 0.24, delay: index * 0.035 }}
       className="relative grid gap-3 rounded-[1.05rem] border border-white/10 bg-white/7 px-3.5 py-3 sm:grid-cols-[2.15rem_1fr]"
     >
-      {!isLast && <span className="absolute left-[1.5rem] top-11 hidden h-[calc(100%+0.8rem)] w-px bg-[linear-gradient(180deg,var(--coral),rgba(32,199,189,0.38))] sm:block" aria-hidden="true" />}
       <span className={`relative z-10 grid size-8 place-items-center rounded-full border font-mono text-[0.68rem] font-bold ${
         isFirst
           ? 'border-[color:var(--coral)] bg-[color:var(--coral)] text-white'
