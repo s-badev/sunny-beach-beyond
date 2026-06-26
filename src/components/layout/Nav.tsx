@@ -91,7 +91,7 @@ export function Nav() {
                 }`
               }
             >
-              {item.label[language]}
+              <span data-no-translate>{item.label[language]}</span>
             </NavLink>
           ))}
           <div className="ml-1 flex rounded-full border border-[color:var(--border)]/80 bg-white/70 p-0.5" aria-label={languageLabel}>
@@ -145,7 +145,7 @@ export function Nav() {
                     }`
                   }
                 >
-                  {item.label[language]}
+                  <span data-no-translate>{item.label[language]}</span>
                 </NavLink>
               ))}
             </div>

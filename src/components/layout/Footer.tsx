@@ -55,7 +55,7 @@ export function Footer() {
             <p className="w-fit rounded-full border border-white/14 bg-white/8 px-3 py-1.5 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--coral-soft)]">
               {t('Coastal guide / archive')}
             </p>
-            <h2 className="mt-5 font-serif text-4xl font-semibold leading-tight text-white sm:text-5xl">
+            <h2 className="mt-5 font-sans text-4xl font-bold leading-none text-white sm:text-5xl">
               Sunny Beach &amp; Beyond
             </h2>
             <p className="mt-5 max-w-lg text-base font-medium leading-8 text-white/72 sm:text-lg">

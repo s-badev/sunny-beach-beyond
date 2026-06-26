@@ -15,6 +15,11 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import heroImage from '../assets/sunny-beach-hero.png'
+import archiveImage from '../assets/section-backgrounds/sunny-beach-archive.png'
+import beachImage from '../assets/section-backgrounds/sunny-beach-beachfront.png'
+import dayPanoramaImage from '../assets/section-backgrounds/sunny-beach-day-panorama.png'
+import nightlifeImage from '../assets/section-backgrounds/sunny-beach-nightlife.png'
+import vlasMarinaImage from '../assets/section-backgrounds/vlas-marina.png'
 import { Hero } from '../components/sections/Hero'
 import { fadeUp, MotionSection, staggerContainer } from '../components/ui/motion'
 import { SectionLabel } from '../components/ui/SectionLabel'
@@ -165,77 +170,122 @@ const quickStarts = [
   },
 ]
 
-const guideSteps = [
-  {
-    title: { en: 'Choose a page', bg: 'Избери страница' },
-    description: {
-      en: 'Open only the guide layer you need instead of scrolling through everything.',
-      bg: 'Отвори само нужния слой от гида, вместо да скролваш през всичко.',
-    },
-  },
-  {
-    title: { en: 'Compare the tradeoffs', bg: 'Сравни компромисите' },
-    description: {
-      en: 'Each page focuses on timing, transport, crowd level and the best use case.',
-      bg: 'Всяка страница гледа време, транспорт, тълпи и най-добра употреба.',
-    },
-  },
-  {
-    title: { en: 'Shape a simple plan', bg: 'Оформи прост план' },
-    description: {
-      en: 'Use the map and routes together when you are ready to connect real stops.',
-      bg: 'Използвай картата и маршрутите заедно, когато си готов да свържеш реални спирки.',
-    },
-  },
-]
+const entryImages: Partial<Record<string, string>> = {
+  '/vibes': dayPanoramaImage,
+  '/areas': vlasMarinaImage,
+  '/beaches': beachImage,
+  '/nightlife': nightlifeImage,
+  '/archive': archiveImage,
+}
+
+const primaryEntryRoutes = new Set(['/vibes', '/areas', '/beaches'])
 
 export function HomePage() {
   const { language } = useLanguage()
+  const primaryCards = routeCards.filter((card) => primaryEntryRoutes.has(card.to))
+  const secondaryCards = routeCards.filter((card) => !primaryEntryRoutes.has(card.to))
 
   return (
     <>
       <Hero />
-      <MotionSection className="section-shell overflow-hidden bg-[linear-gradient(180deg,#eef8f5_0%,#fff8e8_48%,#eaf6f2_100%)] py-12 sm:py-16 lg:py-18">
+      <MotionSection className="section-shell overflow-hidden bg-[linear-gradient(180deg,#eef8f5_0%,#fff8e8_46%,#f5ecda_100%)] py-12 sm:py-16 lg:py-20">
         <div
-          className="pointer-events-none absolute -inset-x-20 -top-32 bottom-[-7rem] z-0 scale-[1.1] bg-cover bg-center opacity-[0.44] blur-[22px] saturate-[1.12] contrast-[1.04]"
+          className="pointer-events-none absolute -inset-x-12 -top-24 h-[28rem] z-0 bg-cover bg-center opacity-[0.18] saturate-[0.95] contrast-[0.96]"
           style={{ backgroundImage: `url(${heroImage})` }}
           aria-hidden="true"
         />
-        <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(238,248,245,0.5)_0%,rgba(255,248,232,0.58)_42%,rgba(234,246,242,0.82)_100%),radial-gradient(circle_at_18%_18%,rgba(255,248,226,0.28),transparent_20rem),radial-gradient(circle_at_84%_28%,rgba(32,199,189,0.2),transparent_24rem),linear-gradient(105deg,rgba(255,255,255,0.3),rgba(255,255,255,0.06)_52%,rgba(223,246,237,0.34))]" aria-hidden="true" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-28 bg-[linear-gradient(180deg,rgba(7,26,45,0.18),rgba(238,248,245,0))]" aria-hidden="true" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-32 bg-[linear-gradient(180deg,rgba(234,246,242,0),rgba(234,246,242,0.92))]" aria-hidden="true" />
-        <div className="grain absolute inset-0 opacity-22" aria-hidden="true" />
+        <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(238,248,245,0.74)_0%,rgba(255,248,232,0.86)_38%,rgba(245,236,218,0.94)_100%),linear-gradient(90deg,rgba(6,59,91,0.055)_0_1px,transparent_1px),linear-gradient(rgba(114,88,61,0.05)_0_1px,transparent_1px)] bg-[length:auto,34px_100%,100%_30px]" aria-hidden="true" />
+        <div className="grain absolute inset-0 opacity-14" aria-hidden="true" />
         <div className="section-inner">
-          <motion.div className="grid gap-6 lg:grid-cols-[0.78fr_1fr] lg:items-end" variants={fadeUp}>
-            <div>
+          <motion.div className="grid gap-7 border-b border-[color:var(--sea-deep)]/16 pb-9 lg:grid-cols-[0.9fr_0.75fr] lg:items-end lg:pb-12" variants={fadeUp}>
+            <div className="max-w-4xl">
               <SectionLabel>{language === 'bg' ? 'Начало' : 'Start Here'}</SectionLabel>
-              <h2 className="text-balance font-serif text-4xl font-semibold leading-tight text-[color:var(--ink)] sm:text-5xl">
-                {language === 'bg' ? 'Отвори правилната част от крайбрежието.' : 'Open the right part of the coast.'}
+              <h2 className="mt-4 text-balance font-serif text-4xl font-semibold leading-[1.03] text-[color:var(--ink)] sm:text-5xl lg:text-6xl">
+                {language === 'bg' ? 'Личен вход към българското Черноморие.' : 'A personal entrance to the Bulgarian coast.'}
               </h2>
+              <p className="mt-5 max-w-2xl text-pretty text-lg font-semibold leading-8 text-[color:var(--sea-deep)]/84">
+                {language === 'bg'
+                  ? 'Отвори правилната част от крайбрежието според деня, настроението и маршрута.'
+                  : 'Open the right part of the coast for the day, mood and route you need.'}
+              </p>
             </div>
-            <p className="max-w-3xl text-pretty text-base font-semibold leading-8 text-[color:var(--sea-deep)]/82">
+            <p className="max-w-2xl text-pretty text-base font-medium leading-8 text-[color:var(--muted-foreground)] lg:justify-self-end">
               {language === 'bg'
-                ? 'Гидът вече е разделен на фокусирани страници, за да стигаш директно до плажове, нощен живот, карта, маршрути и архив без тежко скролване.'
-                : 'The guide is split into focused pages so you can jump straight to beaches, nightlife, maps, routes and archive stories without heavy scrolling.'}
+                ? 'Sunny Beach & Beyond събира Слънчев бряг, Несебър, Свети Влас и Елените като практичен, визуален и малко архивен пътеводител - не като безкраен туристически каталог.'
+                : 'Sunny Beach & Beyond reads Sunny Beach, Nessebar, Sveti Vlas and Elenite as one practical, visual and slightly archival guide - not an endless tourism catalogue.'}
             </p>
           </motion.div>
 
-          <motion.div className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-3" variants={staggerContainer}>
-            {routeCards.map((card) => {
+          <motion.div className="mt-9 grid gap-4 lg:grid-cols-[1.2fr_0.9fr_0.9fr]" variants={staggerContainer}>
+            {primaryCards.map((card, index) => {
               const Icon = card.icon
+              const image = entryImages[card.to]
 
               return (
                 <motion.div key={card.to} variants={fadeUp}>
                   <Link
                     to={card.to}
-                    className="interactive-card active-rail group grid min-h-full grid-cols-[2.75rem_1fr] gap-4 rounded-[1.25rem] border border-white/74 bg-white/82 p-4 shadow-soft backdrop-blur-md hover:border-[color:var(--turquoise)]/42 hover:bg-white/92 sm:p-5"
+                    className="interactive-card group flex min-h-full flex-col overflow-hidden rounded-lg border border-[color:var(--sea-deep)]/14 bg-[color:var(--paper-soft)] shadow-[0_16px_38px_rgba(73,52,31,0.08)] hover:border-[color:var(--sea-deep)]/28"
                   >
-                    <span className="grid size-11 place-items-center rounded-full border border-[color:var(--turquoise)]/24 bg-[color:var(--foam)] text-[color:var(--sea-deep)] shadow-sm transition group-hover:bg-[color:var(--turquoise)] group-hover:text-[color:var(--night)]">
-                      <Icon size={19} aria-hidden="true" />
+                    <span className={`relative block min-h-48 overflow-hidden bg-[color:var(--sea-deep)] ${index === 0 ? 'lg:min-h-64' : 'lg:min-h-52'}`}>
+                      {image ? (
+                        <span
+                          className="absolute inset-0 bg-cover bg-center opacity-82 saturate-[0.92] transition duration-500 group-hover:scale-[1.035]"
+                          style={{ backgroundImage: `url(${image})` }}
+                          aria-hidden="true"
+                        />
+                      ) : null}
+                      <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,26,45,0.08),rgba(7,26,45,0.58))]" aria-hidden="true" />
+                      <span className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4 text-white">
+                        <span className="font-mono text-[0.66rem] font-bold uppercase tracking-[0.14em] text-white/74">{card.meta[language]}</span>
+                        <span className="grid size-9 shrink-0 place-items-center rounded-full border border-white/28 bg-white/12 text-white backdrop-blur-sm">
+                          <Icon size={17} aria-hidden="true" />
+                        </span>
+                      </span>
+                    </span>
+                    <span className="flex flex-1 flex-col p-5 sm:p-6">
+                      <span className="block font-serif text-3xl leading-tight text-[color:var(--ink)]">{card.title[language]}</span>
+                      <span className="mt-3 block text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{card.description[language]}</span>
+                      <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[color:var(--sea-deep)]">
+                        {language === 'bg' ? 'Отвори секцията' : 'Open section'}
+                        <ArrowRight size={15} className="transition group-hover:translate-x-1" aria-hidden="true" />
+                      </span>
+                    </span>
+                  </Link>
+                </motion.div>
+              )
+            })}
+          </motion.div>
+
+          <motion.div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3" variants={staggerContainer}>
+            {secondaryCards.map((card) => {
+              const Icon = card.icon
+              const image = entryImages[card.to]
+
+              return (
+                <motion.div key={card.to} variants={fadeUp}>
+                  <Link
+                    to={card.to}
+                    className="interactive-card group grid min-h-full gap-4 rounded-lg border border-[color:var(--sea-deep)]/12 bg-[color:var(--paper-soft)]/90 p-4 shadow-[0_12px_28px_rgba(73,52,31,0.06)] hover:border-[color:var(--sea-deep)]/26 sm:grid-cols-[5.5rem_1fr] sm:p-5"
+                  >
+                    <span className="relative block h-24 overflow-hidden rounded-md border border-[color:var(--sea-deep)]/10 bg-[color:var(--foam)] sm:h-full">
+                      {image ? (
+                        <span
+                          className="absolute inset-0 bg-cover bg-center opacity-76 saturate-[0.88] transition duration-500 group-hover:scale-[1.04]"
+                          style={{ backgroundImage: `url(${image})` }}
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <span className="absolute inset-0 bg-[linear-gradient(135deg,var(--foam),var(--paper),var(--sand))]" aria-hidden="true" />
+                      )}
+                      <span className="absolute inset-0 bg-[linear-gradient(135deg,rgba(6,59,91,0.14),rgba(255,248,232,0.2))]" aria-hidden="true" />
+                      <span className="absolute left-3 top-3 grid size-8 place-items-center rounded-full bg-white/78 text-[color:var(--sea-deep)]">
+                        <Icon size={16} aria-hidden="true" />
+                      </span>
                     </span>
                     <span className="min-w-0">
-                      <span className="font-mono text-[0.66rem] font-bold uppercase tracking-[0.14em] text-[color:var(--coral)]">{card.meta[language]}</span>
-                      <span className="mt-1.5 block font-serif text-2xl leading-tight text-[color:var(--ink)]">{card.title[language]}</span>
+                      <span className="font-mono text-[0.64rem] font-bold uppercase tracking-[0.13em] text-[color:var(--sand-deep)]">{card.meta[language]}</span>
+                      <span className="mt-1 block font-serif text-2xl leading-tight text-[color:var(--ink)]">{card.title[language]}</span>
                       <span className="mt-2 block text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{card.description[language]}</span>
                     </span>
                   </Link>
@@ -244,23 +294,25 @@ export function HomePage() {
             })}
           </motion.div>
 
-          <motion.div className="mt-8 rounded-[1.6rem] border border-white/76 bg-white/64 p-3 shadow-[0_28px_80px_rgba(9,58,82,0.14)] backdrop-blur-md sm:p-4" variants={fadeUp}>
-            <div className="grid gap-3 lg:grid-cols-[0.42fr_1fr] lg:items-stretch">
-              <div className="rounded-[1.25rem] border border-[color:var(--border)]/72 bg-[color:var(--sea-deep)] p-5 text-white shadow-soft">
-                <p className="font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[color:var(--coral-soft)]">
-                  {language === 'bg' ? 'Започни оттук' : 'Start with these'}
-                </p>
-                <h3 className="mt-3 font-serif text-3xl leading-tight text-white">
-                  {language === 'bg' ? 'Най-бързите входове в гида.' : 'The fastest ways into the guide.'}
-                </h3>
-                <p className="mt-3 text-sm font-medium leading-6 text-white/76">
-                  {language === 'bg'
-                    ? 'Избери според първото решение за деня: плаж, вечер, карта или архивна разходка.'
-                    : 'Choose by the first decision of the day: beach, evening, map or archive walk.'}
-                </p>
+          <motion.div className="mt-9 overflow-hidden rounded-lg border border-[color:var(--sea-deep)]/14 bg-[color:var(--sea-deep)] text-white shadow-[0_18px_44px_rgba(7,26,45,0.16)]" variants={fadeUp}>
+            <div className="grid lg:grid-cols-[0.78fr_1fr]">
+              <div className="relative min-h-64 overflow-hidden">
+                <div
+                  className="absolute inset-0 bg-cover bg-center opacity-76 saturate-[0.86] contrast-[0.96]"
+                  style={{ backgroundImage: `url(${dayPanoramaImage})` }}
+                  aria-hidden="true"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(3,17,31,0.72),rgba(3,17,31,0.16))]" aria-hidden="true" />
+                <div className="absolute inset-x-5 bottom-5">
+                  <p className="font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[color:var(--coral-soft)]">
+                    {language === 'bg' ? 'Започни оттук' : 'Start with these'}
+                  </p>
+                  <h3 className="mt-3 max-w-md font-serif text-3xl leading-tight text-white sm:text-4xl">
+                    {language === 'bg' ? 'Четири бързи входа според деня.' : 'Four quick entries for the day.'}
+                  </h3>
+                </div>
               </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-px bg-white/10 p-px sm:grid-cols-2">
                 {quickStarts.map((item) => {
                   const Icon = item.icon
 
@@ -268,33 +320,21 @@ export function HomePage() {
                     <Link
                       key={item.to}
                       to={item.to}
-                      className="interactive-card group rounded-[1.2rem] border border-white/72 bg-white/78 p-4 shadow-soft backdrop-blur hover:bg-white/92"
+                      className="group bg-[#082b42] p-5 transition-colors hover:bg-[#0a354e]"
                     >
-                      <span className="flex items-center justify-between gap-3">
-                        <span className="grid size-10 place-items-center rounded-full bg-[color:var(--foam)] text-[color:var(--sea-deep)] transition group-hover:bg-[color:var(--turquoise)] group-hover:text-[color:var(--night)]">
+                      <span className="flex items-center justify-between gap-4">
+                        <span className="grid size-10 place-items-center rounded-full border border-white/14 bg-white/8 text-[color:var(--turquoise)]">
                           <Icon size={18} aria-hidden="true" />
                         </span>
-                        <ArrowRight size={16} className="text-[color:var(--coral)] transition group-hover:translate-x-1" aria-hidden="true" />
+                        <ArrowRight size={16} className="text-white/58 transition group-hover:translate-x-1 group-hover:text-white" aria-hidden="true" />
                       </span>
-                      <span className="mt-3 block font-serif text-xl leading-tight text-[color:var(--ink)]">{item.title[language]}</span>
-                      <span className="mt-2 block text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{item.description[language]}</span>
+                      <span className="mt-4 block font-serif text-xl leading-tight text-white">{item.title[language]}</span>
+                      <span className="mt-2 block text-sm font-medium leading-6 text-white/68">{item.description[language]}</span>
                     </Link>
                   )
                 })}
               </div>
             </div>
-          </motion.div>
-
-          <motion.div className="mt-6 grid gap-3 md:grid-cols-3" variants={staggerContainer}>
-            {guideSteps.map((step, index) => (
-              <motion.div key={step.title.en} variants={fadeUp} className="rounded-[1.2rem] border border-white/74 bg-white/72 p-4 shadow-soft backdrop-blur">
-                <span className="grid size-9 place-items-center rounded-full bg-[color:var(--sand)] font-mono text-[0.72rem] font-bold text-[color:var(--ink)]">
-                  {index + 1}
-                </span>
-                <h3 className="mt-3 font-serif text-xl leading-tight text-[color:var(--ink)]">{step.title[language]}</h3>
-                <p className="mt-2 text-sm font-medium leading-6 text-[color:var(--muted-foreground)]">{step.description[language]}</p>
-              </motion.div>
-            ))}
           </motion.div>
         </div>
       </MotionSection>
