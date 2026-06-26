@@ -15,7 +15,7 @@ export function PageShell({ meta, showHeader = false, children }: PageShellProps
   const showMobileBack = meta.path !== '/'
 
   return (
-    <div data-page-path={meta.path} data-page-number={meta.number} data-page-label={meta.label[language]}>
+    <div className="relative" data-page-path={meta.path} data-page-number={meta.number} data-page-label={meta.label[language]}>
       {showHeader && <PageHeader meta={meta} />}
       {showMobileBack && (
         <div className="px-4 pt-2 md:hidden">

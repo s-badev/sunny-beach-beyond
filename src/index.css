@@ -12,6 +12,8 @@
   --turquoise: #20c7bd;
   --foam: #dff6ed;
   --sand: #f2d9aa;
+  --paper: #fff8e8;
+  --paper-soft: #fffbf1;
   --sand-deep: #c89447;
   --coral: #f06f61;
   --coral-soft: #ffd6cf;
@@ -30,7 +32,7 @@
 
 @theme {
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-  --font-serif: Fraunces, ui-serif, Georgia, serif;
+  --font-serif: Lora, ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
@@ -84,13 +86,13 @@ select {
 }
 
 .glass {
-  border: 1px solid rgba(255, 255, 255, 0.58);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.38));
-  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(255, 251, 241, 0.56));
+  backdrop-filter: blur(16px);
 }
 
 .shadow-soft {
-  box-shadow: 0 22px 58px rgba(9, 58, 82, 0.12);
+  box-shadow: 0 18px 42px rgba(9, 58, 82, 0.09);
 }
 
 .shadow-glow {
@@ -160,6 +162,12 @@ select {
   z-index: 1;
   width: min(100%, 80rem);
   margin: 0 auto;
+}
+
+:where(h1, h2, h3, .font-serif) {
+  font-feature-settings:
+    "kern" 1,
+    "liga" 1;
 }
 
 @media (max-width: 639px) {
@@ -238,16 +246,16 @@ select {
   z-index: -1;
   border-radius: inherit;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.7), transparent 36%),
-    radial-gradient(circle at 82% 10%, rgba(32, 199, 189, 0.18), transparent 11rem),
-    radial-gradient(circle at 12% 92%, rgba(240, 111, 97, 0.13), transparent 10rem);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.55), transparent 40%),
+    radial-gradient(circle at 82% 10%, rgba(32, 199, 189, 0.1), transparent 11rem),
+    radial-gradient(circle at 12% 92%, rgba(240, 111, 97, 0.08), transparent 10rem);
   opacity: 0;
   transition: opacity 260ms ease;
 }
 
 .interactive-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 28px 74px rgba(9, 58, 82, 0.16);
+  box-shadow: 0 22px 54px rgba(9, 58, 82, 0.12);
 }
 
 .interactive-card:active {
