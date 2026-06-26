@@ -75,7 +75,7 @@ export function Nav() {
             <Compass size={16} strokeWidth={2.2} aria-hidden="true" />
             <Waves className="absolute -bottom-0.5 -right-0.5 rounded-full bg-[color:var(--turquoise)] p-0.5 text-[color:var(--sea-deep)]" size={14} aria-hidden="true" />
           </span>
-          <span className="max-w-[9rem] truncate font-serif text-base font-semibold min-[390px]:max-w-[10.75rem] sm:max-w-none sm:text-lg lg:max-w-[11rem] xl:max-w-none">Sunny Beach &amp; Beyond</span>
+          <span className="max-w-[9rem] truncate font-sans text-base font-bold leading-none text-[color:var(--ink)] min-[390px]:max-w-[10.75rem] sm:max-w-none sm:text-lg lg:max-w-[11rem] xl:max-w-none">Sunny Beach &amp; Beyond</span>
         </Link>
 
         <div className="hidden items-center gap-0.5 whitespace-nowrap text-[0.72rem] font-bold text-[color:var(--muted-foreground)] lg:flex xl:gap-1 xl:text-[0.78rem]">

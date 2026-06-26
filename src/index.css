@@ -877,19 +877,29 @@ select {
     linear-gradient(118deg, rgba(7, 26, 45, 0.58), transparent 48%, rgba(255, 255, 255, 0.08));
 }
 
+.archive-page {
+  background:
+    linear-gradient(90deg, rgba(114, 88, 61, 0.08) 0 1px, transparent 1px),
+    linear-gradient(rgba(114, 88, 61, 0.055) 0 1px, transparent 1px),
+    radial-gradient(circle at 12% 18%, rgba(242, 217, 170, 0.44), transparent 11rem),
+    linear-gradient(180deg, #fff8e8 0%, #fffaf1 45%, #f4ead6 100%);
+  background-size: 36px 100%, 100% 28px, auto, auto;
+}
+
 .archive-museum-artifact {
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  box-shadow: 0 12px 30px rgba(73, 52, 31, 0.09);
 }
 
 .archive-museum-artifact::before {
   content: "";
   position: absolute;
-  inset: 0.75rem;
+  inset: 0.65rem;
   z-index: -1;
-  border: 1px solid rgba(255, 248, 226, 0.24);
-  border-radius: 1rem;
+  border: 1px solid rgba(255, 248, 226, 0.22);
+  border-radius: 0.45rem;
   pointer-events: none;
 }
 
@@ -899,25 +909,28 @@ select {
   inset: 0;
   z-index: -2;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.11) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.34), transparent 8rem);
-  background-size: 30px 30px, 30px 30px, auto;
+    linear-gradient(rgba(255, 248, 226, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 248, 226, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.24), transparent 8rem);
+  background-size: 28px 28px, 28px 28px, auto;
 }
 
 .archive-museum-then {
   background:
-    radial-gradient(circle at 24% 24%, rgba(255, 248, 226, 0.5), transparent 8rem),
-    repeating-linear-gradient(92deg, rgba(114, 88, 61, 0.1) 0 1px, transparent 1px 18px),
+    linear-gradient(120deg, rgba(34, 26, 18, 0.42), rgba(114, 88, 61, 0.18)),
+    radial-gradient(circle at 24% 24%, rgba(255, 248, 226, 0.58), transparent 8rem),
+    repeating-linear-gradient(92deg, rgba(114, 88, 61, 0.09) 0 1px, transparent 1px 18px),
     linear-gradient(145deg, #d8b06f, #72583d);
-  filter: sepia(0.16) contrast(0.97);
+  filter: sepia(0.22) saturate(0.82) contrast(0.95);
 }
 
 .archive-museum-now {
   background:
-    radial-gradient(circle at 75% 22%, rgba(255, 255, 255, 0.74), transparent 8rem),
-    radial-gradient(circle at 28% 82%, rgba(240, 111, 97, 0.24), transparent 10rem),
-    linear-gradient(145deg, #022940 0%, #087996 48%, #20c7bd 72%, #f2d9aa 100%);
+    linear-gradient(125deg, rgba(3, 17, 31, 0.48), rgba(6, 59, 91, 0.16)),
+    radial-gradient(circle at 75% 22%, rgba(255, 255, 255, 0.56), transparent 8rem),
+    radial-gradient(circle at 28% 82%, rgba(216, 176, 111, 0.22), transparent 10rem),
+    linear-gradient(145deg, #022940 0%, #087996 54%, #d8b06f 100%);
+  filter: saturate(0.84) contrast(0.96);
 }
 
 .hero-coastal-bg {
@@ -1199,11 +1212,27 @@ select {
 
 .archive-paper {
   background:
-    linear-gradient(90deg, rgba(114, 88, 61, 0.12) 0 1px, transparent 1px),
-    linear-gradient(rgba(114, 88, 61, 0.08) 0 1px, transparent 1px),
-    radial-gradient(circle at 12% 22%, rgba(242, 217, 170, 0.54), transparent 9rem),
-    linear-gradient(145deg, rgba(255, 248, 226, 0.82), rgba(255, 255, 255, 0.46));
+    linear-gradient(90deg, rgba(114, 88, 61, 0.11) 0 1px, transparent 1px),
+    linear-gradient(rgba(114, 88, 61, 0.07) 0 1px, transparent 1px),
+    radial-gradient(circle at 12% 22%, rgba(242, 217, 170, 0.5), transparent 9rem),
+    linear-gradient(145deg, rgba(255, 248, 226, 0.9), rgba(255, 251, 241, 0.68));
   background-size: 28px 100%, 100% 24px, auto, auto;
+}
+
+.archive-dossier-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(114, 88, 61, 0.08) 0 1px, transparent 1px),
+    linear-gradient(rgba(114, 88, 61, 0.045) 0 1px, transparent 1px);
+  background-size: 30px 100%, 100% 26px;
+  opacity: 0.72;
+}
+
+.archive-dossier-card > * {
+  position: relative;
 }
 
 .archive-timeline-card::before {
@@ -1212,14 +1241,14 @@ select {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(200, 148, 71, 0.18) 0 1px, transparent 1px),
-    radial-gradient(circle at 16% 14%, rgba(255, 248, 226, 0.72), transparent 5rem);
-  opacity: 0.5;
+    linear-gradient(90deg, rgba(114, 88, 61, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 16% 14%, rgba(255, 248, 226, 0.78), transparent 5rem);
+  opacity: 0.48;
   transition: opacity 220ms ease;
 }
 
 .archive-timeline-card:hover::before {
-  opacity: 0.82;
+  opacity: 0.72;
 }
 
 .archive-timeline-card > * {

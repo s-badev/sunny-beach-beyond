@@ -83,14 +83,14 @@ export function ThenNow() {
   }
 
   return (
-    <MotionSection id="archive" className="section-shell overflow-hidden bg-[linear-gradient(180deg,#fff8e8_0%,#f3fbf8_48%,#eaf6f2_100%)]">
+    <MotionSection id="archive" className="section-shell archive-page overflow-hidden">
       <SectionBackground
         image={archiveImage}
         position="center 46%"
-        imageClassName="opacity-78 sepia-[0.18] saturate-[0.98] contrast-[1.02]"
-        overlay="bg-[linear-gradient(180deg,rgba(255,248,232,0.5)_0%,rgba(243,251,248,0.24)_48%,rgba(234,246,242,0.56)_100%),linear-gradient(108deg,rgba(255,248,226,0.58),rgba(255,255,255,0.14)_50%,rgba(223,246,237,0.34)),radial-gradient(circle_at_18%_24%,rgba(200,148,71,0.18),transparent_18rem)]"
+        imageClassName="opacity-34 sepia-[0.26] saturate-[0.72] contrast-[0.94]"
+        overlay="bg-[linear-gradient(180deg,rgba(255,248,232,0.86)_0%,rgba(255,251,241,0.74)_44%,rgba(244,235,213,0.82)_100%),linear-gradient(108deg,rgba(255,248,226,0.72),rgba(255,255,255,0.18)_50%,rgba(216,176,111,0.16)),radial-gradient(circle_at_18%_24%,rgba(114,88,61,0.14),transparent_18rem)]"
       />
-      <div className="grain absolute inset-0 opacity-25" aria-hidden="true" />
+      <div className="grain absolute inset-0 opacity-18" aria-hidden="true" />
       <div className="section-inner">
         <motion.div className="grid gap-8 lg:grid-cols-[0.78fr_1fr] lg:items-end" variants={fadeUp}>
           <div>
@@ -104,18 +104,18 @@ export function ThenNow() {
           </SectionIntro>
         </motion.div>
 
-        <motion.div className="mt-8 overflow-hidden rounded-[1.75rem] border border-white/72 bg-white/58 shadow-[0_32px_90px_rgba(9,58,82,0.13)] backdrop-blur" variants={fadeUp}>
+        <motion.div className="mt-8 overflow-hidden rounded-[0.85rem] border border-[color:var(--sand-deep)]/24 bg-[color:var(--paper-soft)]/88 shadow-[0_18px_48px_rgba(73,52,31,0.08)]" variants={fadeUp}>
           <div className="grid gap-0 xl:grid-cols-[minmax(0,0.95fr)_minmax(22rem,1.05fr)]">
-            <div className="min-w-0 border-b border-[color:var(--border)]/70 bg-white/48 p-4 xl:border-b-0 xl:border-r">
-              <div className="flex w-fit rounded-full border border-[color:var(--border)] bg-white/68 p-1 shadow-soft">
+            <div className="min-w-0 border-b border-[color:var(--sand-deep)]/20 bg-[rgba(255,248,232,0.58)] p-4 xl:border-b-0 xl:border-r">
+              <div className="flex w-fit rounded-[0.55rem] border border-[color:var(--sand-deep)]/24 bg-[color:var(--paper-soft)]/86 p-1">
                 {(['then', 'now'] as const).map((mode) => (
                   <button
                     key={mode}
                     type="button"
                     onClick={() => chooseArchiveMode(mode)}
                     aria-pressed={archiveMode === mode}
-                    className={`interactive-control rounded-full px-4 py-2 text-sm font-bold ${
-                      archiveMode === mode ? 'bg-[color:var(--sea-deep)] text-white shadow-glow' : 'text-[color:var(--muted-foreground)] hover:bg-white hover:text-[color:var(--ink)]'
+                    className={`interactive-control rounded-[0.4rem] px-4 py-2 text-sm font-bold ${
+                      archiveMode === mode ? 'bg-[color:var(--sea-deep)] text-white' : 'text-[color:var(--muted-foreground)] hover:bg-white/72 hover:text-[color:var(--ink)]'
                     }`}
                   >
                     {mode === 'then' ? 'Then' : 'Now'}
@@ -137,21 +137,21 @@ export function ThenNow() {
                       whileTap={{ scale: 0.99 }}
                       data-active={isActive}
                       aria-pressed={isActive}
-                      className={`interactive-card archive-museum-artifact group min-h-[17rem] rounded-[1.35rem] border p-4 text-left shadow-soft ${
+                      className={`interactive-card archive-museum-artifact group min-h-[17rem] rounded-[0.8rem] border p-4 text-left ${
                         mode === 'then' ? 'archive-museum-then' : 'archive-museum-now'
                       } ${isActive ? 'ring-2 ring-[color:var(--coral)]/20' : 'opacity-88 hover:opacity-100'}`}
                     >
                       <div className="relative z-10 flex h-full flex-col justify-between">
                         <div className="flex items-start justify-between gap-3">
-                          <span className="rounded-full border border-white/70 bg-white/88 px-3 py-1 font-mono text-[0.66rem] font-bold uppercase tracking-[0.14em] text-[color:var(--sea-deep)] shadow-sm backdrop-blur">
+                          <span className="rounded-[0.35rem] border border-white/68 bg-white/88 px-3 py-1 font-mono text-[0.66rem] font-bold uppercase tracking-[0.14em] text-[color:var(--sea-deep)]">
                             {copy.eyebrow}
                           </span>
-                          <span className="grid size-9 shrink-0 place-items-center rounded-full border border-white/28 bg-white/18 text-white backdrop-blur">
+                          <span className="grid size-9 shrink-0 place-items-center rounded-[0.45rem] border border-white/28 bg-white/18 text-white">
                             {isActive ? <BadgeCheck size={17} aria-hidden="true" /> : <Archive size={17} aria-hidden="true" />}
                           </span>
                         </div>
                         <div>
-                          <span className="rounded-full border border-white/70 bg-white/86 px-3 py-1 font-mono text-[0.66rem] font-bold uppercase tracking-[0.14em] text-[color:var(--ink)] shadow-sm backdrop-blur">
+                          <span className="rounded-[0.35rem] border border-white/70 bg-white/86 px-3 py-1 font-mono text-[0.66rem] font-bold uppercase tracking-[0.14em] text-[color:var(--ink)]">
                             {copy.period}
                           </span>
                           <p className="mt-3 font-serif text-2xl leading-tight text-white sm:text-[1.65rem]">{copy.title}</p>
@@ -172,17 +172,17 @@ export function ThenNow() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   transition={{ duration: 0.24 }}
-                  className="relative overflow-hidden rounded-[1.35rem] border border-[color:var(--sand-deep)]/20 bg-white/68 p-4 shadow-soft sm:p-5"
+                  className="archive-dossier-card relative overflow-hidden rounded-[0.75rem] border border-[color:var(--sand-deep)]/24 bg-[rgba(255,251,241,0.92)] p-4 shadow-[0_14px_34px_rgba(73,52,31,0.08)] sm:p-5"
                 >
-                  <div className="absolute right-5 top-5 hidden rotate-6 rounded-[0.85rem] border border-[color:var(--sand-deep)]/28 px-3 py-2 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sand-deep)]/72 sm:block" aria-hidden="true">
+                  <div className="absolute right-5 top-5 hidden rotate-3 rounded-[0.35rem] border border-[color:var(--sand-deep)]/34 px-3 py-2 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sand-deep)]/72 sm:block" aria-hidden="true">
                     {selectedStory.stamp}
                   </div>
                   <div className="flex flex-wrap items-center gap-2 pr-0 sm:pr-28">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)]/85 bg-white/88 px-3 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[color:var(--sea-deep)] shadow-sm backdrop-blur">
+                    <span className="inline-flex items-center gap-2 rounded-[0.4rem] border border-[color:var(--sand-deep)]/24 bg-white/88 px-3 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]">
                       <Clock3 size={13} aria-hidden="true" />
                       {selectedArchive.year}
                     </span>
-                    <span className="rounded-full border border-[color:var(--border)]/85 bg-white/86 px-3 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[color:var(--ink)] shadow-sm backdrop-blur">
+                    <span className="rounded-[0.4rem] border border-[color:var(--sand-deep)]/24 bg-[color:var(--paper)]/86 px-3 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[color:var(--ink)]">
                       {archiveMode === 'then' ? 'Then lens' : 'Now lens'}
                     </span>
                   </div>
@@ -192,21 +192,21 @@ export function ThenNow() {
                   <p className="mt-3 max-w-3xl leading-7 text-[color:var(--muted-foreground)]">{selectedArchive.description}</p>
 
                   <div className="mt-5 grid gap-3 lg:grid-cols-3">
-                    <div className="rounded-[1.1rem] border border-[color:var(--sea-deep)]/10 bg-[color:var(--foam)]/54 px-4 py-3">
+                    <div className="rounded-[0.55rem] border border-[color:var(--sea-deep)]/12 bg-[color:var(--foam)]/36 px-4 py-3">
                       <span className="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sea-deep)]/62">
                         <Camera size={14} aria-hidden="true" />
                         {archiveMode === 'then' ? 'Then lens' : 'Now lens'}
                       </span>
                       <p className="mt-1.5 text-sm font-medium leading-6 text-[color:var(--ink)]">{selectedStory.lens}</p>
                     </div>
-                    <div className="rounded-[1.1rem] border border-[color:var(--sand-deep)]/20 bg-white/64 px-4 py-3">
+                    <div className="rounded-[0.55rem] border border-[color:var(--sand-deep)]/22 bg-white/58 px-4 py-3">
                       <span className="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--sea-deep)]/62">
                         <Layers size={14} aria-hidden="true" />
                         What changed
                       </span>
                       <p className="mt-1.5 text-sm font-medium leading-6 text-[color:var(--ink)]">{selectedStory.changed}</p>
                     </div>
-                    <div className="rounded-[1.1rem] border border-[color:var(--coral)]/16 bg-[color:var(--coral-soft)]/26 px-4 py-3">
+                    <div className="rounded-[0.55rem] border border-[color:var(--coral)]/18 bg-[color:var(--coral-soft)]/20 px-4 py-3">
                       <span className="flex items-center gap-2 font-mono text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--coral)]">
                         <Stamp size={14} aria-hidden="true" />
                         Museum note
@@ -221,7 +221,7 @@ export function ThenNow() {
         </motion.div>
 
         <motion.div className="mt-5 flex flex-wrap items-center justify-end gap-3" variants={fadeUp}>
-          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)]/85 bg-white/88 px-3 py-1.5 font-mono text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[color:var(--sea-deep)] shadow-sm backdrop-blur">
+          <span className="inline-flex items-center gap-2 rounded-[0.45rem] border border-[color:var(--sand-deep)]/24 bg-[color:var(--paper-soft)]/88 px-3 py-1.5 font-mono text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[color:var(--sea-deep)]">
             <MapPinned size={14} aria-hidden="true" />
             {selectedStory.mood}
           </span>
@@ -243,22 +243,22 @@ export function ThenNow() {
                 data-active={isActive}
                 aria-pressed={isActive}
                 aria-label={`Select archive entry ${entry.title}`}
-                className={`interactive-card active-rail archive-timeline-card group relative min-w-0 overflow-hidden rounded-[1.25rem] border p-5 pl-6 text-left shadow-soft ${
-                  isActive ? 'border-[color:var(--coral)]/48 bg-white/82 ring-2 ring-[color:var(--coral)]/14' : 'border-white/62 bg-white/58 hover:border-[color:var(--sand-deep)]/35 hover:bg-white/70'
+                className={`interactive-card active-rail archive-timeline-card group relative min-w-0 overflow-hidden rounded-[0.7rem] border p-5 pl-6 text-left ${
+                  isActive ? 'border-[color:var(--sea-deep)]/38 bg-[color:var(--paper-soft)]/94 ring-1 ring-[color:var(--sea-deep)]/12' : 'border-[color:var(--sand-deep)]/20 bg-[color:var(--paper-soft)]/72 hover:border-[color:var(--sand-deep)]/38 hover:bg-[color:var(--paper-soft)]/90'
                 }`}
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full border border-[color:var(--border)]/85 bg-white/90 px-3 py-1 font-mono text-[0.68rem] font-bold leading-none text-[color:var(--sea-deep)] shadow-sm backdrop-blur transition group-hover:border-[color:var(--turquoise)]/40">
+                  <span className="rounded-[0.35rem] border border-[color:var(--sand-deep)]/28 bg-white/86 px-3 py-1 font-mono text-[0.68rem] font-bold leading-none text-[color:var(--sea-deep)] transition group-hover:border-[color:var(--sea-deep)]/34">
                     {archiveBadgeLabels[entry.id]}
                   </span>
-                  <span className="rounded-full border border-[color:var(--border)]/85 bg-[color:var(--sand)]/82 px-3 py-1 font-mono text-[0.64rem] font-bold leading-none text-[color:var(--ink)] shadow-sm backdrop-blur">
+                  <span className="rounded-[0.35rem] border border-[color:var(--sand-deep)]/24 bg-[color:var(--sand)]/58 px-3 py-1 font-mono text-[0.64rem] font-bold leading-none text-[color:var(--ink)]">
                     {story.stamp}
                   </span>
                 </div>
                 <h3 className="mt-3 pr-8 font-serif text-2xl leading-tight text-[color:var(--ink)]">{entry.title}</h3>
                 <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{entry.subtitle}</p>
                 <p className="mt-3 text-sm leading-6 text-[color:var(--muted-foreground)]">{entry.description}</p>
-                <p className="mt-4 rounded-[1rem] border border-[color:var(--border)]/70 bg-white/58 px-3 py-2 text-sm font-medium leading-6 text-[color:var(--ink)]">
+                <p className="mt-4 rounded-[0.5rem] border border-[color:var(--sand-deep)]/18 bg-white/48 px-3 py-2 text-sm font-medium leading-6 text-[color:var(--ink)]">
                   {story.changed}
                 </p>
               </motion.button>
