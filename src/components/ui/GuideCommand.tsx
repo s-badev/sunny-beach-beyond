@@ -126,7 +126,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
           <div className="fixed inset-0 z-40 px-3 py-4 sm:px-5 sm:py-8">
             <motion.button
               type="button"
-              aria-label="Close guide search"
+              aria-label={t('Close guide search')}
               onClick={() => setIsOpen(false)}
               className="absolute inset-0 bg-[color:var(--night)]/38 backdrop-blur-[2px]"
               initial={{ opacity: 0 }}
@@ -137,7 +137,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
             <motion.div
               role="dialog"
               aria-modal="true"
-              aria-label="Guide search"
+              aria-label={t('Guide search')}
               initial={{ opacity: 0, y: 20, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -149,17 +149,17 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                   <div>
                     <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">
                       <Compass size={14} aria-hidden="true" />
-                      Ask the guide
+                      {t('Ask the guide')}
                     </p>
                     <h2 className="mt-2 font-serif text-2xl leading-tight text-[color:var(--ink)] sm:text-3xl">
-                      Find a useful coast move.
+                      {t('Find a useful coast move.')}
                     </h2>
                   </div>
                   <button
                     type="button"
                     onClick={() => setIsOpen(false)}
                     className="interactive-control shrink-0 rounded-full border border-[color:var(--border)] bg-white p-2 text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]"
-                    aria-label="Close guide search"
+                    aria-label={t('Close guide search')}
                   >
                     <X size={18} aria-hidden="true" />
                   </button>
@@ -167,7 +167,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
 
                 <label className="mt-4 flex min-w-0 items-center gap-3 rounded-[1.15rem] border border-[color:var(--turquoise)]/28 bg-[color:var(--foam)]/72 px-3.5 py-3 text-[color:var(--sea-deep)]">
                   <Search size={18} aria-hidden="true" />
-                  <span className="sr-only">Search Sunny Beach guide</span>
+                  <span className="sr-only">{t('Search Sunny Beach guide')}</span>
                   <input
                     value={visibleQuery}
                     onChange={(event) => updateQuery(event.target.value)}
@@ -177,7 +177,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                   />
                 </label>
 
-                <div className="mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Quick guide intents">
+                <div className="mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label={t('Quick guide intents')}>
                   {guideQuickActions.map((action) => (
                     <button
                       key={action.id}
@@ -212,7 +212,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                         <div className="flex flex-wrap items-start justify-between gap-3">
                           <div className="min-w-0">
                             <p className="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--coral)]">
-                              {index === 0 ? 'Best match' : 'Guide result'}
+                              {index === 0 ? t('Best match') : t('Guide result')}
                             </p>
                             <h3 className="mt-1 font-serif text-xl leading-tight text-[color:var(--ink)]">{t(result.place.name)}</h3>
                             <p className="mt-1 text-sm font-semibold leading-5 text-[color:var(--sea-deep)]">{guideReason(result.place)}</p>
@@ -265,16 +265,16 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                   <div className="flex flex-wrap gap-2">
                     <Link to="/map" onClick={() => setIsOpen(false)} className="interactive-control inline-flex items-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3 py-2 text-xs font-bold text-white hover:bg-[color:var(--sea)]">
                       <MapPinned size={13} aria-hidden="true" />
-                      Map
+                      {t('Map')}
                     </Link>
                     <Link to="/routes" onClick={() => setIsOpen(false)} className="interactive-control inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3 py-2 text-xs font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
                       <Route size={13} aria-hidden="true" />
-                      Routes
+                      {t('Routes')}
                     </Link>
                     {selectedStops.length > 0 && (
                       <button type="button" onClick={onClearRoute} className="interactive-control inline-flex items-center gap-2 rounded-full border border-[color:var(--coral)]/22 bg-[color:var(--coral-soft)]/32 px-3 py-2 text-xs font-bold text-[color:var(--ink)] hover:bg-[color:var(--coral-soft)]">
                         <Trash2 size={13} aria-hidden="true" />
-                        Clear
+                        {t('Clear')}
                       </button>
                     )}
                   </div>
@@ -284,8 +284,8 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
                     {selectedStops.map((stop, index) => (
                       <div key={stop.id} className="flex shrink-0 items-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-2.5 py-1.5 text-xs font-bold text-[color:var(--ink)]">
                         <span className="grid size-5 place-items-center rounded-full bg-[color:var(--sea-deep)] font-mono text-[0.6rem] text-white">{index + 1}</span>
-                        <span className="max-w-[9rem] truncate">{stop.name}</span>
-                        <button type="button" onClick={() => onRemoveStop(stop.id)} className="interactive-control rounded-full p-1 text-[color:var(--muted-foreground)] hover:bg-[color:var(--coral-soft)] hover:text-[color:var(--ink)]" aria-label={`Remove ${stop.name}`}>
+                        <span className="max-w-[9rem] truncate">{t(stop.name)}</span>
+                        <button type="button" onClick={() => onRemoveStop(stop.id)} className="interactive-control rounded-full p-1 text-[color:var(--muted-foreground)] hover:bg-[color:var(--coral-soft)] hover:text-[color:var(--ink)]" aria-label={`${t('Remove')} ${t(stop.name)}`}>
                           <X size={12} aria-hidden="true" />
                         </button>
                       </div>
@@ -305,7 +305,7 @@ export function GuideCommand({ selectedStops, routeStatus, onOpenPlace, onAddPla
         className="interactive-control fixed bottom-4 right-4 z-30 inline-flex items-center gap-2 rounded-full border border-white/70 bg-[color:var(--sea-deep)] px-4 py-3 text-sm font-extrabold text-white shadow-[0_18px_50px_rgba(7,26,45,0.24)] backdrop-blur hover:bg-[color:var(--sea)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--turquoise)] sm:bottom-5 sm:right-5"
       >
         <Search size={17} aria-hidden="true" />
-        Guide
+        {t('Guide')}
         {selectedStops.length > 0 && <span className="rounded-full bg-white/18 px-2 py-0.5 font-mono text-[0.65rem]">{selectedStops.length}</span>}
       </button>
     </>

@@ -1,13 +1,6 @@
-import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { LanguageContext } from './LanguageContext'
 import { LANGUAGE_STORAGE_KEY, translatePhrase, type Language } from './translations'
-
-type LanguageContextValue = {
-  language: Language
-  setLanguage: (language: Language) => void
-  t: (value: string) => string
-}
-
-export const LanguageContext = createContext<LanguageContextValue | null>(null)
 
 const textOriginals = new WeakMap<Text, string>()
 const translatedAttributes = ['aria-label', 'alt', 'placeholder', 'title']

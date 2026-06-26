@@ -2,7 +2,11 @@ import { ArrowLeft } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../../i18n/useLanguage'
 
-export function BackButton() {
+type BackButtonProps = {
+  variant?: 'inline' | 'pill'
+}
+
+export function BackButton({ variant = 'pill' }: BackButtonProps) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const { language } = useLanguage()
@@ -17,6 +21,20 @@ export function BackButton() {
     }
 
     navigate('/')
+  }
+
+  if (variant === 'inline') {
+    return (
+      <button
+        type="button"
+        onClick={handleBack}
+        aria-label={label}
+        className="interactive-control group inline-flex min-h-9 items-center gap-1.5 rounded-full border border-[color:var(--border)]/72 bg-white/72 px-3 py-1.5 text-sm font-semibold text-[color:var(--sea-deep)] transition-colors duration-200 hover:border-transparent hover:bg-transparent hover:text-[color:var(--night)] hover:underline hover:underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--turquoise)] sm:min-h-0 sm:rounded-none sm:border-0 sm:bg-transparent sm:px-0 sm:py-0"
+      >
+        <ArrowLeft className="transition-transform duration-200 group-hover:-translate-x-0.5" size={15} aria-hidden="true" />
+        <span data-no-translate>{label}</span>
+      </button>
+    )
   }
 
   return (

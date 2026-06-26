@@ -3,6 +3,7 @@ import { AlertTriangle, ArrowRight, Check, Compass, MapPinned, Navigation, Plus,
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import type { GuidePlace, Place } from '../../types'
+import { useLanguage } from '../../i18n/useLanguage'
 import { guidePlaceToRoutePlace } from '../../lib/guideSearch'
 import { PhotoFrame } from './PhotoFrame'
 
@@ -60,6 +61,7 @@ function toneForPlace(place: GuidePlace) {
 }
 
 export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, onClose, onAddToRoute }: PlaceDetailDrawerProps) {
+  const { t } = useLanguage()
   const routePlace = place ? guidePlaceToRoutePlace(place) : null
   const isInRoute = routePlace ? selectedStops.some((stop) => stop.id === routePlace.id) : false
   const closeButtonRef = useRef<HTMLButtonElement>(null)
@@ -88,7 +90,7 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
           <motion.button
             type="button"
             className="absolute inset-0 bg-[color:var(--night)]/42 backdrop-blur-[2px]"
-            aria-label="Close place detail"
+            aria-label={t('Close place detail')}
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -97,7 +99,7 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
           <motion.aside
             role="dialog"
             aria-modal="true"
-            aria-label={`${place.name} guide detail`}
+            aria-label={`${t(place.name)} ${t('Guide detail')}`}
             initial={{ opacity: 0, x: 38, y: 24 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             exit={{ opacity: 0, x: 28, y: 18 }}
@@ -108,11 +110,11 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
               <PhotoFrame
                 mediaKey={place.photoKey}
                 tone={toneForPlace(place)}
-                title={place.name}
-                subtitle={`${place.area} / ${typeLabels[place.type]}`}
-                areaLabel={place.area}
-                categoryLabel="Guide detail"
-                editorialLabel={place.routePairing ?? 'Coastal planner'}
+                title={t(place.name)}
+                subtitle={`${t(place.area)} / ${t(typeLabels[place.type])}`}
+                areaLabel={t(place.area)}
+                categoryLabel={t('Guide detail')}
+                editorialLabel={t(place.routePairing ?? 'Coastal planner')}
                 heightClassName="min-h-[18rem]"
                 selected
               />
@@ -120,22 +122,22 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
               <div className="p-4 sm:p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">Guide detail</p>
-                    <h2 className="mt-2 font-serif text-3xl leading-tight text-[color:var(--ink)]">{place.name}</h2>
+                    <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">{t('Guide detail')}</p>
+                    <h2 className="mt-2 font-serif text-3xl leading-tight text-[color:var(--ink)]">{t(place.name)}</h2>
                   </div>
-                  <button ref={closeButtonRef} type="button" onClick={onClose} className="interactive-control shrink-0 rounded-full border border-[color:var(--border)] bg-white p-2 text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]" aria-label="Close guide detail">
+                  <button ref={closeButtonRef} type="button" onClick={onClose} className="interactive-control shrink-0 rounded-full border border-[color:var(--border)] bg-white p-2 text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]" aria-label={t('Close guide detail')}>
                     <X size={18} aria-hidden="true" />
                   </button>
                 </div>
 
                 <div className="mt-4 grid gap-2 rounded-[1.1rem] border border-[color:var(--turquoise)]/24 bg-[color:var(--foam)]/54 p-3 sm:grid-cols-3">
                   {[
-                    { label: 'Route list', value: `${selectedStops.length}/4 stops` },
-                    { label: 'Status', value: isInRoute ? 'Added' : 'Ready' },
-                    { label: 'Next', value: place.type === 'club' || place.type === 'bar' ? 'Night route' : 'Day route' },
+                    { label: 'Route list', value: `${selectedStops.length}/4 ${selectedStops.length === 1 ? t('stop') : t('stops')}` },
+                    { label: 'Status', value: isInRoute ? t('Added') : t('Ready') },
+                    { label: 'Next', value: place.type === 'club' || place.type === 'bar' ? t('Night route') : t('Day route') },
                   ].map((item) => (
                     <div key={item.label}>
-                      <p className="font-mono text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">{item.label}</p>
+                      <p className="font-mono text-[0.58rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--sea-deep)]/62">{t(item.label)}</p>
                       <p className="mt-1 text-sm font-bold leading-5 text-[color:var(--ink)]">{item.value}</p>
                     </div>
                   ))}
@@ -144,47 +146,47 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
                 <div className="mt-4 flex flex-wrap gap-2">
                   {[place.area, typeLabels[place.type], budgetLabels[place.budget], noiseLabels[place.noise], timeLabels[place.bestTime]].map((item) => (
                     <span key={item} className="rounded-full border border-[color:var(--border)] bg-white/72 px-3 py-1.5 text-[0.7rem] font-bold text-[color:var(--sea-deep)]">
-                      {item}
+                      {t(item)}
                     </span>
                   ))}
                 </div>
 
-                <p className="mt-4 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{place.bestFor}</p>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">{place.description}</p>
+                <p className="mt-4 text-sm font-semibold leading-6 text-[color:var(--sea-deep)]">{t(place.bestFor)}</p>
+                <p className="mt-2 text-sm leading-6 text-[color:var(--muted-foreground)]">{t(place.description)}</p>
 
                 <div className="mt-4 grid gap-3">
                   <div className="rounded-[1.15rem] border border-[color:var(--turquoise)]/24 bg-[color:var(--foam)]/62 p-4">
                     <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]">
                       <Compass size={14} aria-hidden="true" />
-                      Local tip
+                      {t('Local tip')}
                     </p>
-                    <p className="mt-2 text-sm font-bold leading-6 text-[color:var(--ink)]">{place.localTip}</p>
+                    <p className="mt-2 text-sm font-bold leading-6 text-[color:var(--ink)]">{t(place.localTip)}</p>
                   </div>
 
                   <div className="rounded-[1.15rem] border border-[color:var(--coral)]/18 bg-[color:var(--coral-soft)]/24 p-4">
                     <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--coral)]">
                       <AlertTriangle size={14} aria-hidden="true" />
-                      Avoid if
+                      {t('Avoid if')}
                     </p>
-                    <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--ink)]">{place.avoidIf}</p>
+                    <p className="mt-2 text-sm font-semibold leading-6 text-[color:var(--ink)]">{t(place.avoidIf)}</p>
                   </div>
 
                   <div className="rounded-[1.15rem] border border-[color:var(--border)]/72 bg-white/70 p-4">
                     <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
                       <Route size={14} aria-hidden="true" />
-                      Route pairing
+                      {t('Route pairing')}
                     </p>
-                    <p className="mt-2 text-sm font-bold leading-6 text-[color:var(--ink)]">{place.routePairing}</p>
-                    <p className="mt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">{place.goodNextMove}</p>
+                    <p className="mt-2 text-sm font-bold leading-6 text-[color:var(--ink)]">{t(place.routePairing ?? '')}</p>
+                    <p className="mt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">{t(place.goodNextMove)}</p>
                   </div>
 
                   <div className="rounded-[1.15rem] border border-[color:var(--border)]/72 bg-[color:var(--background)]/70 p-4">
                     <p className="inline-flex items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--sea-deep)]/62">
                       <Navigation size={14} aria-hidden="true" />
-                      Seasonal source note
+                      {t('Seasonal source note')}
                     </p>
-                    <p className="mt-2 text-xs font-semibold leading-5 text-[color:var(--ink)]">{place.seasonality}</p>
-                    <p className="mt-2 border-t border-[color:var(--border)]/70 pt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">{place.sourceNote}</p>
+                    <p className="mt-2 text-xs font-semibold leading-5 text-[color:var(--ink)]">{t(place.seasonality ?? '')}</p>
+                    <p className="mt-2 border-t border-[color:var(--border)]/70 pt-2 text-xs leading-5 text-[color:var(--muted-foreground)]">{t(place.sourceNote ?? '')}</p>
                   </div>
                 </div>
 
@@ -199,28 +201,28 @@ export function PlaceDetailDrawer({ place, isOpen, selectedStops, routeStatus, o
                       }`}
                     >
                       {isInRoute ? <Check size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}
-                      {isInRoute ? 'Already in route' : 'Add to route'}
+                      {isInRoute ? t('Already in route') : t('Add to route')}
                     </button>
                     <Link to="/map" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--sea-deep)] px-3.5 py-2.5 text-sm font-bold text-white hover:bg-[color:var(--sea)]">
                       <MapPinned size={15} aria-hidden="true" />
-                      View on Map
+                      {t('View on Map')}
                     </Link>
                     <Link to="/routes" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
                       <Route size={15} aria-hidden="true" />
-                      Pair with Routes
+                      {t('Pair with Routes')}
                     </Link>
                     <Link to="/areas" onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)]">
                       <Compass size={15} aria-hidden="true" />
-                      Compare area
+                      {t('Compare area')}
                     </Link>
                     <Link to={place.type === 'club' || place.type === 'bar' ? '/nightlife' : '/beaches'} onClick={onClose} className="interactive-control inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-white px-3.5 py-2.5 text-sm font-bold text-[color:var(--sea-deep)] hover:bg-[color:var(--foam)] sm:col-span-2">
                       <Sun size={15} aria-hidden="true" />
-                      {place.type === 'club' || place.type === 'bar' ? 'Check nightlife style' : 'Use this as a beach day'}
+                      {place.type === 'club' || place.type === 'bar' ? t('Check nightlife style') : t('Use this as a beach day')}
                       <ArrowRight size={14} aria-hidden="true" />
                     </Link>
                   </div>
 
-                  {routeStatus && <p className="mt-3 rounded-[1rem] border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/72 px-3 py-2 text-xs font-semibold leading-5 text-[color:var(--sea-deep)]">{routeStatus}</p>}
+                  {routeStatus && <p className="mt-3 rounded-[1rem] border border-[color:var(--turquoise)]/22 bg-[color:var(--foam)]/72 px-3 py-2 text-xs font-semibold leading-5 text-[color:var(--sea-deep)]">{t(routeStatus)}</p>}
                 </div>
               </div>
             </div>
